@@ -713,14 +713,14 @@ function countPos(katId){ return state.pos[katId].filter(p => p.leistung).length
 /* ---------- Schrittliste ---------- */
 function stepMeta(s){
   if (s.kat){ const n = countPos(s.id); return n ? fmt(katTotal(s.id)) : ''; }
-  if (s.id === 'sonder'){ const n = state.sonder.length; return n ? fmt(sonderTotal()) : ''; }
+  if (s.id === 'sonder'){ const n = sonderFilled().length; return n ? fmt(sonderTotal()) : ''; }
   if (s.id === 'anfahrt') return anfAktiv() ? fmt(anfahrtTotal()) : state.anfahrt.wahl === 'nein' ? 'keine' : '';
   return '';
 }
 function stepDone(s, i){
   if (s.kat) return countPos(s.id) > 0;
   if (s.id === 'kunde') return !!(state.kunde.nachname || state.kunde.firma);
-  if (s.id === 'sonder') return state.sonder.length > 0;
+  if (s.id === 'sonder') return sonderFilled().length > 0;
   if (s.id === 'anfahrt') return !!state.anfahrt.wahl;
   return state.visited.includes(i) && i !== state.step && s.id !== 'summary';
 }
@@ -788,7 +788,7 @@ function posCard(kat, p, idx, isNew){
   return `<div class="pos${isNew ? ' new' : ''}" data-uid="${p.uid}" data-kat="${kat.id}">
     <div class="pos-head"><span class="pos-nr">${idx + 1}</span>
       <select class="sel" data-f="leistung" aria-label="Leistung auswählen"><option value="">Leistung auswählen …</option>${opts}</select>
-      <button type="button" class="icon-btn del" data-act="del" aria-label="Position entfernen" title="Position entfernen">${ICON.trash}</button></div>
+      ${(state.pos[kat.id].length > 1 || p.leistung) ? `<button type="button" class="icon-btn del" data-act="del" aria-label="Position entfernen" title="Position entfernen">${ICON.trash}</button>` : ''}</div>
     ${body}</div>`;
 }
 function totalHtml(c){ if (!c) return ''; return (c.rab ? `<s>${fmt(c.vor)}</s>` : '') + `<b>${fmt(c.total)}</b>`; }
@@ -798,7 +798,7 @@ function sonderCard(s, idx, isNew){
   return `<div class="pos${isNew ? ' new' : ''}" data-uid="${s.uid}" data-sonder="1">
     <div class="pos-head"><span class="pos-nr">${idx + 1}</span>
       <input class="in" data-f="text" value="${esc(s.text)}" placeholder="Bezeichnung, z. B. Regenrinne reinigen" aria-label="Bezeichnung">
-      <button type="button" class="icon-btn del" data-act="del" aria-label="Position entfernen" title="Position entfernen">${ICON.trash}</button></div>
+      ${(state.sonder.length > 1 || s.text || num(s.preis)) ? `<button type="button" class="icon-btn del" data-act="del" aria-label="Position entfernen" title="Position entfernen">${ICON.trash}</button>` : ''}</div>
     <div class="pos-body">
       <label class="fld f-menge"><span>Menge</span>${pauschal ? '<div class="static">pauschal</div>' : `<input class="in" inputmode="decimal" data-f="menge" value="${esc(s.menge)}" placeholder="0">`}</label>
       <label class="fld" style="grid-column:span 3"><span>Einheit</span><select class="sel" data-f="einheit">${SONDER_EINHEITEN.map(e => `<option${e === s.einheit ? ' selected' : ''}>${e}</option>`).join('')}</select></label>
@@ -1033,16 +1033,17 @@ function viewKunde(){
     <div class="fld c3"><span>Datum</span><div class="static">${new Date().toLocaleDateString('de-DE')}</div></div>
   </div></div>`;
 }
+function emptyPos(){ return { uid:uid(), leistung:'', menge:'', ep:null, rabatt:'', farbe:'std', farbtext:'', optionen:{} }; }
+function emptySonder(){ return { uid:uid(), text:'', menge:'1', einheit:'Stück', preis:'', rabatt:'' }; }
+const sonderFilled = () => state.sonder.filter(x => x.text || num(x.preis));
+const filledPos = () => Object.fromEntries(Object.entries(state.pos).map(([k, l]) => [k, l.filter(p => p.leistung)]));
 function viewKat(kat){
   const list = state.pos[kat.id];
-  const sub = `<div class="subtotal" data-kattotal>${list.length ? `Summe Kategorie<b>${fmt(katTotal(kat.id))}</b>` : ''}</div>`;
+  if (!list.length) list.push(emptyPos());
+  const sub = `<div class="subtotal" data-kattotal>${countPos(kat.id) ? `Summe Kategorie<b>${fmt(katTotal(kat.id))}</b>` : ''}</div>`;
   let html = head(kat.name, sub);
-  if (!list.length){
-    html += `<div class="empty"><p>In dieser Kategorie ist noch nichts ausgewählt.</p><button type="button" class="btn btn-primary" data-act="add">${ICON.plus}Position hinzufügen</button></div>`;
-  } else {
-    html += `<div class="stack" id="poslist">${list.map((p, i) => posCard(kat, p, i, p._new)).join('')}</div>
-      <div style="margin-top:14px"><button type="button" class="add-btn" data-act="add">${ICON.plus}Weitere Position in ${esc(kat.name)}</button></div>`;
-  }
+  html += `<div class="stack" id="poslist">${list.map((p, i) => posCard(kat, p, i, p._new)).join('')}</div>
+    <div style="margin-top:14px"><button type="button" class="add-btn" data-act="add">${ICON.plus}Weitere Position in ${esc(kat.name)}</button></div>`;
   html += `<div class="card" style="margin-top:14px"><details class="notes"${state.notes[kat.id] ? ' open' : ''}><summary>Notiz zu ${esc(kat.name)}</summary>
     <textarea data-note="${kat.id}" placeholder="z. B. Zufahrt eng, Termin erst ab März">${esc(state.notes[kat.id])}</textarea></details></div>`;
   list.forEach(p => delete p._new);
@@ -1050,14 +1051,12 @@ function viewKat(kat){
 }
 function viewSonder(){
   const list = state.sonder;
-  const sub = `<div class="subtotal" data-kattotal>${list.length ? `Summe Sonderpositionen<b>${fmt(sonderTotal())}</b>` : ''}</div>`;
+  if (!list.length) list.push(emptySonder());
+  const sub = `<div class="subtotal" data-kattotal>${sonderFilled().length ? `Summe Sonderpositionen<b>${fmt(sonderTotal())}</b>` : ''}</div>`;
   let html = head('Sonderpositionen', sub);
-  if (!list.length){
-    html += `<div class="empty"><p>Für alles, was nicht im Katalog steht: Bezeichnung und Preis frei eintragen.</p><button type="button" class="btn btn-primary" data-act="add-sonder">${ICON.plus}Sonderposition hinzufügen</button></div>`;
-  } else {
-    html += `<div class="stack">${list.map((s, i) => sonderCard(s, i, s._new)).join('')}</div>
-      <div style="margin-top:14px"><button type="button" class="add-btn" data-act="add-sonder">${ICON.plus}Weitere Sonderposition</button></div>`;
-  }
+  html += `<p class="adm-hint" style="margin:-8px 0 14px">Für alles, was nicht im Katalog steht: Bezeichnung und Preis frei eintragen.</p>
+    <div class="stack">${list.map((s, i) => sonderCard(s, i, s._new)).join('')}</div>
+    <div style="margin-top:14px"><button type="button" class="add-btn" data-act="add-sonder">${ICON.plus}Weitere Sonderposition</button></div>`;
   list.forEach(s => delete s._new);
   return html;
 }
@@ -1174,7 +1173,7 @@ function updateBar(){
   const next = document.getElementById('btnNext');
   next.hidden = state.step === STEPS.length - 1;
   if (s.kat) next.textContent = countPos(s.id) ? 'Weiter' : 'Überspringen';
-  else if (s.id === 'sonder') next.textContent = state.sonder.length ? 'Weiter' : 'Überspringen';
+  else if (s.id === 'sonder') next.textContent = sonderFilled().length ? 'Weiter' : 'Überspringen';
   else next.textContent = 'Weiter';
 }
 function refreshLive(){
@@ -1189,8 +1188,8 @@ function refreshLive(){
     if (tEl) tEl.innerHTML = totalHtml(c); if (cEl) cEl.textContent = line || '';
   });
   const kt = main.querySelector('[data-kattotal]');
-  if (kt && s.kat) kt.innerHTML = state.pos[s.id].length ? `Summe Kategorie<b>${fmt(katTotal(s.id))}</b>` : '';
-  if (kt && s.id === 'sonder') kt.innerHTML = state.sonder.length ? `Summe Sonderpositionen<b>${fmt(sonderTotal())}</b>` : '';
+  if (kt && s.kat) kt.innerHTML = countPos(s.id) ? `Summe Kategorie<b>${fmt(katTotal(s.id))}</b>` : '';
+  if (kt && s.id === 'sonder') kt.innerHTML = sonderFilled().length ? `Summe Sonderpositionen<b>${fmt(sonderTotal())}</b>` : '';
   const ak = main.querySelector('[data-anfkm]'); if (ak) ak.textContent = `${dec.format(num(state.anfahrt.km))} km × ${fmt(ANFAHRT.proKm)}`;
   const at = main.querySelector('[data-anftotal]'); if (at) at.textContent = fmt(anfahrtTotal());
   const ar = main.querySelector('[data-anfrabrow]'); if (ar){ const r = anfahrtRabatt(); ar.hidden = !r.rabBetrag; ar.querySelector('[data-anfrabval]').textContent = `− ${fmt(r.rabBetrag)}`; }
@@ -1214,11 +1213,11 @@ const ICON2 = {
 const confirmHtml = (text, yes, no, yesLabel) => `<div class="confirm-box" role="alertdialog"><p>${text}</p><div class="confirm-btns"><button type="button" class="btn btn-ghost" data-aa="${no}">Abbrechen</button><button type="button" class="btn btn-danger" data-aa="${yes}">${yesLabel}</button></div></div>`;
 
 function viewAdmin(){
-  const tabs = [['leistungen','Kategorien & Leistungen'],['farben','Farben'],['allgemein','Anfahrt & MwSt.']];
+  const tabs = [['leistungen','Kategorien & Leistungen'],['farben','Farben'],['allgemein','Anfahrt & MwSt.'],['sicherung','Sicherung']];
   return `<div class="panel-head"><div><h1>Einstellungen</h1><p class="adm-hint">Änderungen werden automatisch für alle gespeichert. <span id="syncState" class="sync"></span></p></div>
     <button type="button" class="btn btn-primary" data-aa="close">Zurück zum Angebot</button></div>
     <div class="tabs" role="tablist">${tabs.map(([id, t]) => `<button type="button" role="tab" class="tab${adminTab === id ? ' active' : ''}" aria-selected="${adminTab === id}" data-tab="${id}">${t}</button>`).join('')}</div>
-    ${adminTab === 'leistungen' ? admLeistungen() : adminTab === 'farben' ? admFarben() : admAllgemein()}`;
+    ${adminTab === 'leistungen' ? admLeistungen() : adminTab === 'farben' ? admFarben() : adminTab === 'sicherung' ? admSicherung() : admAllgemein()}`;
 }
 function admLeistungen(){
   const ks = CFG.katalog;
@@ -1318,6 +1317,44 @@ function admFarben(){
     ${CFG.farben.map(admFarbRow).join('')}
     <button type="button" class="add-btn" data-aa="add-f" style="margin-top:14px">${ICON.plus}Farbe hinzufügen</button></div></div>`;
 }
+let pendingImport = null;
+function cfgStats(c){ const ks = (c.katalog || []); return { kat:ks.length, leist:ks.reduce((n, k) => n + (k.leistungen || []).length, 0), farben:(c.farben || []).length }; }
+function admSicherung(){
+  const st = cfgStats(CFG);
+  return `<div class="stack">
+    <div class="card"><h2 class="adm-h2">Sicherung herunterladen</h2>
+      <p class="adm-hint" style="margin-bottom:14px">Speichert alle Einstellungen als Datei auf diesem Gerät: ${st.kat} Kategorien, ${st.leist} Leistungen mit Preisen, ${st.farben} Farben, alle Regeln sowie Anfahrt und MwSt. Am besten vor größeren Änderungen und vor jedem Update eine Sicherung machen.</p>
+      <button type="button" class="btn btn-primary" data-aa="export">${ICON.pdf}Sicherung herunterladen</button></div>
+    <div class="card"><h2 class="adm-h2">Sicherung einspielen</h2>
+      <p class="adm-hint" style="margin-bottom:14px">Stellt die Einstellungen aus einer Sicherungsdatei wieder her. Die aktuellen Einstellungen werden dabei für alle ersetzt. Gespeicherte Angebote bleiben unverändert.</p>
+      ${pendingImport ? confirmHtml(`Sicherung „${esc(pendingImport.datei)}“${pendingImport.datum ? ` vom ${esc(pendingImport.datum)}` : ''} mit ${pendingImport.st.kat} Kategorien und ${pendingImport.st.leist} Leistungen einspielen? Die aktuellen Einstellungen werden ersetzt.`, 'imp-yes', 'imp-no', 'Ja, einspielen')
+        : '<button type="button" class="btn btn-outline" data-aa="import">Sicherungsdatei auswählen …</button>'}
+      <input type="file" id="cfgImport" accept=".json,application/json" hidden></div>
+  </div>`;
+}
+function exportCfg(){
+  const jetzt = new Date();
+  const datei = { typ:'laumer-angebotskonfigurator-einstellungen', format:1, exportiertAm:jetzt.toISOString(), exportiertVon:USER ? USER.name : '', daten:plain(CFG) };
+  const blob = new Blob([JSON.stringify(datei, null, 2)], { type:'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `Konfigurator-Sicherung_${jetzt.toISOString().slice(0, 10)}.json`;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+  toast('Sicherung heruntergeladen.');
+}
+function readImport(file){
+  const r = new FileReader();
+  r.onload = () => {
+    try {
+      const obj = JSON.parse(r.result), daten = obj && obj.daten ? obj.daten : obj;
+      if (!daten || !Array.isArray(daten.katalog) || !Array.isArray(daten.farben)) throw new Error('format');
+      pendingImport = { daten, datei:file.name, datum:obj.exportiertAm ? new Date(obj.exportiertAm).toLocaleString('de-DE', { dateStyle:'medium', timeStyle:'short' }) : '', st:cfgStats(daten) };
+      renderAdmin();
+    } catch(e){ toast('Die Datei ist keine gültige Sicherung des Angebotskonfigurators.', 5000); }
+  };
+  r.readAsText(file);
+}
 function admAllgemein(){
   return `<div class="stack">
     <div class="card"><h2 class="adm-h2">Anfahrt</h2><p class="adm-hint">Berechnung im Angebot: Pauschale + gefahrene Kilometer × Preis je km.</p>
@@ -1346,6 +1383,10 @@ function adminClick(e){
   const b = e.target.closest('[data-aa]'); if (!b) return;
   const a = b.dataset.aa, k = admKatOf(b), l = admLOf(b);
   if (a === 'close'){ closeAdmin(); return; }
+  if (a === 'export'){ exportCfg(); return; }
+  if (a === 'import'){ document.getElementById('cfgImport').click(); return; }
+  if (a === 'imp-no'){ pendingImport = null; renderAdmin(); return; }
+  if (a === 'imp-yes'){ CFG = Object.assign(clone(DEFAULT_CONFIG), plain(pendingImport.daten)); pendingImport = null; openKats.clear(); cfgChanged(); renderAdmin(); toast('Sicherung eingespielt. Die Einstellungen gelten jetzt für alle.', 4500); return; }
   if (a === 'add-k'){ const nk = { id:'k' + uid(), name:'Neue Kategorie', leistungen:[] }; CFG.katalog.push(nk); openKats.add(nk.id); cfgChanged(); renderAdmin(`[data-kid="${nk.id}"] input[data-ak="name"]`); return; }
   if (a === 'add-l'){ const nl = { id:'l' + uid(), name:'', einheit:'Stück', preis:0 }; k.leistungen.push(nl); cfgChanged(); renderAdmin(`[data-lid="${nl.id}"] input[data-al="name"]`); return; }
   if (a === 'add-o'){ l.optionen = l.optionen || []; const no = { id:'o' + uid(), name:'', preis:0 }; l.optionen.push(no); cfgChanged(); renderAdmin(`[data-oid="${no.id}"] input[data-ao="name"]`); return; }
@@ -1385,6 +1426,7 @@ function adminInput(e){
 }
 function adminChange(e){
   const t = e.target, d = t.dataset;
+  if (t.id === 'cfgImport'){ if (t.files && t.files[0]) readImport(t.files[0]); t.value = ''; return; }
   if (d.al === 'einheit'){ const l = admLOf(t); l.einheit = t.value; if (t.value === 'pauschal') delete l.grund; cfgChanged(); renderAdmin(); }
   if (d.al === 'farben'){ const l = admLOf(t); l.farben = t.checked;
     if (t.checked){ l.farbAufpreis = l.farbAufpreis || { vorzug:0, sonder:0, dekor:0 }; if (!farbeById(l.farbStandard)){ const first = CFG.farben.find(x => !x.dekor); l.farbStandard = first ? first.id : ''; } l.farbVorzug = l.farbVorzug || []; }
@@ -1459,12 +1501,12 @@ main.addEventListener('click', e => {
   const b = e.target.closest('[data-act]'); if (!b) return;
   const act = b.dataset.act, s = STEPS[state.step], card = b.closest('.pos');
   if (act === 'add'){
-    state.pos[s.id].push({ uid:uid(), leistung:'', menge:'', ep:null, rabatt:'', farbe:'std', farbtext:'', optionen:{}, _new:true });
+    state.pos[s.id].push({ ...emptyPos(), _new:true });
     render('.pos:last-child select[data-f="leistung"]');
     main.querySelector('.pos:last-child')?.scrollIntoView({ block:'center', behavior:'smooth' });
   }
   if (act === 'add-sonder'){
-    state.sonder.push({ uid:uid(), text:'', menge:'1', einheit:'Stück', preis:'', rabatt:'', _new:true });
+    state.sonder.push({ ...emptySonder(), _new:true });
     render('.pos:last-child input[data-f="text"]');
     main.querySelector('.pos:last-child')?.scrollIntoView({ block:'center', behavior:'smooth' });
   }
@@ -1559,11 +1601,11 @@ function nameFromMail(mail){
 const datum = ms => ms ? new Date(ms).toLocaleDateString('de-DE') : '–';
 function kundeAnzeige(k){ return k.firma || [k.vorname, k.nachname].filter(Boolean).join(' ') || 'Ohne Kundenname'; }
 function contentKey(){
-  return JSON.stringify({ kunde:state.kunde, pos:state.pos, notes:state.notes, sonder:state.sonder, anfahrt:state.anfahrt },
+  return JSON.stringify({ kunde:state.kunde, pos:filledPos(), notes:state.notes, sonder:sonderFilled(), anfahrt:state.anfahrt },
     (key, v) => (key === 'editing' || key === '_new') ? undefined : v);
 }
 function hasContent(){
-  return !!(state.kunde.nachname || state.kunde.firma || state.sonder.length || Object.values(state.pos).some(l => l.some(p => p.leistung)));
+  return !!(state.kunde.nachname || state.kunde.firma || sonderFilled().length || Object.values(state.pos).some(l => l.some(p => p.leistung)));
 }
 function isDirty(){ return state.meta && state.meta.id ? contentKey() !== state.meta.saved : hasContent(); }
 function updateTopOffer(){
@@ -1687,7 +1729,7 @@ async function nextNummer(){
 function offerData(){
   const t = totals(), k = state.kunde;
   return plain({
-    kunde:k, pos:state.pos, notes:state.notes, sonder:state.sonder, anfahrt:state.anfahrt,
+    kunde:k, pos:filledPos(), notes:state.notes, sonder:sonderFilled(), anfahrt:state.anfahrt,
     summen:{ netto:t.netto, brutto:t.brutto }, kundeName:kundeAnzeige(k), ort:k.ort || '', bearbeiter:k.bearbeiter || USER.name,
   });
 }
