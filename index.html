@@ -1131,7 +1131,7 @@ function viewSummary(){
       if (c.opt) auf.push(`Optionen ${fmt(c.opt)}`);
       rows += `<tr><td>${esc(c.l.name)}${extras.filter(Boolean).length ? `<span class="sub">${extras.filter(Boolean).join(', ')}</span>` : ''}${auf.length ? `<span class="sub auf">zzgl. ${auf.join(', ')}</span>` : ''}</td>
         <td class="num">${c.pauschal ? 'pauschal' : dec.format(c.menge) + ' ' + c.l.einheit}</td>
-        <td class="num">${fmt(c.ep)}${p.ep != null ? `<span class="ep-note">manuell, statt <s>${fmt(c.l.preis)}</s></span>` : ''}</td>
+        <td class="num">${fmt(c.ep)}${p.ep != null ? `<span class="ep-note"><s>${fmt(c.l.preis)}</s></span>` : ''}</td>
         <td class="num">${c.rab ? rabText(c) : '–'}</td><td class="num">${fmt(c.total)}</td></tr>`;
     });
   });
@@ -2132,7 +2132,7 @@ function ddInnen(){
         { text:String(pos), color:C.grey },
         { stack:[{ text:it.name, bold:true }, ...(it.details.length ? [{ text:it.details.join(', '), fontSize:8, color:C.grey, margin:[0, 2, 0, 0] }] : []), ...(it.sonder ? [{ text:'Freie Sonderposition', fontSize:7.5, color:C.amber }] : [])] },
         { text:it.menge, alignment:'right', noWrap:true },
-        { stack:[...(manuell ? [{ text:fmt(c.l.preis), decoration:'lineThrough', color:C.grey, fontSize:7.5, alignment:'right', noWrap:true }] : []), { text:fmt(c.ep), alignment:'right', noWrap:true }, ...(manuell ? [{ text:'manuell geändert', fontSize:7, color:C.amber, alignment:'right' }] : [])] },
+        { stack:[...(manuell ? [{ text:fmt(c.l.preis), decoration:'lineThrough', color:C.grey, fontSize:7.5, alignment:'right', noWrap:true }] : []), { text:fmt(c.ep), alignment:'right', noWrap:true }] },
         { text:auf.length ? auf.join('\n') : '–', alignment:'right', fontSize:8 },
         { text:c.rab ? `${rabText(c)}${c.rabEur ? '' : '\n−' + fmt(c.rabBetrag)}` : '–', alignment:'right', fontSize:8, color:c.rab ? C.amber : undefined },
         { text:fmt(c.total), alignment:'right', bold:true, noWrap:true },
