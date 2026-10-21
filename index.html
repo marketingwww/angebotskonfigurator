@@ -1,0 +1,1923 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Angebotskonfigurator Garagenservice – Laumer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  color-scheme:light;
+  --blue:#182865; --primary:#182865; --on-primary:#ffffff;
+  --ink-blue:#182865; --blue-soft:#eaecf4; --blue-line:#c7cce0;
+  --bg:#f1f3f6; --surface:#ffffff; --surface-2:#f7f8fa;
+  --line:#dce1e8; --text:#17213a; --muted:#5b6578;
+  --danger:#b3261e; --focus:#3a52b0; --logo:#182865;
+  --bar-bg:#182865; --bar-text:#ffffff;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--text);font-family:"Montserrat",system-ui,"Segoe UI",Arial,sans-serif;font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+img,svg{max-width:100%}
+
+/* Kopf */
+.top{background:var(--surface);border-bottom:1px solid var(--line)}
+.top-inner{max-width:1200px;margin:0 auto;padding:16px 24px;display:flex;align-items:center;gap:20px}
+.logo{color:var(--logo);display:block;height:38px;width:auto;flex:none}
+.logo svg{height:38px;width:auto;display:block}
+.top-title{border-left:1px solid var(--line);padding-left:20px;line-height:1.25}
+.top-title strong{display:block;font-weight:700;font-size:16px;color:var(--ink-blue)}
+.top-title span{font-size:13px;color:var(--muted)}
+
+/* Raster */
+.app{max-width:1200px;margin:0 auto;padding:24px 24px 140px;display:grid;grid-template-columns:270px minmax(0,1fr);gap:28px;align-items:start}
+
+main,nav{min-width:0}
+.pos-head .sel,.pos-head .in{min-width:0}
+/* Schrittliste */
+.steps{position:sticky;top:16px;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:8px;margin:0;list-style:none}
+.steps li{margin:0}
+.step-btn{width:100%;display:grid;grid-template-columns:26px 1fr auto;align-items:center;gap:10px;padding:9px 10px;border:0;background:none;border-radius:7px;text-align:left;cursor:pointer;font-size:14px;font-weight:500}
+.step-btn:hover{background:var(--surface-2)}
+.step-btn .nr{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:600;background:var(--surface-2);border:1px solid var(--line);color:var(--muted)}
+.step-btn .meta{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
+.step-btn.done .nr{background:var(--blue-soft);border-color:var(--blue-line);color:var(--ink-blue)}
+.step-btn.active{background:var(--blue-soft)}
+.step-btn.active .nr{background:var(--primary);border-color:var(--primary);color:var(--on-primary)}
+.step-btn.active .label{color:var(--ink-blue);font-weight:700}
+.steps .sep{height:1px;background:var(--line);margin:6px 8px}
+
+/* Inhalt */
+.panel-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin:4px 0 18px}
+.panel-head h1{margin:0;font-size:26px;line-height:1.2;font-weight:700;color:var(--ink-blue);letter-spacing:-.01em}
+.panel-head .count{font-size:13px;color:var(--muted);margin-bottom:4px}
+.panel-head .subtotal{text-align:right;font-size:13px;color:var(--muted);white-space:nowrap}
+.panel-head .subtotal b{display:block;font-size:20px;color:var(--text);font-variant-numeric:tabular-nums}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:20px}
+.stack>*+*{margin-top:14px}
+
+/* Formularfelder */
+.grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:14px 16px}
+.c1{grid-column:span 1}.c2{grid-column:span 2}.c3{grid-column:span 3}.c4{grid-column:span 4}.c6{grid-column:span 6}
+.fld{display:flex;flex-direction:column;gap:5px;min-width:0}
+.fld>span,.fld>label{font-size:12.5px;font-weight:600;color:var(--muted)}
+.in,.sel,textarea{width:100%;border:1px solid var(--line);background:var(--surface);border-radius:7px;padding:10px 12px;min-height:44px}
+textarea{min-height:80px;resize:vertical}
+.in:hover,.sel:hover,textarea:hover{border-color:#b9c2cf}
+.in:focus,.sel:focus,textarea:focus{outline:none;border-color:var(--focus);box-shadow:0 0 0 3px color-mix(in srgb,var(--focus) 22%,transparent)}
+.sel{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%235b6578' stroke-width='1.6' fill='none'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:34px;cursor:pointer}
+.suffix{display:flex;align-items:stretch;border:1px solid var(--line);border-radius:7px;background:var(--surface);overflow:hidden;min-height:44px}
+.suffix:focus-within{border-color:var(--focus);box-shadow:0 0 0 3px color-mix(in srgb,var(--focus) 22%,transparent)}
+.suffix input{border:0;background:none;padding:10px 12px;width:100%;min-width:0;outline:none;font-variant-numeric:tabular-nums}
+.suffix em{font-style:normal;display:grid;place-items:center;padding:0 12px;background:var(--surface-2);border-left:1px solid var(--line);color:var(--muted);font-size:13px;font-weight:600;white-space:nowrap}
+.static{min-height:44px;display:flex;align-items:center;padding:0 12px;border:1px dashed var(--line);border-radius:7px;color:var(--muted);font-size:14px}
+
+/* Buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:0 18px;border-radius:8px;border:1px solid transparent;font-weight:600;font-size:14px;cursor:pointer;text-decoration:none}
+.btn svg{width:18px;height:18px;flex:none}
+.btn-primary{background:var(--primary);color:var(--on-primary)}
+.btn-primary:hover{filter:brightness(1.12)}
+.btn-outline{background:var(--surface);border-color:var(--blue-line);color:var(--ink-blue)}
+.btn-outline:hover{background:var(--blue-soft)}
+.btn-ghost{background:none;color:var(--muted)}
+.btn-ghost:hover{color:var(--text);background:var(--surface-2)}
+.btn[hidden]{display:none}
+.btn[disabled]{opacity:.5;cursor:not-allowed;filter:none}
+.icon-btn{width:40px;height:40px;display:grid;place-items:center;border-radius:8px;border:1px solid transparent;background:none;color:var(--muted);cursor:pointer;flex:none}
+.icon-btn svg{width:18px;height:18px}
+.icon-btn:hover{background:var(--surface-2);color:var(--text)}
+.icon-btn.del:hover{color:var(--danger)}
+.add-btn{width:100%;min-height:52px;border:1.5px dashed var(--blue-line);background:none;color:var(--ink-blue);border-radius:10px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer}
+.add-btn:hover{background:var(--blue-soft);border-style:solid}
+.add-btn svg{width:20px;height:20px}
+
+/* Leere Kategorie */
+.empty{border:1.5px dashed var(--line);border-radius:10px;padding:34px 20px;text-align:center;background:var(--surface)}
+.empty p{margin:0 0 16px;color:var(--muted)}
+
+/* Positionen */
+.pos{background:var(--surface);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.pos.new{animation:pop .25s ease-out}
+@keyframes pop{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.pos.new{animation:none}}
+.pos-head{display:flex;align-items:center;gap:12px;padding:14px 14px 14px 16px}
+.pos-nr{width:28px;height:28px;border-radius:50%;background:var(--primary);color:var(--on-primary);display:grid;place-items:center;font-size:13px;font-weight:700;flex:none}
+.pos-head .sel{flex:1}
+.pos-body{padding:0 16px 16px;display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:12px 14px}
+.pos-body .f-menge{grid-column:span 3}
+.pos-body .f-ep{grid-column:span 5}
+.pos-body .f-rab{grid-column:span 4}
+.pos-body .f-farbe{grid-column:span 7}
+.pos-body .f-farbtext{grid-column:span 5}
+.pos-body .f-opt{grid-column:span 12}
+.pos-body .f-text{grid-column:span 12}
+.price{min-height:44px;display:flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:7px;padding:0 4px 0 12px;background:var(--surface-2)}
+.price b{font-variant-numeric:tabular-nums;font-weight:700}
+.price small{color:var(--muted);font-size:13px}
+.price .icon-btn{margin-left:auto;width:36px;height:36px;color:var(--ink-blue)}
+.price.manual{border-color:#d9a43b;background:color-mix(in srgb,#d9a43b 10%,var(--surface))}
+.tag{display:inline-block;font-size:11px;font-weight:700;padding:2px 7px;border-radius:20px;background:#f5e3bd;color:#6b4a00;white-space:nowrap}
+.catalog-hint{font-size:12px;color:var(--muted);display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.link{background:none;border:0;padding:0;color:var(--ink-blue);font-weight:600;font-size:12px;text-decoration:underline;cursor:pointer}
+.farbe-row{display:flex;gap:10px;align-items:center}
+.swatch{width:28px;height:28px;border-radius:6px;border:1px solid var(--line);flex:none}
+.swatch.sonder{background:conic-gradient(#c0392b,#e67e22,#f1c40f,#27ae60,#2980b9,#8e44ad,#c0392b)}
+.opts{display:flex;flex-wrap:wrap;gap:8px}
+.chk{display:inline-flex;align-items:center;gap:8px;min-height:40px;padding:0 12px;border:1px solid var(--line);border-radius:20px;cursor:pointer;font-size:13.5px;font-weight:500;background:var(--surface)}
+.chk input{accent-color:var(--blue);width:16px;height:16px}
+.chk:has(input:checked){border-color:var(--blue-line);background:var(--blue-soft);color:var(--ink-blue)}
+.pos-foot{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:12px 16px;background:var(--surface-2);border-top:1px solid var(--line)}
+.calc{font-size:12.5px;color:var(--muted)}
+.ptotal{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.ptotal s{display:block;font-size:12px;color:var(--muted)}
+.ptotal b{font-size:18px;font-weight:700;color:var(--text)}
+.notes summary{cursor:pointer;font-weight:600;font-size:14px;color:var(--ink-blue);padding:4px 0;list-style:none;display:flex;gap:8px;align-items:center}
+.notes summary::-webkit-details-marker{display:none}
+.notes summary::before{content:"+";display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;border:1px solid var(--blue-line);font-size:14px;line-height:1}
+.notes[open] summary::before{content:"–"}
+.notes textarea{margin-top:8px}
+
+/* Anfahrt */
+.toggle{display:flex;align-items:center;gap:12px;font-weight:600;cursor:pointer}
+.toggle input{width:20px;height:20px;accent-color:var(--blue)}
+.kv{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid var(--line);font-variant-numeric:tabular-nums}
+.kv:last-child{border-bottom:0}
+.kv.strong{font-weight:700;font-size:17px}
+
+/* Zusammenfassung */
+.sum-grid{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:20px;align-items:start}
+.sum-side{align-self:stretch}
+.sum-full{grid-column:1 / -1}
+.sum-block h2{font-size:15px;margin:0 0 12px;color:var(--ink-blue);font-weight:700}
+.kunde-lines{font-size:14px;line-height:1.6}
+.kunde-lines .muted{color:var(--muted)}
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13.5px;min-width:560px}
+th{text-align:left;font-weight:600;color:var(--muted);font-size:12px;padding:8px 10px;border-bottom:1px solid var(--line)}
+td{padding:10px;border-bottom:1px solid var(--line);vertical-align:top}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+tr.cat td{background:var(--surface-2);font-weight:700;color:var(--ink-blue);font-size:12.5px;padding:7px 10px}
+td .sub{display:block;color:var(--muted);font-size:12px;margin-top:2px}
+.totals .kv.brutto{font-size:19px;font-weight:700;color:var(--ink-blue);border-bottom:0;padding-top:14px}
+.totals .kv.minus{color:var(--muted);font-size:13.5px}
+.note-list{margin:0;padding:0;list-style:none;font-size:14px}
+.note-list li{padding:8px 0;border-bottom:1px solid var(--line)}
+.note-list li:last-child{border:0}
+.note-list b{color:var(--ink-blue)}
+.phase2{font-size:13px;color:var(--muted);background:var(--surface-2);border:1px dashed var(--line);border-radius:8px;padding:12px}
+
+.confirm-box{border:1px solid #e3b6b2;background:#fdf3f2;border-radius:10px;padding:14px}
+.confirm-box p{margin:0 0 12px;font-weight:600;font-size:14px}
+.confirm-btns{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap}
+.btn-danger{background:var(--danger);color:#fff}
+.btn-danger:hover{filter:brightness(1.1)}
+
+.seg{display:flex;background:var(--surface-2);border-left:1px solid var(--line);padding:3px;gap:2px}
+.seg button{border:0;background:none;min-width:30px;border-radius:5px;font-weight:700;font-size:13px;color:var(--muted);cursor:pointer;padding:0 6px}
+.seg button:hover{color:var(--text)}
+.seg button.on{background:var(--primary);color:var(--on-primary)}
+
+/* Konfigurator */
+.kfg{display:grid;grid-template-columns:minmax(0,1fr);gap:18px;padding:4px 16px 16px}
+.kfg.has-prev{grid-template-columns:minmax(0,1fr) 300px}
+.kfg-group+.kfg-group{margin-top:16px}
+.kfg-label{display:block;font-size:12.5px;font-weight:600;color:var(--muted);margin-bottom:7px}
+.tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
+.tile{display:flex;align-items:center;gap:10px;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--surface);cursor:pointer;text-align:left;min-height:54px}
+.tile:hover{border-color:var(--blue-line)}
+.tile.on{border-color:var(--primary);box-shadow:inset 0 0 0 1px var(--primary);background:var(--blue-soft)}
+.tile-txt{display:flex;flex-direction:column;line-height:1.25;min-width:0}
+.tile-txt b{font-size:13px;font-weight:600;hyphens:auto;-webkit-hyphens:auto}
+.tile-txt small{font-size:11.5px;color:var(--muted)}
+.tile-ico{width:34px;height:26px;color:var(--ink-blue);flex:none;display:inline-block}
+.tile-ico svg{width:34px;height:26px;display:block}
+.sw{width:28px;height:28px;border-radius:5px;border:1px solid rgba(0,0,0,.2);flex:none}
+.sw.sonder{background:conic-gradient(#c0392b,#e67e22,#f1c40f,#27ae60,#2980b9,#8e44ad,#c0392b)}
+.kfg-sonder{margin-top:10px;max-width:320px}
+.kfg-preview{background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:10px;align-self:start}
+.kfg.has-prev .kfg-preview{position:sticky;top:16px}
+@media (max-width:760px){.kfg.has-prev .kfg-preview{position:static}}
+.kfg-preview svg{width:100%;height:auto;display:block;border-radius:6px}
+.kfg-caption{margin-top:9px;font-size:12.5px;line-height:1.45}
+.kfg-caption b{color:var(--ink-blue);display:block;font-size:13.5px}
+.kfg-caption span{display:block;color:var(--text)}
+.kfg-caption em{display:block;font-style:normal;color:var(--muted);font-size:11px;margin-top:4px}
+@media (max-width:760px){
+  .kfg.has-prev{grid-template-columns:1fr}
+  .kfg-preview{order:-1}
+  .tiles{grid-template-columns:1fr 1fr}
+  .tile{padding:8px;gap:8px}
+  .tile-txt b{font-size:12.5px}
+}
+.adm-block{flex-basis:100%;display:flex;flex-direction:column;gap:8px;padding-top:10px;border-top:1px dashed var(--line)}
+.adm-pair{display:grid;grid-template-columns:repeat(2,minmax(0,180px));gap:10px}
+.adm-motive{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:8px}
+.adm-mrow{display:grid;grid-template-columns:minmax(0,1fr) 110px;gap:8px;align-items:center}
+.adm-mrow .chk{border-radius:8px}
+.adm-mrow .suffix input:disabled{opacity:.4}
+
+/* Konfigurator: Ergänzungen */
+.kfg-note{margin:0;font-size:13px;color:var(--muted);background:var(--surface-2);border:1px dashed var(--line);border-radius:8px;padding:10px 12px}
+.adm-chips{display:flex;flex-wrap:wrap;gap:6px}
+.chk-sw{min-height:34px;padding:0 10px 0 8px;font-size:12.5px;gap:6px}
+.sw.sm{width:16px;height:16px;border-radius:3px}
+.adm-trio{grid-template-columns:repeat(3,minmax(0,160px))}
+
+/* Regeln */
+.tile.blocked{opacity:.6;border-style:dashed;background:var(--surface-2)}
+.tile.blocked:hover{opacity:.85}
+.tile .blk,.chk .blk{color:#9a5b00;font-weight:600;font-size:11px}
+.chk.blocked{opacity:.65;border-style:dashed}
+.chk .blk{margin-left:4px}
+.adm-regel{border:1px solid var(--line);border-radius:8px;padding:10px;background:var(--surface);display:flex;flex-direction:column;gap:8px}
+.adm-regel-top{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.adm-regel-top .sel{width:auto;min-width:180px;flex:1}
+.adm-regel-w{font-size:12.5px;font-weight:700;color:var(--ink-blue)}
+.chip-x{display:inline-flex;align-items:center;gap:4px;padding:4px 4px 4px 10px;border-radius:16px;background:#f5e3bd;color:#6b4a00;font-size:12.5px;font-weight:600}
+.chip-x button{border:0;background:none;color:inherit;width:22px;height:22px;border-radius:50%;cursor:pointer;font-size:15px;line-height:1}
+.chip-x button:hover{background:rgba(0,0,0,.08)}
+
+/* Einstellungen */
+.top-actions{margin-left:auto;display:flex;gap:8px;align-items:center}
+.top-btn{min-height:40px;padding:0 14px}
+.top-btn[hidden]{display:none}
+.top-offer{font-size:12.5px;font-weight:600;color:var(--ink-blue);background:var(--blue-soft);border-radius:20px;padding:6px 12px;white-space:nowrap}
+.top-offer[hidden]{display:none}
+.liste-mode #btnListe{background:var(--blue-soft)}
+.liste-mode nav,.liste-mode .bar{display:none}
+.liste-mode .app{grid-template-columns:minmax(0,1fr);max-width:1100px;padding-bottom:60px}
+.login{position:fixed;inset:0;z-index:50;background:var(--bg);display:grid;place-items:center;padding:24px;overflow:auto}
+.login[hidden]{display:none}
+.login-card{width:min(400px,100%);background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:28px;display:flex;flex-direction:column;gap:14px;box-shadow:0 10px 40px rgba(24,40,101,.08)}
+.login-logo{color:var(--logo);display:block}
+.login-logo svg{height:40px;width:auto;display:block}
+.login-card h1{margin:4px 0 0;font-size:20px;color:var(--ink-blue)}
+.login-card h1+p{margin:0;color:var(--muted);font-size:13px}
+.login-status{margin:0;font-size:13px;color:var(--muted)}
+.login-status:empty{display:none}
+.login-status.err,.login-err{color:var(--danger)}
+.login-err{margin:0;font-size:13px;font-weight:600}
+.login-err:empty{display:none}
+.login-card .link{align-self:center;font-size:13px}
+.offer-card{background:var(--surface);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.offer-head{display:flex;flex-wrap:wrap;gap:6px 16px;align-items:baseline;padding:14px 16px;border-bottom:1px solid var(--line)}
+.offer-head b{font-size:15px;color:var(--ink-blue)}
+.offer-head span{font-size:13.5px;color:var(--muted)}
+.offer-row{display:grid;grid-template-columns:150px minmax(0,1fr) 120px 110px auto;gap:12px;align-items:center;padding:10px 16px;border-bottom:1px solid var(--line);font-size:13.5px}
+.offer-row:last-child{border-bottom:0}
+.offer-row.alt{color:var(--muted);background:var(--surface-2)}
+.offer-row .num{font-variant-numeric:tabular-nums;text-align:right;font-weight:700}
+.offer-row .meta{color:var(--muted);font-size:12.5px}
+.offer-acts{display:flex;gap:6px;justify-content:flex-end;flex-wrap:wrap}
+.offer-acts .btn{min-height:36px;padding:0 12px;font-size:13px}
+.offer-row .confirm-box{grid-column:1/-1}
+.badge{display:inline-block;font-size:11.5px;font-weight:700;padding:3px 9px;border-radius:20px;background:var(--surface-2);color:var(--muted);border:1px solid var(--line);white-space:nowrap}
+.badge.versendet{background:#e6eefc;color:#1d4a9e;border-color:#c7d6f3}
+.badge.beauftragt{background:#e4f4e8;color:#1d6b35;border-color:#bfe0c8}
+.badge.abgelehnt{background:#fbe9e7;color:#9b2c20;border-color:#efc7c1}
+.filters{display:grid;grid-template-columns:minmax(0,2fr) repeat(3,minmax(0,1fr));gap:10px;margin-bottom:10px}
+.filters-2{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap;font-size:13px;color:var(--muted)}
+.meta-card .kv{font-size:14px}
+.meta-card .meta-nr{font-size:17px;font-weight:700;color:var(--ink-blue)}
+.btn-row{display:flex;flex-direction:column;gap:8px}
+.sync{font-weight:600}
+.sync.ok{color:#1d6b35}.sync.err{color:var(--danger)}
+@media (max-width:760px){
+  .offer-row{grid-template-columns:1fr auto;gap:6px 10px}
+  .offer-row .offer-acts{grid-column:1/-1;justify-content:flex-start}
+  .filters{grid-template-columns:1fr 1fr}
+  .filters .q{grid-column:1/-1}
+}
+.admin-mode .top-admin{background:var(--blue-soft)}
+.admin-mode nav,.admin-mode .bar{display:none}
+.admin-mode .app{grid-template-columns:minmax(0,1fr);max-width:1000px;padding-bottom:60px}
+.panel-head{flex-wrap:wrap}
+.adm-hint{margin:6px 0 0;font-size:13px;color:var(--muted)}
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin-bottom:18px;overflow-x:auto;scrollbar-width:none}
+.tab{border:0;background:none;padding:12px 16px;font-weight:600;font-size:14px;color:var(--muted);border-bottom:3px solid transparent;margin-bottom:-1px;cursor:pointer;white-space:nowrap}
+.tab:hover{color:var(--text)}
+.tab.active{color:var(--ink-blue);border-bottom-color:var(--primary)}
+.adm-kat{background:var(--surface);border:1px solid var(--line);border-radius:10px}
+.adm-kat summary{list-style:none;display:flex;align-items:center;gap:12px;padding:16px 18px;cursor:pointer;font-weight:700;color:var(--ink-blue)}
+.adm-kat summary::-webkit-details-marker{display:none}
+.adm-kat.is-hidden .adm-kat-name{color:var(--muted)}
+.adm-chev{width:9px;height:9px;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:rotate(-45deg);transition:transform .15s;flex:none}
+.adm-kat[open] .adm-chev{transform:rotate(45deg)}
+.adm-count{margin-left:auto;font-weight:500;font-size:13px;color:var(--muted);white-space:nowrap}
+.tag-grey{background:var(--surface-2);color:var(--muted);border:1px solid var(--line)}
+.adm-kat-body{padding:16px 18px 18px;border-top:1px solid var(--line)}
+.adm-kat-top{display:flex;gap:12px;align-items:flex-end;margin-bottom:14px}
+.adm-kat-top .confirm-box{flex-basis:100%}
+.adm-tools{display:flex;gap:2px;align-items:center}
+.icon-btn[disabled]{opacity:.3;cursor:default;background:none}
+.adm-list{display:flex;flex-direction:column;gap:10px;margin-bottom:12px}
+.adm-l{border:1px solid var(--line);border-radius:8px;padding:12px;background:var(--surface-2)}
+.adm-l-grid{display:grid;grid-template-columns:minmax(0,1fr) 116px 140px 140px auto;gap:10px;align-items:end}
+.adm-l-extra{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;margin-top:10px}
+.adm-opts{flex-basis:100%;display:flex;flex-direction:column;gap:8px}
+.adm-sub{font-size:12.5px;font-weight:600;color:var(--muted)}
+.adm-opt{display:grid;grid-template-columns:minmax(0,1fr) 140px auto;gap:8px;align-items:center;max-width:540px}
+.adm-empty{color:var(--muted);font-size:14px;margin:0}
+.adm-h2{font-size:16px;margin:0;color:var(--ink-blue)}
+.adm-farbe{display:grid;grid-template-columns:64px minmax(0,1fr) 150px auto 40px;gap:10px;align-items:end;margin-top:12px}
+.adm-farbe input[type=color]{width:64px;height:44px;border:1px solid var(--line);border-radius:7px;padding:3px;background:var(--surface);cursor:pointer}
+@media (max-width:640px){
+  .top-btn span{display:none}
+  .top-btn{padding:0;width:40px}
+  .top-offer{display:none}
+  .adm-l-grid{grid-template-columns:1fr 1fr}
+  .adm-l-grid .a-name{grid-column:span 2}
+  .adm-l-grid .a-tools{grid-column:span 2;justify-content:flex-end}
+  .adm-kat-top{flex-wrap:wrap}
+  .adm-farbe{grid-template-columns:64px 1fr 40px}
+  .adm-farbe .a-dekor{grid-column:2}
+  .adm-trio{grid-template-columns:1fr 1fr}
+  .adm-farbe .a-ral{grid-column:2}
+  .adm-opt{grid-template-columns:1fr 110px auto}
+}
+
+/* Summenleiste */
+.bar{position:fixed;left:0;right:0;bottom:0;background:var(--bar-bg);color:var(--bar-text);padding-bottom:env(safe-area-inset-bottom,0px);z-index:20;box-shadow:0 -6px 24px rgba(24,40,101,.18)}
+.bar-inner{max-width:1200px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;gap:24px}
+.bar-sum{display:flex;gap:28px;align-items:flex-end;flex:1;min-width:0}
+.bar-sum div{line-height:1.2}
+.bar-sum small{display:block;font-size:12px;opacity:.75;font-weight:500}
+.bar-sum .netto b{font-size:16px;font-weight:600}
+.bar-sum .brutto b{font-size:26px;font-weight:700;letter-spacing:-.01em}
+.bar-sum b{font-variant-numeric:tabular-nums}
+.bar-nav{display:flex;gap:10px}
+.bar .btn-back{background:transparent;color:#fff;border-color:rgba(255,255,255,.35)}
+.bar .btn-back:hover{background:rgba(255,255,255,.1)}
+.bar .btn-next{background:#fff;color:#182865}
+.bar .btn-next:hover{background:#eaecf4}
+
+.toast{position:fixed;left:50%;bottom:110px;max-width:min(560px,calc(100vw - 32px));text-align:center;transform:translateX(-50%) translateY(20px);background:var(--text);color:var(--surface);padding:12px 18px;border-radius:8px;font-size:14px;font-weight:500;opacity:0;pointer-events:none;transition:.25s;z-index:30}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+@media (max-width:900px){
+  .app{grid-template-columns:1fr;padding:0 0 150px;gap:0}
+  .steps{position:sticky;top:0;z-index:10;display:flex;overflow-x:auto;border-radius:0;border-width:0 0 1px;padding:8px 12px;gap:4px;scrollbar-width:none}
+  .steps::-webkit-scrollbar{display:none}
+  .steps .sep{display:none}
+  .step-btn{grid-template-columns:24px auto;white-space:nowrap;width:auto}
+  .step-btn .meta{display:none}
+  .step-btn .nr{width:24px;height:24px}
+  main{padding:20px 16px}
+  .sum-grid{grid-template-columns:1fr}
+  body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--surface)}
+}
+@media (max-width:640px){
+  .top-inner{padding:12px 16px;gap:14px}
+  .logo,.logo svg{height:30px}
+  .top-title{padding-left:14px}
+  .top-title span{display:none}
+  .panel-head h1{font-size:22px}
+  .grid{grid-template-columns:1fr 1fr}
+  .c2,.c3{grid-column:span 1}.c4,.c6{grid-column:span 2}
+  .pos-body{grid-template-columns:1fr 1fr}
+  .pos-body .f-menge,.pos-body .f-rab{grid-column:span 1}
+  .pos-body .f-ep,.pos-body .f-farbe,.pos-body .f-farbtext,.pos-body .f-opt,.pos-body .f-text{grid-column:span 2}
+  .pos-body .f-ep{order:1}.pos-body .f-farbe,.pos-body .f-farbtext,.pos-body .f-opt{order:2}
+  .bar-inner{padding:10px 16px;gap:12px}
+  .bar-sum .netto{display:none}
+  .bar-sum .brutto b{font-size:20px}
+  .bar .btn{padding:0 14px}
+  .bar .btn-back span{display:none}
+}
+</style>
+</head>
+<body>
+<div class="login" id="login">
+  <form class="login-card" id="loginForm" novalidate>
+    <span class="login-logo"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 759.64 240.17" fill="currentColor" role="img" aria-label="Firmengruppe Laumer"> <polyline points="234.51 219.73 234.66 222.19 235.11 224.62 235.84 226.98 236.85 229.23 238.13 231.34 239.65 233.29 241.4 235.03 243.34 236.55 245.46 237.83 247.71 238.84 250.07 239.58 252.49 240.02 254.96 240.17 317.19 240.17 318.85 240.01 320.45 239.52 321.92 238.74 323.21 237.68 324.27 236.39 325.06 234.91 325.54 233.31 325.71 231.65 325.71 180.9 325.54 179.85 325.06 178.9 324.3 178.15 323.35 177.66 322.3 177.5 294.96 177.5 293.91 177.66 292.96 178.15 292.2 178.9 291.72 179.85 291.55 180.9 291.55 218.16 291.43 219.3 291.05 220.38 290.44 221.35 289.63 222.16 288.66 222.77 287.58 223.14 286.44 223.27 272.37 223.27 271.23 223.14 270.15 222.77 269.18 222.16 268.37 221.35 267.76 220.38 267.39 219.3 267.26 218.16 267.26 180.9 267.09 179.85 266.61 178.9 265.85 178.15 264.9 177.66 263.85 177.5 237.92 177.5 236.87 177.66 235.92 178.15 235.16 178.9 234.68 179.85 234.51 180.9 234.51 219.73"/> <polyline points="373.95 201.97 374.07 200.84 374.45 199.76 375.06 198.79 375.87 197.98 376.84 197.37 377.92 196.99 379.06 196.86 387.14 196.86 388.28 196.99 389.36 197.37 390.33 197.98 391.14 198.79 391.75 199.76 392.13 200.84 392.26 201.97 392.26 236.76 392.42 237.82 392.91 238.77 393.66 239.52 394.61 240.01 395.66 240.17 418.07 240.17 419.12 240.01 420.08 239.52 420.83 238.77 421.31 237.82 421.48 236.76 421.48 201.97 421.61 200.84 421.99 199.76 422.6 198.79 423.4 197.98 424.37 197.37 425.45 196.99 426.59 196.86 438.64 196.86 439.77 196.99 440.86 197.37 441.82 197.98 442.64 198.79 443.24 199.76 443.62 200.84 443.75 201.97 443.75 236.76 443.92 237.82 444.4 238.77 445.15 239.52 446.1 240.01 447.16 240.17 469.57 240.17 470.62 240.01 471.57 239.52 472.32 238.77 472.81 237.82 472.97 236.76 472.97 197.94 472.83 195.48 472.38 193.05 471.65 190.69 470.63 188.44 469.36 186.33 467.83 184.38 466.09 182.64 464.14 181.12 462.03 179.84 459.78 178.83 457.42 178.09 454.99 177.65 452.53 177.5 351.54 177.5 350.21 177.63 348.93 178.02 347.75 178.65 346.72 179.49 345.87 180.53 345.24 181.7 344.85 182.98 344.72 184.31 344.72 236.76 344.89 237.82 345.37 238.77 346.13 239.52 347.08 240.01 348.13 240.17 370.54 240.17 371.59 240.01 372.54 239.52 373.3 238.77 373.78 237.82 373.95 236.76 373.95 201.97"/> <polyline points="586.11 236.76 586.28 237.82 586.76 238.77 587.51 239.52 588.47 240.01 589.52 240.17 613.44 240.17 614.49 240.01 615.44 239.52 616.19 238.77 616.68 237.82 616.85 236.76 616.85 197.63 617.01 196.57 617.5 195.62 618.25 194.87 619.2 194.38 620.25 194.22 635.87 194.22 637.01 194.34 638.09 194.72 639.06 195.33 639.87 196.14 640.47 197.11 640.85 198.19 640.98 199.33 640.98 210.98 641.11 212.12 641.49 213.2 642.1 214.17 642.91 214.98 643.87 215.59 644.96 215.97 646.09 216.1 665.36 216.1 666.41 215.93 667.36 215.44 668.11 214.69 668.6 213.74 668.76 212.69 668.76 197.99 668.61 195.53 668.17 193.1 667.44 190.74 666.42 188.49 665.14 186.38 663.62 184.44 661.88 182.69 659.93 181.17 657.82 179.89 655.57 178.88 653.21 178.14 650.78 177.7 648.32 177.55 591.22 177.55 590.08 177.68 589 178.06 588.04 178.66 587.23 179.47 586.62 180.44 586.24 181.52 586.11 182.66 586.11 236.76"/> <path d="M486.96,219.73l.15,2.46.45,2.43.73,2.36,1.01,2.25,1.28,2.11,1.52,1.95,1.75,1.75,1.94,1.52,2.11,1.28,2.25,1.02,2.35.73,2.43.44,2.46.15h63.57l1.05-.17.95-.49.75-.75.48-.95.16-1.05v-10.79l-.16-1.05-.48-.95-.75-.75-.95-.48-1.05-.16h-51.7l-.9-.16-.8-.46-.59-.7-.31-.86v-.92l.31-.86.59-.7.8-.46.9-.16h48.41l1.14-.13,1.08-.38.97-.61.81-.81.61-.97.38-1.08.13-1.14v-22.75l-.15-1.87-.44-1.82-.71-1.73-.98-1.6-1.21-1.42-1.42-1.22-1.6-.98-1.73-.71-1.82-.44-1.87-.15h-58.58l-2.18.16-2.14.47-2.05.77-1.92,1.05-1.75,1.31-1.55,1.55-1.31,1.75-1.05,1.92-.76,2.05-.46,2.14-.16,2.18v26.9M519.28,195.81h23.17l.91.16.79.46.59.7.32.86v.92l-.32.86-.59.7-.79.46-.91.16h-23.17l-.9-.16-.8-.46-.59-.7-.31-.86v-.92l.31-.86.59-.7.8-.46.9-.16"/> <path d="M187.86,200.38h-42.43l-2.13.17-2.08.5-1.98.82-1.82,1.12-1.63,1.39-1.39,1.63-1.12,1.82-.82,1.98-.5,2.08-.17,2.13v7.41l.16,2.45.48,2.41.79,2.32,1.08,2.2,1.36,2.04,1.62,1.84,1.84,1.62,2.04,1.36,2.2,1.09,2.32.79,2.41.48,2.45.16h62.82l1.33-.13,1.28-.39,1.18-.63,1.03-.85.85-1.03.63-1.18.39-1.28.13-1.33v-35.41l-.15-2.46-.44-2.43-.73-2.36-1.01-2.25-1.28-2.11-1.52-1.95-1.75-1.75-1.94-1.52-2.12-1.28-2.25-1.01-2.36-.74-2.43-.45-2.47-.15h-63.57l-1.06.17-.95.48-.75.75-.48.95-.17,1.05v10.79l.17,1.05.48.95.75.75.95.48,1.06.17h51.69l.91.16.79.46.59.7.31.86v.92l-.31.86-.59.7-.79.46-.91.16M187.86,221.86h-23.17l-.9-.16-.79-.46-.59-.7-.31-.86v-.92l.31-.86.59-.7.79-.46.9-.16h23.17l.9.16.8.46.59.7.31.86v.92l-.31.86-.59.7-.79.46-.91.16"/> <polyline points="10.34 218.34 .47 235.03 .09 235.98 0 236.99 .22 237.99 .73 238.88 1.47 239.58 2.39 240.02 3.4 240.17 115.91 240.17 116.56 240.04 117.12 239.67 117.49 239.12 117.62 238.47 117.62 211.95 117.49 211.29 117.12 210.74 116.56 210.37 115.91 210.24 51.39 210.24 58.65 200.51 66.18 190.99 73.96 181.67 82 172.58 90.29 163.71 98.83 155.08 107.59 146.69 116.6 138.54 125.82 130.65 135.25 123.02 144.9 115.65 154.75 108.55 164.79 101.72 175.01 95.18 185.42 88.93 195.99 82.96 206.72 77.29 217.61 71.93 228.64 66.86 239.81 62.11 251.11 57.66 262.52 53.54 274.05 49.73 285.67 46.24 297.4 43.07 309.2 40.24 321.07 37.73 333.02 35.55 345.01 33.7 357.06 32.19 369.14 31.01 381.25 30.17 393.38 29.67 405.51 29.5 417.65 29.67 429.78 30.17 441.89 31.01 453.97 32.19 466.02 33.7 478.01 35.55 489.96 37.73 501.83 40.24 513.63 43.07 525.35 46.24 536.98 49.73 548.5 53.54 559.92 57.66 571.22 62.11 582.38 66.86 593.42 71.93 604.3 77.29 615.04 82.96 625.61 88.93 636.01 95.18 646.24 101.72 656.28 108.55 666.13 115.65 675.77 123.02 685.21 130.65 694.43 138.54 703.43 146.69 712.2 155.08 720.74 163.71 729.03 172.58 737.07 181.67 744.85 190.99 752.38 200.51 759.64 210.24 759.64 162.66 751.38 153.31 742.88 144.18 734.14 135.28 725.17 126.62 715.96 118.2 706.54 110.02 696.89 102.11 687.05 94.45 677 87.06 666.75 79.94 656.32 73.1 645.71 66.54 634.93 60.26 623.99 54.27 612.89 48.58 601.64 43.19 590.25 38.1 578.73 33.32 567.08 28.85 555.32 24.68 543.45 20.84 531.49 17.31 519.43 14.1 507.3 11.22 495.08 8.66 482.81 6.43 470.48 4.54 458.11 2.96 445.7 1.73 433.25 .82 420.79 .24 408.32 0 395.84 .09 383.37 .52 370.92 1.27 358.5 2.37 346.1 3.79 333.75 5.54 321.45 7.62 309.21 10.03 297.04 12.77 284.95 15.83 272.94 19.21 261.03 22.92 249.22 26.93 237.52 31.27 225.94 35.91 214.5 40.87 203.18 46.12 192.01 51.68 181 57.54 170.14 63.68 159.45 70.11 148.94 76.83 138.61 83.83 128.48 91.1 118.54 98.63 108.8 106.43 99.28 114.49 89.97 122.8 80.89 131.35 72.04 140.15 63.44 149.18 55.07 158.43 46.96 167.91 39.1 177.6 31.5 187.49 24.17 197.58 17.12 207.87 10.34 218.34"/> </svg></span>
+    <div><h1>Angebotskonfigurator</h1><p>Garagenservice</p></div>
+    <p class="login-status" id="loginStatus">Verbindung wird hergestellt …</p>
+    <label class="fld"><span>E-Mail</span><input class="in" type="email" id="loginMail" autocomplete="username" inputmode="email"></label>
+    <label class="fld"><span>Passwort</span><input class="in" type="password" id="loginPw" autocomplete="current-password"></label>
+    <p class="login-err" id="loginErr" role="alert"></p>
+    <button class="btn btn-primary" type="submit" id="loginBtn" disabled>Anmelden</button>
+    <button type="button" class="link" id="pwReset">Passwort vergessen?</button>
+  </form>
+</div>
+<header class="top">
+  <div class="top-inner">
+    <span class="logo"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 759.64 240.17" fill="currentColor" role="img" aria-label="Firmengruppe Laumer"> <polyline points="234.51 219.73 234.66 222.19 235.11 224.62 235.84 226.98 236.85 229.23 238.13 231.34 239.65 233.29 241.4 235.03 243.34 236.55 245.46 237.83 247.71 238.84 250.07 239.58 252.49 240.02 254.96 240.17 317.19 240.17 318.85 240.01 320.45 239.52 321.92 238.74 323.21 237.68 324.27 236.39 325.06 234.91 325.54 233.31 325.71 231.65 325.71 180.9 325.54 179.85 325.06 178.9 324.3 178.15 323.35 177.66 322.3 177.5 294.96 177.5 293.91 177.66 292.96 178.15 292.2 178.9 291.72 179.85 291.55 180.9 291.55 218.16 291.43 219.3 291.05 220.38 290.44 221.35 289.63 222.16 288.66 222.77 287.58 223.14 286.44 223.27 272.37 223.27 271.23 223.14 270.15 222.77 269.18 222.16 268.37 221.35 267.76 220.38 267.39 219.3 267.26 218.16 267.26 180.9 267.09 179.85 266.61 178.9 265.85 178.15 264.9 177.66 263.85 177.5 237.92 177.5 236.87 177.66 235.92 178.15 235.16 178.9 234.68 179.85 234.51 180.9 234.51 219.73"/> <polyline points="373.95 201.97 374.07 200.84 374.45 199.76 375.06 198.79 375.87 197.98 376.84 197.37 377.92 196.99 379.06 196.86 387.14 196.86 388.28 196.99 389.36 197.37 390.33 197.98 391.14 198.79 391.75 199.76 392.13 200.84 392.26 201.97 392.26 236.76 392.42 237.82 392.91 238.77 393.66 239.52 394.61 240.01 395.66 240.17 418.07 240.17 419.12 240.01 420.08 239.52 420.83 238.77 421.31 237.82 421.48 236.76 421.48 201.97 421.61 200.84 421.99 199.76 422.6 198.79 423.4 197.98 424.37 197.37 425.45 196.99 426.59 196.86 438.64 196.86 439.77 196.99 440.86 197.37 441.82 197.98 442.64 198.79 443.24 199.76 443.62 200.84 443.75 201.97 443.75 236.76 443.92 237.82 444.4 238.77 445.15 239.52 446.1 240.01 447.16 240.17 469.57 240.17 470.62 240.01 471.57 239.52 472.32 238.77 472.81 237.82 472.97 236.76 472.97 197.94 472.83 195.48 472.38 193.05 471.65 190.69 470.63 188.44 469.36 186.33 467.83 184.38 466.09 182.64 464.14 181.12 462.03 179.84 459.78 178.83 457.42 178.09 454.99 177.65 452.53 177.5 351.54 177.5 350.21 177.63 348.93 178.02 347.75 178.65 346.72 179.49 345.87 180.53 345.24 181.7 344.85 182.98 344.72 184.31 344.72 236.76 344.89 237.82 345.37 238.77 346.13 239.52 347.08 240.01 348.13 240.17 370.54 240.17 371.59 240.01 372.54 239.52 373.3 238.77 373.78 237.82 373.95 236.76 373.95 201.97"/> <polyline points="586.11 236.76 586.28 237.82 586.76 238.77 587.51 239.52 588.47 240.01 589.52 240.17 613.44 240.17 614.49 240.01 615.44 239.52 616.19 238.77 616.68 237.82 616.85 236.76 616.85 197.63 617.01 196.57 617.5 195.62 618.25 194.87 619.2 194.38 620.25 194.22 635.87 194.22 637.01 194.34 638.09 194.72 639.06 195.33 639.87 196.14 640.47 197.11 640.85 198.19 640.98 199.33 640.98 210.98 641.11 212.12 641.49 213.2 642.1 214.17 642.91 214.98 643.87 215.59 644.96 215.97 646.09 216.1 665.36 216.1 666.41 215.93 667.36 215.44 668.11 214.69 668.6 213.74 668.76 212.69 668.76 197.99 668.61 195.53 668.17 193.1 667.44 190.74 666.42 188.49 665.14 186.38 663.62 184.44 661.88 182.69 659.93 181.17 657.82 179.89 655.57 178.88 653.21 178.14 650.78 177.7 648.32 177.55 591.22 177.55 590.08 177.68 589 178.06 588.04 178.66 587.23 179.47 586.62 180.44 586.24 181.52 586.11 182.66 586.11 236.76"/> <path d="M486.96,219.73l.15,2.46.45,2.43.73,2.36,1.01,2.25,1.28,2.11,1.52,1.95,1.75,1.75,1.94,1.52,2.11,1.28,2.25,1.02,2.35.73,2.43.44,2.46.15h63.57l1.05-.17.95-.49.75-.75.48-.95.16-1.05v-10.79l-.16-1.05-.48-.95-.75-.75-.95-.48-1.05-.16h-51.7l-.9-.16-.8-.46-.59-.7-.31-.86v-.92l.31-.86.59-.7.8-.46.9-.16h48.41l1.14-.13,1.08-.38.97-.61.81-.81.61-.97.38-1.08.13-1.14v-22.75l-.15-1.87-.44-1.82-.71-1.73-.98-1.6-1.21-1.42-1.42-1.22-1.6-.98-1.73-.71-1.82-.44-1.87-.15h-58.58l-2.18.16-2.14.47-2.05.77-1.92,1.05-1.75,1.31-1.55,1.55-1.31,1.75-1.05,1.92-.76,2.05-.46,2.14-.16,2.18v26.9M519.28,195.81h23.17l.91.16.79.46.59.7.32.86v.92l-.32.86-.59.7-.79.46-.91.16h-23.17l-.9-.16-.8-.46-.59-.7-.31-.86v-.92l.31-.86.59-.7.8-.46.9-.16"/> <path d="M187.86,200.38h-42.43l-2.13.17-2.08.5-1.98.82-1.82,1.12-1.63,1.39-1.39,1.63-1.12,1.82-.82,1.98-.5,2.08-.17,2.13v7.41l.16,2.45.48,2.41.79,2.32,1.08,2.2,1.36,2.04,1.62,1.84,1.84,1.62,2.04,1.36,2.2,1.09,2.32.79,2.41.48,2.45.16h62.82l1.33-.13,1.28-.39,1.18-.63,1.03-.85.85-1.03.63-1.18.39-1.28.13-1.33v-35.41l-.15-2.46-.44-2.43-.73-2.36-1.01-2.25-1.28-2.11-1.52-1.95-1.75-1.75-1.94-1.52-2.12-1.28-2.25-1.01-2.36-.74-2.43-.45-2.47-.15h-63.57l-1.06.17-.95.48-.75.75-.48.95-.17,1.05v10.79l.17,1.05.48.95.75.75.95.48,1.06.17h51.69l.91.16.79.46.59.7.31.86v.92l-.31.86-.59.7-.79.46-.91.16M187.86,221.86h-23.17l-.9-.16-.79-.46-.59-.7-.31-.86v-.92l.31-.86.59-.7.79-.46.9-.16h23.17l.9.16.8.46.59.7.31.86v.92l-.31.86-.59.7-.79.46-.91.16"/> <polyline points="10.34 218.34 .47 235.03 .09 235.98 0 236.99 .22 237.99 .73 238.88 1.47 239.58 2.39 240.02 3.4 240.17 115.91 240.17 116.56 240.04 117.12 239.67 117.49 239.12 117.62 238.47 117.62 211.95 117.49 211.29 117.12 210.74 116.56 210.37 115.91 210.24 51.39 210.24 58.65 200.51 66.18 190.99 73.96 181.67 82 172.58 90.29 163.71 98.83 155.08 107.59 146.69 116.6 138.54 125.82 130.65 135.25 123.02 144.9 115.65 154.75 108.55 164.79 101.72 175.01 95.18 185.42 88.93 195.99 82.96 206.72 77.29 217.61 71.93 228.64 66.86 239.81 62.11 251.11 57.66 262.52 53.54 274.05 49.73 285.67 46.24 297.4 43.07 309.2 40.24 321.07 37.73 333.02 35.55 345.01 33.7 357.06 32.19 369.14 31.01 381.25 30.17 393.38 29.67 405.51 29.5 417.65 29.67 429.78 30.17 441.89 31.01 453.97 32.19 466.02 33.7 478.01 35.55 489.96 37.73 501.83 40.24 513.63 43.07 525.35 46.24 536.98 49.73 548.5 53.54 559.92 57.66 571.22 62.11 582.38 66.86 593.42 71.93 604.3 77.29 615.04 82.96 625.61 88.93 636.01 95.18 646.24 101.72 656.28 108.55 666.13 115.65 675.77 123.02 685.21 130.65 694.43 138.54 703.43 146.69 712.2 155.08 720.74 163.71 729.03 172.58 737.07 181.67 744.85 190.99 752.38 200.51 759.64 210.24 759.64 162.66 751.38 153.31 742.88 144.18 734.14 135.28 725.17 126.62 715.96 118.2 706.54 110.02 696.89 102.11 687.05 94.45 677 87.06 666.75 79.94 656.32 73.1 645.71 66.54 634.93 60.26 623.99 54.27 612.89 48.58 601.64 43.19 590.25 38.1 578.73 33.32 567.08 28.85 555.32 24.68 543.45 20.84 531.49 17.31 519.43 14.1 507.3 11.22 495.08 8.66 482.81 6.43 470.48 4.54 458.11 2.96 445.7 1.73 433.25 .82 420.79 .24 408.32 0 395.84 .09 383.37 .52 370.92 1.27 358.5 2.37 346.1 3.79 333.75 5.54 321.45 7.62 309.21 10.03 297.04 12.77 284.95 15.83 272.94 19.21 261.03 22.92 249.22 26.93 237.52 31.27 225.94 35.91 214.5 40.87 203.18 46.12 192.01 51.68 181 57.54 170.14 63.68 159.45 70.11 148.94 76.83 138.61 83.83 128.48 91.1 118.54 98.63 108.8 106.43 99.28 114.49 89.97 122.8 80.89 131.35 72.04 140.15 63.44 149.18 55.07 158.43 46.96 167.91 39.1 177.6 31.5 187.49 24.17 197.58 17.12 207.87 10.34 218.34"/> </svg></span>
+    <div class="top-title"><strong>Angebotskonfigurator</strong><span>Garagenservice</span></div>
+    <div class="top-actions">
+      <span class="top-offer" id="topOffer" hidden></span>
+      <button type="button" class="btn btn-outline top-btn" id="btnListe"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6h12M8 12h12M8 18h12M4 6h.01M4 12h.01M4 18h.01"/></svg><span>Angebote</span></button>
+      <button type="button" class="btn btn-outline top-btn top-admin" id="btnAdmin" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg><span>Einstellungen</span></button>
+      <button type="button" class="btn btn-ghost top-btn" id="btnLogout" title="Abmelden"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15 4h3a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-3M10 16l-4-4 4-4M6 12h10"/></svg><span id="userName">Abmelden</span></button>
+    </div>
+  </div>
+</header>
+
+<div class="app">
+  <nav aria-label="Schritte"><ol class="steps" id="steps"></ol></nav>
+  <main id="main"></main>
+</div>
+
+<div class="bar" role="region" aria-label="Summe und Navigation">
+  <div class="bar-inner">
+    <div class="bar-sum">
+      <div class="netto"><small>Summe netto</small><b id="barNetto">0,00 €</b></div>
+      <div class="brutto"><small>Gesamt inkl. MwSt.</small><b id="barBrutto">0,00 €</b></div>
+    </div>
+    <div class="bar-nav">
+      <button class="btn btn-back" id="btnBack" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg><span>Zurück</span></button>
+      <button class="btn btn-next" id="btnNext" type="button">Weiter</button>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+/* ---------- Einstellungen (später aus der Datenbank) ---------- */
+const DEFAULT_CONFIG = {
+mwst: 19,
+anfahrt: { pauschale: 49, proKm: 0.90 },
+motive: [
+  { id:'s', name:'S-Sicke' }, { id:'m', name:'M-Sicke' }, { id:'l', name:'L-Sicke' },
+  { id:'902', name:'Motiv 902' }, { id:'984', name:'Motiv 984' }, { id:'985', name:'Motiv 985' },
+],
+oberflaechen: [
+  { id:'woodgrain', name:'Woodgrain', textur:'woodgrain' },
+  { id:'silkgrain', name:'Silkgrain', textur:'silkgrain' },
+  { id:'glatt', name:'Glatt', textur:'glatt' },
+  { id:'microliniert', name:'Microliniert', textur:'micro' },
+  { id:'stucco', name:'Stucco', textur:'stucco' },
+  { id:'decograin', name:'Decograin Dekor', textur:'decograin', dekor:true, hex:'#a5652a' },
+],
+/* Farbbibliothek: Bildschirmwerte nur annähernd */
+farben: [
+  { id:'9016', name:'Verkehrsweiß', ral:'RAL 9016', hex:'#f4f4f1' },
+  { id:'1015', name:'Hellelfenbein', ral:'RAL 1015', hex:'#e6d690' },
+  { id:'9002', name:'Grauweiß', ral:'RAL 9002', hex:'#e2e3d9' },
+  { id:'7035', name:'Lichtgrau', ral:'RAL 7035', hex:'#cfd3d1' },
+  { id:'7040', name:'Fenstergrau', ral:'RAL 7040', hex:'#9da3a6' },
+  { id:'9006', name:'Weißaluminium', ral:'RAL 9006', hex:'#a5a8a6' },
+  { id:'9007', name:'Graualuminium', ral:'RAL 9007', hex:'#8f8e8a' },
+  { id:'7030', name:'Steingrau', ral:'RAL 7030', hex:'#8b8c7a' },
+  { id:'7039', name:'Quarzgrau', ral:'RAL 7039', hex:'#6c6960' },
+  { id:'7012', name:'Basaltgrau', ral:'RAL 7012', hex:'#4e5754' },
+  { id:'7015', name:'Schiefergrau', ral:'RAL 7015', hex:'#4c5059' },
+  { id:'ch703', name:'Anthrazit metallic', ral:'CH 703', hex:'#3a3f43' },
+  { id:'7016', name:'Anthrazitgrau', ral:'RAL 7016', hex:'#293133' },
+  { id:'6005', name:'Moosgrün', ral:'RAL 6005', hex:'#1f4a36' },
+  { id:'6009', name:'Tannengrün', ral:'RAL 6009', hex:'#27352a' },
+  { id:'8028', name:'Terrabraun', ral:'RAL 8028', hex:'#4e3b31' },
+  { id:'8014', name:'Sepiabraun', ral:'RAL 8014', hex:'#3f2f22' },
+  { id:'9005', name:'Tiefschwarz', ral:'RAL 9005', hex:'#111111' },
+  { id:'3000', name:'Feuerrot', ral:'RAL 3000', hex:'#b3241c' },
+  { id:'db703', name:'Eisenglimmer', ral:'DB 703', hex:'#45484a' },
+  { id:'mahagoni', name:'Mahagoni', ral:'Holzdekor', hex:'#5e2418', dekor:true },
+  { id:'nussbaum', name:'Nussbaum', ral:'Holzdekor', hex:'#5a3519', dekor:true },
+  { id:'goldenoak', name:'Golden Oak', ral:'Holzdekor', hex:'#a5652a', dekor:true },
+  { id:'eichenatur', name:'Eiche Natur', ral:'Holzdekor', hex:'#9c7a52', dekor:true },
+  { id:'eichegrau', name:'Eiche Grau', ral:'Holzdekor', hex:'#7f7c74', dekor:true },
+],
+
+/* Leistungskatalog – alle Preise fiktiv und netto
+   einheit: m² | lfm | Stück | pauschal
+   grund: optionale Grundpauschale, farben: Farbauswahl, optionen: Aufpreise je Stück */
+katalog: [
+  { id:'dach', name:'Dachabdichtung', leistungen:[
+    { id:'d1', name:'Bitumen-Schweißbahn, 2-lagig', einheit:'m²', preis:42 },
+    { id:'d2', name:'Flüssigkunststoff-Abdichtung', einheit:'m²', preis:58, grund:250 },
+    { id:'d3', name:'EPDM-Dachfolie', einheit:'m²', preis:55 },
+    { id:'d4', name:'Altbelag entfernen & entsorgen', einheit:'m²', preis:12 },
+  ]},
+  { id:'attika', name:'Attika Dachabdeckung', leistungen:[
+    { id:'a1', name:'Attikaabdeckung Aluminium, anthrazit', einheit:'lfm', preis:48 },
+    { id:'a2', name:'Eck- und Stoßverbinder', einheit:'Stück', preis:25 },
+    { id:'a3', name:'Demontage alte Abdeckung', einheit:'lfm', preis:8 },
+  ]},
+  { id:'pultdach', name:'Renovierungs-Pultdach', leistungen:[
+    { id:'p1', name:'Pultdach Trapezblech inkl. Unterkonstruktion', einheit:'m²', preis:135, farben:true, farbStandard:'9016', farbVorzug:['7016','9006','8014','6005'], farbAufpreis:{ vorzug:6, sonder:12 } },
+    { id:'p2', name:'Pultdach Sandwichpaneel, gedämmt', einheit:'m²', preis:175, farben:true, farbStandard:'9016', farbVorzug:['7016','9006','8014','6005'], farbAufpreis:{ vorzug:8, sonder:15 } },
+    { id:'p3', name:'Dachrinne inkl. Fallrohr', einheit:'lfm', preis:39 },
+    { id:'p4', name:'Kranstellung', einheit:'pauschal', preis:380 },
+  ]},
+  { id:'boden', name:'Bodensanierung', leistungen:[
+    { id:'b1', name:'Epoxid-Bodenbeschichtung', einheit:'m²', preis:34, grund:180 },
+    { id:'b2', name:'Risse sanieren', einheit:'lfm', preis:22 },
+    { id:'b3', name:'Ausgleichsestrich bis 3 cm', einheit:'m²', preis:29 },
+    { id:'b4', name:'Bodenablaufrinne', einheit:'lfm', preis:95 },
+  ]},
+  { id:'antrieb', name:'Torantriebe', leistungen:[
+    { id:'t1', name:'Torantrieb Basic', einheit:'Stück', preis:590 },
+    { id:'t2', name:'Torantrieb Smart mit App', einheit:'Stück', preis:790 },
+    { id:'t3', name:'Zusätzlicher Handsender', einheit:'Stück', preis:39 },
+    { id:'t4', name:'Montage & Einstellung', einheit:'pauschal', preis:180 },
+  ]},
+  { id:'tor', name:'Garagentor', leistungen:[
+    { id:'g1', name:'Hörmann Schwingtor', einheit:'Stück', preis:1290, visual:'schwing',
+      motive:[{id:'902',preis:0},{id:'984',preis:0},{id:'985',preis:60}], oberflaechen:[{id:'glatt',preis:0}],
+      farben:true, farbStandard:'9016', farbVorzug:['1015','7035','7040','9006','7016','6009','8028'], farbAufpreis:{ vorzug:140, sonder:290 },
+      regeln:[{ id:'r1', wenn:'motiv:985', nicht:['farbe:1015','farbe:8028'] }] },
+    { id:'g2', name:'Hörmann Sektionaltor', einheit:'Stück', preis:2190, visual:'sektional',
+      motive:[{id:'s',preis:0},{id:'m',preis:0},{id:'l',preis:0}], oberflaechen:[{id:'woodgrain',preis:0},{id:'silkgrain',preis:180},{id:'decograin',preis:690}],
+      farben:true, farbStandard:'9016', farbVorzug:['1015','7035','7040','9006','9007','7030','7039','7012','7015','ch703','7016','6005','6009','8028','9005'], farbAufpreis:{ vorzug:220, sonder:450 },
+      optionen:[{id:'fen',name:'Fenstersektion',preis:240}],
+      regeln:[{ id:'r1', wenn:'motiv:l', nicht:['oberfl:decograin'] }, { id:'r2', wenn:'oberfl:silkgrain', nicht:['farbe:ch703','farbe:7030'] }, { id:'r3', wenn:'opt:fen', nicht:['motiv:s'] }] },
+    { id:'g3', name:'Niemetz Sektionaltor', einheit:'Stück', preis:1990, visual:'sektional',
+      motive:[{id:'s',preis:0},{id:'m',preis:0},{id:'l',preis:0}], oberflaechen:[{id:'woodgrain',preis:0},{id:'glatt',preis:120},{id:'microliniert',preis:120},{id:'stucco',preis:90}],
+      farben:true, farbStandard:'9016', farbVorzug:['9002','7035','7040','9006','9007','7015','8014','9005','7016','6009','3000','db703'], farbDekore:['mahagoni','nussbaum','goldenoak','eichenatur','eichegrau'], farbAufpreis:{ vorzug:190, sonder:420, dekor:590 },
+      optionen:[{id:'fen',name:'Fenstersektion',preis:240}],
+      regeln:[{ id:'r1', wenn:'motiv:l', nicht:['farbe:mahagoni','farbe:nussbaum','farbe:goldenoak','farbe:eichenatur','farbe:eichegrau'] }, { id:'r2', wenn:'oberfl:stucco', nicht:['farbe:3000','farbe:db703','farbe:9005'] }, { id:'r3', wenn:'oberfl:microliniert', nicht:['motiv:s'] }] },
+    { id:'g4', name:'Demontage & Entsorgung Alttor', einheit:'pauschal', preis:220 },
+  ]},
+  { id:'tuer', name:'Garagentür', leistungen:[
+    { id:'u1', name:'Hörmann Nebeneingangstür', einheit:'Stück', preis:790, visual:'tuer',
+      motive:[{id:'s',preis:0},{id:'m',preis:0},{id:'l',preis:0}], oberflaechen:[{id:'woodgrain',preis:0},{id:'silkgrain',preis:90},{id:'decograin',preis:390}],
+      farben:true, farbStandard:'9016', farbVorzug:['1015','7035','7040','9006','9007','7030','7039','7012','7015','ch703','7016','6005','6009','8028','9005'], farbAufpreis:{ vorzug:110, sonder:220 },
+      optionen:[{id:'mv',name:'Mehrfachverriegelung',preis:140}],
+      regeln:[{ id:'r1', wenn:'oberfl:decograin', nicht:['motiv:s'] }] },
+    { id:'u3', name:'Niemetz Nebeneingangstür', einheit:'Stück', preis:690, visual:'tuer',
+      motive:[{id:'s',preis:0},{id:'m',preis:0},{id:'l',preis:0}], oberflaechen:[{id:'woodgrain',preis:0},{id:'glatt',preis:60},{id:'microliniert',preis:60},{id:'stucco',preis:45}],
+      farben:true, farbStandard:'9016', farbVorzug:['9002','7035','7040','9006','9007','7015','8014','9005','7016','6009','3000','db703'], farbDekore:['mahagoni','nussbaum','goldenoak','eichenatur','eichegrau'], farbAufpreis:{ vorzug:95, sonder:210, dekor:290 },
+      optionen:[{id:'mv',name:'Mehrfachverriegelung',preis:140}],
+      regeln:[{ id:'r1', wenn:'motiv:l', nicht:['farbe:mahagoni','farbe:nussbaum','farbe:goldenoak','farbe:eichenatur','farbe:eichegrau'] }, { id:'r2', wenn:'oberfl:stucco', nicht:['farbe:3000'] }] },
+    { id:'u2', name:'Schloss/Zylinder tauschen', einheit:'Stück', preis:85 },
+  ]},
+  { id:'fenster', name:'Fenster mit Klemmzarge', leistungen:[
+    { id:'f1', name:'Kunststofffenster 80 × 60 cm', einheit:'Stück', preis:340 },
+    { id:'f2', name:'Kunststofffenster 100 × 60 cm', einheit:'Stück', preis:390 },
+    { id:'f3', name:'Lüftungsgitter statt Fenster', einheit:'Stück', preis:120 },
+  ]},
+  { id:'streich', name:'Streicharbeiten', leistungen:[
+    { id:'s1', name:'Fassadenanstrich außen', einheit:'m²', preis:18 },
+    { id:'s2', name:'Sockelanstrich', einheit:'lfm', preis:14 },
+    { id:'s3', name:'Innenanstrich Wände & Decke', einheit:'m²', preis:11 },
+    { id:'s4', name:'Garagentor lackieren', einheit:'pauschal', preis:290 },
+  ]},
+]};
+const SONDER_EINHEITEN = ['Stück','m²','lfm','Std.','pauschal'];
+
+const CFG_KEY = 'laumer-gs-einstellungen-v4';
+const clone = o => JSON.parse(JSON.stringify(o));
+let CFG = clone(DEFAULT_CONFIG);
+try { const raw = localStorage.getItem(CFG_KEY); if (raw) CFG = Object.assign(clone(DEFAULT_CONFIG), JSON.parse(raw)); } catch(e) {}
+let cfgTimer = null, lastCfgJSON = '';
+const plain = o => JSON.parse(JSON.stringify(o));
+function canon(o){ if (Array.isArray(o)) return '[' + o.map(canon).join(',') + ']'; if (o && typeof o === 'object') return '{' + Object.keys(o).sort().map(k => JSON.stringify(k) + ':' + canon(o[k])).join(',') + '}'; return JSON.stringify(o); }
+function saveConfig(){
+  try { localStorage.setItem(CFG_KEY, JSON.stringify(CFG)); } catch(e) {}
+  if (!window.FB || typeof USER === 'undefined' || !USER || !USER.admin) return;
+  clearTimeout(cfgTimer); setSync('Wird gespeichert …', '');
+  cfgTimer = setTimeout(async () => {
+    const data = plain(CFG); lastCfgJSON = canon(data);
+    try { await FB.f.setDoc(FB.f.doc(FB.db, 'config', 'main'), data); setSync('Für alle gespeichert', 'ok'); }
+    catch(e){ setSync('Speichern fehlgeschlagen', 'err'); toast(errText(e), 5000); }
+  }, 700);
+}
+function setSync(text, cls){ const el = document.getElementById('syncState'); if (el){ el.textContent = text; el.className = 'sync ' + (cls || ''); } }
+let MWST, ANFAHRT, FARBEN, MOTIVE, OBERFL, KATALOG, STEPS;
+function applyConfig(){
+  MWST = CFG.mwst; ANFAHRT = CFG.anfahrt; FARBEN = CFG.farben; MOTIVE = CFG.motive; OBERFL = CFG.oberflaechen || [];
+  KATALOG = CFG.katalog.filter(k => !k.hidden);
+  STEPS = [
+    { id:'kunde', title:'Kundendaten' },
+    ...KATALOG.map(k => ({ id:k.id, title:k.name || 'Ohne Namen', kat:k })),
+    { id:'sonder', title:'Sonderpositionen' },
+    { id:'anfahrt', title:'Anfahrt' },
+    { id:'summary', title:'Zusammenfassung' },
+  ];
+}
+applyConfig();
+function ensureStatePos(){
+  KATALOG.forEach(k => { if (!state.pos[k.id]) state.pos[k.id] = []; });
+  state.step = Math.min(state.step, STEPS.length - 1);
+  state.visited = (state.visited || []).filter(i => i < STEPS.length);
+}
+
+/* ---------- Zustand ---------- */
+const STORE_KEY = 'laumer-gs-angebot-v1';
+function freshState(){
+  return {
+    step:0, visited:[0],
+    kunde:{ anrede:'', vorname:'', nachname:'', firma:'', strasse:'', plz:'', ort:'', telefon:'', email:'', bearbeiter:'' },
+    pos:Object.fromEntries(KATALOG.map(k => [k.id, []])),
+    notes:{}, sonder:[], anfahrt:{ wahl:null, km:'' }, meta:null,
+  };
+}
+let state = freshState();
+try { const raw = localStorage.getItem(STORE_KEY); if (raw) state = Object.assign(freshState(), JSON.parse(raw)); } catch(e) {}
+ensureStatePos();
+let saveTimer;
+function save(){ clearTimeout(saveTimer); saveTimer = setTimeout(() => { try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch(e) {} }, 250); }
+
+/* ---------- Hilfen ---------- */
+const eur = new Intl.NumberFormat('de-DE', { style:'currency', currency:'EUR' });
+const dec = new Intl.NumberFormat('de-DE', { maximumFractionDigits:2 });
+const fmt = n => eur.format(n || 0);
+function num(v){
+  if (v === '' || v == null) return 0;
+  let s = String(v).trim().replace(/\s/g,'');
+  if (s.includes(',') || /^\d{1,3}(\.\d{3})+$/.test(s)) s = s.replace(/\./g,'').replace(',', '.');
+  const n = parseFloat(s); return isFinite(n) ? n : 0;
+}
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const uid = () => Math.random().toString(36).slice(2, 9);
+const findL = (kat, id) => kat.leistungen.find(l => l.id === id);
+const katById = id => CFG.katalog.find(k => k.id === id);
+const farbeById = id => FARBEN.find(f => f.id === id);
+
+const ICON = {
+  plus:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>',
+  trash:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12M9 7V4h6v3"/></svg>',
+  pen:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9l-4-4L4 16v4zM13.5 6.5l4 4"/></svg>',
+  check:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>',
+};
+
+/* ---------- Berechnung ---------- */
+function calcPos(p, kat){
+  const l = findL(kat, p.leistung); if (!l) return null;
+  const pauschal = l.einheit === 'pauschal';
+  const ep = p.ep != null ? p.ep : l.preis;
+  const menge = pauschal ? 1 : num(p.menge);
+  const base = (l.grund || 0) + menge * ep;
+  const oberfl = activeOberfl(l, p), oberflBetrag = (oberfl ? oberfl.preis : 0) * menge;
+  let farbEinzel = 0, fw = null;
+  if (l.farben && !(oberfl && oberfl.dekor)){ fw = farbWahl(l, p); farbEinzel = (l.farbAufpreis || {})[fw.kind] || 0; }
+  const farbBetrag = farbEinzel * menge;
+  const motiv = activeMotiv(l, p), motivBetrag = (motiv ? motiv.preis : 0) * menge;
+  const opt = (l.optionen || []).filter(o => p.optionen && p.optionen[o.id]).reduce((s, o) => s + o.preis * menge, 0);
+  const vor = base + farbBetrag + motivBetrag + oberflBetrag + opt;
+  const { rab, rabEur, rabBetrag } = calcRabatt(p, vor);
+  return { l, pauschal, ep, menge, base, farbEinzel, farbBetrag, fw, motiv, motivBetrag, oberfl, oberflBetrag, opt, vor, rab, rabEur, rabBetrag, total: vor - rabBetrag };
+}
+function libFor(lib, arr){
+  if (!arr || !arr.length) return [];
+  return lib.filter(m => arr.some(x => x.id === m.id)).map(m => ({ ...m, preis: arr.find(x => x.id === m.id).preis || 0 }));
+}
+function motiveFor(l){ return libFor(MOTIVE, l.motive); }
+function oberflFor(l){ return libFor(OBERFL, l.oberflaechen); }
+function activeOberfl(l, p){ const os = oberflFor(l); return os.find(o => o.id === p.oberfl) || os[0] || null; }
+function farbListe(l, key){ return (l[key] || []).map(farbeById).filter(Boolean); }
+function stdFarbe(l){ return farbeById(l.farbStandard) || FARBEN.find(f => !f.dekor) || { name:'Weiß', ral:'', hex:'#f4f4f1' }; }
+function farbWahl(l, p){
+  if (p.farbe === 'sonder') return { kind:'sonder', f:null };
+  const f = farbeById(p.farbe);
+  if (f && (l.farbVorzug || []).includes(f.id)) return { kind:'vorzug', f };
+  if (f && (l.farbDekore || []).includes(f.id)) return { kind:'dekor', f };
+  return { kind:'std', f:stdFarbe(l) };
+}
+function swStyle(f){ return f.dekor ? `background-color:${f.hex};background-image:repeating-linear-gradient(100deg,rgba(0,0,0,.22) 0 1.5px,transparent 1.5px 5px)` : `background:${f.hex}`; }
+function activeMotiv(l, p){ const ms = motiveFor(l); return ms.find(m => m.id === p.motiv) || ms[0] || null; }
+function calcSonder(s){
+  const pauschal = s.einheit === 'pauschal';
+  const menge = pauschal ? 1 : num(s.menge);
+  const vor = menge * num(s.preis);
+  const { rab, rabEur, rabBetrag } = calcRabatt(s, vor);
+  return { menge, ep:num(s.preis), vor, rab, rabEur, rabBetrag, total: vor - rabBetrag, pauschal };
+}
+function calcRabatt(x, vor){
+  const raw = Math.max(0, num(x.rabatt)), rabEur = x.rabattArt === 'eur';
+  const rab = rabEur ? raw : Math.min(100, raw);
+  return { rab, rabEur, rabBetrag: rabEur ? Math.min(vor, rab) : vor * rab / 100 };
+}
+function rabText(c){ return c.rabEur ? fmt(c.rabBetrag) : dec.format(c.rab) + ' %'; }
+function rabField(x, style){
+  const eur = x.rabattArt === 'eur';
+  return `<label class="fld f-rab"${style || ''}><span>Nachlass</span><div class="suffix"><input inputmode="decimal" data-f="rabatt" value="${esc(x.rabatt)}" placeholder="0" aria-label="Nachlass in ${eur ? 'Euro' : 'Prozent'}"><span class="seg" role="group" aria-label="Nachlass in Prozent oder Euro"><button type="button" data-rabart="pct" class="${eur ? '' : 'on'}" aria-pressed="${!eur}">%</button><button type="button" data-rabart="eur" class="${eur ? 'on' : ''}" aria-pressed="${eur}">€</button></span></div></label>`;
+}
+function katTotal(katId){ const k = katById(katId); return state.pos[katId].reduce((s, p) => s + (calcPos(p, k)?.total || 0), 0); }
+function sonderTotal(){ return state.sonder.filter(s => s.text || num(s.preis)).reduce((s, x) => s + calcSonder(x).total, 0); }
+function anfAktiv(){ return state.anfahrt.wahl === 'ja'; }
+function anfahrtVor(){ return anfAktiv() ? ANFAHRT.pauschale + num(state.anfahrt.km) * ANFAHRT.proKm : 0; }
+function anfahrtRabatt(){ return calcRabatt(state.anfahrt, anfahrtVor()); }
+function anfahrtTotal(){ return anfahrtVor() - anfahrtRabatt().rabBetrag; }
+function totals(){
+  let pos = 0, rab = 0;
+  KATALOG.forEach(k => state.pos[k.id].forEach(p => { const c = calcPos(p, k); if (c){ pos += c.total; rab += c.rabBetrag; } }));
+  state.sonder.forEach(s => { const c = calcSonder(s); pos += c.total; rab += c.rabBetrag; });
+  const anf = anfahrtTotal();
+  const netto = pos + anf, mwst = netto * MWST / 100;
+  return { pos, rab, anf, netto, mwst, brutto: netto + mwst };
+}
+function countPos(katId){ return state.pos[katId].filter(p => p.leistung).length; }
+
+/* ---------- Schrittliste ---------- */
+function stepMeta(s){
+  if (s.kat){ const n = countPos(s.id); return n ? fmt(katTotal(s.id)) : ''; }
+  if (s.id === 'sonder'){ const n = state.sonder.length; return n ? fmt(sonderTotal()) : ''; }
+  if (s.id === 'anfahrt') return anfAktiv() ? fmt(anfahrtTotal()) : state.anfahrt.wahl === 'nein' ? 'keine' : '';
+  return '';
+}
+function stepDone(s, i){
+  if (s.kat) return countPos(s.id) > 0;
+  if (s.id === 'kunde') return !!(state.kunde.nachname || state.kunde.firma);
+  if (s.id === 'sonder') return state.sonder.length > 0;
+  if (s.id === 'anfahrt') return !!state.anfahrt.wahl;
+  return state.visited.includes(i) && i !== state.step && s.id !== 'summary';
+}
+function renderSteps(){
+  const el = document.getElementById('steps');
+  el.innerHTML = STEPS.map((s, i) => {
+    const sep = (i === 1 || i >= STEPS.length - 3) ? '<li class="sep" aria-hidden="true"></li>' : '';
+    const done = stepDone(s, i), active = i === state.step;
+    return `${sep}<li><button type="button" class="step-btn${active ? ' active' : ''}${done ? ' done' : ''}" data-goto="${i}" ${active ? 'aria-current="step"' : ''}>
+      <span class="nr">${done && !active ? ICON.check.replace('<svg','<svg width="13" height="13"') : i + 1}</span>
+      <span class="label">${esc(s.title)}</span><span class="meta">${stepMeta(s)}</span></button></li>`;
+  }).join('');
+  const act = el.querySelector('.active');
+  if (act && window.matchMedia('(max-width:900px)').matches){ const li = act.parentElement; el.scrollLeft = li.offsetLeft - el.clientWidth / 2 + li.clientWidth / 2; }
+}
+
+/* ---------- Positionskarte ---------- */
+function farbOptions(sel){
+  const std = FARBEN.filter(f => f.gruppe === 'std'), vz = FARBEN.filter(f => f.gruppe === 'vorzug');
+  const o = f => `<option value="${f.id}"${sel === f.id ? ' selected' : ''}>${esc(f.name)} – ${f.ral}${f.gruppe === 'std' ? ' (Standard)' : ''}</option>`;
+  return std.map(o).join('') +
+    `<optgroup label="Vorzugsfarben (+${FARB_AUFSCHLAG.vorzug} %)">${vz.map(o).join('')}</optgroup>` +
+    `<optgroup label="Sonderwunsch (+${FARB_AUFSCHLAG.sonder} %)"><option value="sonder"${sel === 'sonder' ? ' selected' : ''}>Sonderfarbe nach RAL / Wunsch</option></optgroup>`;
+}
+function calcLine(c, kat){
+  if (!c) return '';
+  const parts = [];
+  if (c.pauschal) parts.push('Pauschalpreis');
+  else {
+    if (c.l.grund) parts.push(`${fmt(c.l.grund)} Grundpauschale`);
+    parts.push(`${dec.format(c.menge)} ${c.l.einheit} × ${fmt(c.ep)}`);
+  }
+  if (c.motivBetrag) parts.push(`Motiv ${fmt(c.motivBetrag)}`);
+  if (c.oberflBetrag) parts.push(`Oberfläche ${fmt(c.oberflBetrag)}`);
+  if (c.farbBetrag) parts.push(`Farbaufpreis ${fmt(c.farbBetrag)}`);
+  if (c.opt) parts.push(`Optionen ${fmt(c.opt)}`);
+  let s = parts.join(' + ');
+  if (c.rab) s += ` − ${rabText(c)} Nachlass`;
+  return s;
+}
+function posCard(kat, p, idx, isNew){
+  const l = findL(kat, p.leistung);
+  const c = l ? calcPos(p, kat) : null;
+  const opts = kat.leistungen.map(x => `<option value="${x.id}"${x.id === p.leistung ? ' selected' : ''}>${esc(x.name || '(ohne Bezeichnung)')}</option>`).join('');
+  let body = '';
+  if (l){
+    const pauschal = l.einheit === 'pauschal';
+    const manual = p.ep != null;
+    const menge = pauschal
+      ? `<div class="fld f-menge"><span>Menge</span><div class="static">pauschal</div></div>`
+      : `<label class="fld f-menge"><span>Menge</span><div class="suffix"><input inputmode="decimal" data-f="menge" value="${esc(p.menge)}" placeholder="0" aria-label="Menge"><em>${l.einheit}</em></div></label>`;
+    const epUnit = pauschal ? '' : ` <small>/ ${l.einheit}</small>`;
+    const price = p.editing
+      ? `<div class="suffix"><input inputmode="decimal" data-f="ep" value="${esc(decIn.format(c.ep))}" aria-label="Einzelpreis manuell"><em>€${pauschal ? '' : ' / ' + l.einheit}</em></div>`
+      : `<div class="price${manual ? ' manual' : ''}"><b>${fmt(c.ep)}</b>${epUnit}${manual ? ' <span class="tag">manuell</span>' : ''}<button type="button" class="icon-btn" data-act="edit-ep" aria-label="Preis manuell ändern" title="Preis manuell ändern">${ICON.pen}</button></div>`;
+    const hint = manual && !p.editing ? `<div class="catalog-hint">Katalogpreis ${fmt(l.preis)} <button type="button" class="link" data-act="reset-ep">zurücksetzen</button></div>`
+      : (l.grund ? `<div class="catalog-hint">zzgl. ${fmt(l.grund)} Grundpauschale</div>` : '');
+    const konfig = (l.farben || motiveFor(l).length) ? konfigHtml(l, p, c) : '';
+    const optionen = (l.optionen || []).length ? `<div class="fld f-opt"><span>Optionen</span><div class="opts">${l.optionen.map(o => { const on = !!(p.optionen && p.optionen[o.id]), bl = on ? null : blocker(l, p, 'opt:' + o.id); return `<label class="chk${bl ? ' blocked' : ''}"${bl ? ` title="Nicht kombinierbar mit ${esc(keyLabel(l, bl))}. Anhaken stellt automatisch um."` : ''}><input type="checkbox" data-opt="${o.id}"${on ? ' checked' : ''}>${esc(o.name)} (+${fmt(o.preis)}${pauschal ? '' : ' je ' + l.einheit})${bl ? `<small class="blk">nicht mit ${esc(keyLabel(l, bl))}</small>` : ''}</label>`; }).join('')}</div></div>` : '';
+    body = `<div class="pos-body">${menge}<div class="fld f-ep"><span>Einzelpreis</span>${price}${hint}</div>
+      ${rabField(p)}
+      ${optionen}</div>${konfig}
+      <div class="pos-foot"><div class="calc" data-calc>${calcLine(c, kat)}</div><div class="ptotal" data-total>${totalHtml(c)}</div></div>`;
+  }
+  return `<div class="pos${isNew ? ' new' : ''}" data-uid="${p.uid}" data-kat="${kat.id}">
+    <div class="pos-head"><span class="pos-nr">${idx + 1}</span>
+      <select class="sel" data-f="leistung" aria-label="Leistung auswählen"><option value="">Leistung auswählen …</option>${opts}</select>
+      <button type="button" class="icon-btn del" data-act="del" aria-label="Position entfernen" title="Position entfernen">${ICON.trash}</button></div>
+    ${body}</div>`;
+}
+function totalHtml(c){ if (!c) return ''; return (c.rab ? `<s>${fmt(c.vor)}</s>` : '') + `<b>${fmt(c.total)}</b>`; }
+
+function sonderCard(s, idx, isNew){
+  const c = calcSonder(s); const pauschal = s.einheit === 'pauschal';
+  return `<div class="pos${isNew ? ' new' : ''}" data-uid="${s.uid}" data-sonder="1">
+    <div class="pos-head"><span class="pos-nr">${idx + 1}</span>
+      <input class="in" data-f="text" value="${esc(s.text)}" placeholder="Bezeichnung, z. B. Regenrinne reinigen" aria-label="Bezeichnung">
+      <button type="button" class="icon-btn del" data-act="del" aria-label="Position entfernen" title="Position entfernen">${ICON.trash}</button></div>
+    <div class="pos-body">
+      <label class="fld f-menge"><span>Menge</span>${pauschal ? '<div class="static">pauschal</div>' : `<input class="in" inputmode="decimal" data-f="menge" value="${esc(s.menge)}" placeholder="0">`}</label>
+      <label class="fld" style="grid-column:span 3"><span>Einheit</span><select class="sel" data-f="einheit">${SONDER_EINHEITEN.map(e => `<option${e === s.einheit ? ' selected' : ''}>${e}</option>`).join('')}</select></label>
+      <label class="fld" style="grid-column:span 3"><span>Einzelpreis</span><div class="suffix"><input inputmode="decimal" data-f="preis" value="${esc(s.preis)}" placeholder="0,00"><em>€</em></div></label>
+      ${rabField(s, ' style="grid-column:span 3"')}
+    </div>
+    <div class="pos-foot"><div class="calc" data-calc>${sonderCalcLine(c, s)}</div><div class="ptotal" data-total>${totalHtml(c)}</div></div></div>`;
+}
+function sonderCalcLine(c, s){ let t = c.pauschal ? 'Pauschalpreis' : `${dec.format(c.menge)} ${s.einheit} × ${fmt(c.ep)}`; if (c.rab) t += ` − ${rabText(c)} Nachlass`; return t; }
+
+
+/* ---------- Konfigurator: Motiv, Farbe, Vorschau ---------- */
+const VISUAL_NAMEN = { sektional:'Sektionaltor', schwing:'Schwingtor', tuer:'Nebeneingangstür' };
+/* RAL-Classic-Farben, Bildschirmwerte nur annähernd */
+const RAL = Object.fromEntries(('1000:BEBD7F,1001:C2B078,1002:C6A664,1003:E5BE01,1004:CDA434,1005:A98307,1006:E4A010,1007:DC9D00,1011:8A6642,1012:C7B446,1013:EAE6CA,1014:E1CC4F,1015:E6D690,1016:EDFF21,1017:F5D033,1018:F8F32B,1019:9E9764,1020:999950,1021:F3DA0B,1023:FAD201,1024:AEA04B,1026:FFFF00,1027:9D9101,1028:F4A900,1032:D6AE01,1033:F3A505,1034:EFA94A,1035:6A5D4D,1036:705335,1037:F39F18,'
++ '2000:ED760E,2001:C93C20,2002:CB2821,2003:FF7514,2004:F44611,2005:FF2301,2007:FFA420,2008:F75E25,2009:F54021,2010:D84B20,2011:EC7C26,2012:E55137,2013:C35831,'
++ '3000:AF2B1E,3001:A52019,3002:A2231D,3003:9B111E,3004:75151E,3005:5E2129,3007:412227,3009:642424,3011:781F19,3012:C1876B,3013:A12312,3014:D36E70,3015:EA899A,3016:B32821,3017:E63244,3018:D53032,3020:CC0605,3022:D95030,3024:F80000,3026:FE0000,3027:C51D34,3028:CB3234,3031:B32428,3032:721422,3033:B44C43,'
++ '4001:6D3F5B,4002:922B3E,4003:DE4C8A,4004:641C34,4005:6C4675,4006:A03472,4007:4A192C,4008:924E7D,4009:A18594,4010:CF3476,4011:8673A1,4012:6C6874,'
++ '5000:354D73,5001:1F3438,5002:20214F,5003:1D1E33,5004:18171C,5005:1E2460,5007:3E5F8A,5008:26252D,5009:025669,5010:0E294B,5011:231A24,5012:3B83BD,5013:1E213D,5014:606E8C,5015:2271B3,5017:063971,5018:3F888F,5019:1B5583,5020:1D334A,5021:256D7B,5022:252850,5023:49678D,5024:5D9B9B,5025:2A6478,5026:102C54,'
++ '6000:316650,6001:287233,6002:2D572C,6003:424632,6004:1F3A3D,6005:2F4538,6006:3E3B32,6007:343B29,6008:39352A,6009:31372B,6010:35682D,6011:587246,6012:343E40,6013:6C7156,6014:47402E,6015:3B3C36,6016:1E5945,6017:4C9141,6018:57A639,6019:BDECB6,6020:2E3A23,6021:89AC76,6022:25221B,6024:308446,6025:3D642D,6026:015D52,6027:84C3BE,6028:2C5545,6029:20603D,6032:317F43,6033:497E76,6034:7FB5B5,6035:1C542D,6036:193737,6037:008F39,6038:00BB2D,'
++ '7000:78858B,7001:8A9597,7002:7E7B52,7003:6C7059,7004:969992,7005:646B63,7006:6D6552,7008:6A5F31,7009:4D5645,7010:4C514A,7011:434B4D,7012:4E5754,7013:464531,7015:434750,7016:293133,7021:23282B,7022:332F2C,7023:686C5E,7024:474A51,7026:2F353B,7030:8B8C7A,7031:474B4E,7032:B8B799,7033:7D8471,7034:8F8B66,7035:D7D7D7,7036:7F7679,7037:7D7F7D,7038:B5B8B1,7039:6C6960,7040:9DA1AA,7042:8D948D,7043:4E5452,7044:CAC4B0,7045:909090,7046:82898F,7047:D0D0D0,7048:898176,'
++ '8000:826C34,8001:955F20,8002:6C3B2A,8003:734222,8004:8E402A,8007:59351F,8008:6F4F28,8011:5B3A29,8012:592321,8014:382C1E,8015:633A34,8016:4C2F27,8017:45322E,8019:403A3A,8022:212121,8023:A65E2E,8024:79553D,8025:755C48,8028:4E3B31,8029:763C28,'
++ '9001:FDF4E3,9002:E7EBDA,9003:F4F4F4,9004:282828,9005:0A0A0A,9006:A5A5A5,9007:8F8F8F,9010:FFFFFF,9011:1C1C1C,9016:F6F6F6,9017:1E1E1E,9018:D7D7D7,9022:9C9C9C,9023:828282').split(',').map(x => x.split(':')));
+function ralHex(text){
+  const t = String(text || '');
+  const m = t.match(/(?:^|\D)([1-9]\d{3})(?!\d)/);
+  if (m && RAL[m[1]]) return '#' + RAL[m[1]];
+  const h = t.match(/#([0-9a-f]{6})\b/i);
+  return h ? '#' + h[1] : null;
+}
+function prevHtml(l, p, act){
+  const ob = activeOberfl(l, p), fw = l.farben && !(ob && ob.dekor) ? farbWahl(l, p) : null;
+  let hex = '#f4f4f1', holz = false, unknown = false, fname = '', hint = '';
+  if (ob && ob.dekor){ hex = ob.hex || '#a5652a'; holz = true; fname = ob.name; }
+  else if (fw){
+    if (fw.kind === 'sonder'){
+      const sh = ralHex(p.farbtext); hex = sh || '#c4c8cf'; unknown = !sh;
+      fname = `Sonderfarbe ${p.farbtext || '(noch offen)'}`;
+      hint = sh ? 'Farbe annähernd dargestellt' : p.farbtext ? 'RAL-Nummer nicht erkannt, neutrale Darstellung' : 'RAL-Nummer eintragen für die Farbvorschau';
+    } else { hex = fw.f.hex; holz = !!fw.f.dekor; fname = fw.f.dekor ? `Dekor ${fw.f.name}` : `${fw.f.name}, ${fw.f.ral}`; }
+  }
+  const fenster = (l.optionen || []).some(o => /fenster/i.test(o.name) && p.optionen && p.optionen[o.id]);
+  return `<div class="kfg-preview" data-preview>${previewSvg(l.visual, hex, act, fenster, unknown, p.uid, p.anschlag, ob ? ob.textur : '', holz)}
+    <div class="kfg-caption"><b>${esc(l.name || VISUAL_NAMEN[l.visual])}</b>${act ? `<span>${esc(act.name)}</span>` : ''}${ob && !ob.dekor ? `<span>Oberfläche ${esc(ob.name)}</span>` : ''}${fname ? `<span>${esc(fname)}</span>` : ''}${l.visual === 'tuer' ? `<span>DIN ${p.anschlag === 'rechts' ? 'rechts' : 'links'}</span>` : ''}${fenster ? '<span>mit Fenster</span>' : ''}${hint ? `<em>${hint}</em>` : ''}${l.visual === 'tuer' ? '<em>Ansicht von der Bandseite</em>' : ''}<em>Grobe Vorschau, nicht maßstabsgetreu</em></div></div>`;
+}
+function motivIcon(id){
+  const r = '<rect x="2" y="2" width="30" height="22" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.5"/>';
+  const hl = n => Array.from({ length:n - 1 }, (_, k) => { const y = 2 + 22 * (k + 1) / n; return `<line x1="2.5" x2="31.5" y1="${y}" y2="${y}" stroke="currentColor" stroke-width="${n > 8 ? .7 : 1}"/>`; }).join('');
+  const vl = n => Array.from({ length:n - 1 }, (_, k) => { const x = 2 + 30 * (k + 1) / n; return `<line y1="2.5" y2="23.5" x1="${x}" x2="${x}" stroke="currentColor" stroke-width="${n > 8 ? .7 : 1}"/>`; }).join('');
+  const body = id === 's' ? hl(10) : id === 'm' ? hl(6) : id === 'l' ? hl(3) : id === '902' ? vl(12) + '<circle cx="17" cy="15" r="1" fill="currentColor"/>' : id === '984' ? vl(6) + '<circle cx="17" cy="15" r="1" fill="currentColor"/>' : id === '985' ? hl(5) + '<circle cx="17" cy="15" r="1" fill="currentColor"/>' : '';
+  return `<svg viewBox="0 0 34 26" aria-hidden="true">${r}${body}</svg>`;
+}
+function oberflIcon(o){
+  const base = o.dekor ? (o.hex || '#a5652a') : o.textur === 'glatt' ? '#c9ccd1' : '#e1e3e7';
+  let t = '';
+  if (o.dekor || o.textur === 'woodgrain') t = [6, 10.5, 15, 19.5].map((y, i) => `<path d="M3 ${y} q7 ${i % 2 ? -1.6 : 1.6} 14 0 t14 0" fill="none" stroke="${o.dekor ? '#5c3216' : '#9ba1aa'}" stroke-width="${o.dekor ? 1.1 : .8}"/>`).join('');
+  if (o.textur === 'micro') t = Array.from({ length:9 }, (_, k) => `<line x1="3" x2="31" y1="${4.5 + k * 2.2}" y2="${4.5 + k * 2.2}" stroke="#9ba1aa" stroke-width=".55"/>`).join('');
+  if (o.textur === 'stucco') t = [[7,6],[13,10],[20,5],[26,9],[9,15],[17,17],[24,15],[29,20],[5,20],[13,21],[21,12]].map(([cx, cy]) => `<circle cx="${cx}" cy="${cy}" r=".9" fill="#9ba1aa"/>`).join('');
+  if (o.textur === 'silkgrain') t = '<path d="M4 22 L14 4 L20 4 L10 22 Z" fill="#ffffff" fill-opacity=".7"/>';
+  if (o.textur === 'glatt') t = '<path d="M4 22 L12 4 L15 4 L7 22 Z" fill="#ffffff" fill-opacity=".45"/>';
+  return `<svg viewBox="0 0 34 26" aria-hidden="true"><rect x="2" y="2" width="30" height="22" rx="1.5" fill="${base}"/>${t}<rect x="2" y="2" width="30" height="22" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.3"/></svg>`;
+}
+function shade(hex, amt){
+  let h = String(hex || '#999999').replace('#', ''); if (h.length === 3) h = h.split('').map(x => x + x).join('');
+  const n = parseInt(h, 16); if (isNaN(n)) return hex;
+  const f = v => Math.max(0, Math.min(255, Math.round(amt < 0 ? v * (1 + amt) : v + (255 - v) * amt)));
+  return '#' + [n >> 16 & 255, n >> 8 & 255, n & 255].map(v => f(v).toString(16).padStart(2, '0')).join('');
+}
+function previewSvg(type, hex, motiv, fenster, sonder, uidv, anschlag, textur, holz){
+  const fill = sonder ? '#c4c8cf' : hex, dark = shade(fill, -0.32), light = shade(fill, 0.22);
+  const W = 320, H = 220, ground = H - 14;
+  const door = type === 'tuer' ? { x:118, y:36, w:84, h:ground - 36 } : { x:70, y:44, w:180, h:ground - 44 };
+  const fr = 7, clip = 'c' + uidv;
+  const { x, y, w, h } = door, m = motiv ? motiv.id : '';
+  let g = '';
+  const rib = (x1, y1, x2, y2, sw = 1.4) => { const v = x1 === x2; return `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${dark}" stroke-width="${sw}"/><line x1="${x1 + (v ? 1.3 : 0)}" y1="${y1 + (v ? 0 : 1.3)}" x2="${x2 + (v ? 1.3 : 0)}" y2="${y2 + (v ? 0 : 1.3)}" stroke="${light}" stroke-width=".9"/>`; };
+  const win = (wx, wy, ww, wh) => `<rect x="${wx}" y="${wy}" width="${ww}" height="${wh}" rx="1.5" fill="#9fb3c7" stroke="${dark}" stroke-width="1.4"/><path d="M${wx + 3} ${wy + wh - 3} L${wx + ww * .45} ${wy + 3}" stroke="#ffffff" stroke-opacity=".55" stroke-width="2"/>`;
+  const vertikal = type === 'schwing' && (m === '902' || m === '984');
+  if (holz) g += `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="url(#w${uidv})"/>`;
+  else if (textur === 'woodgrain') g += `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="url(#wg${uidv})"/>`;
+  else if (textur === 'micro') g += `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="url(#mi${uidv})"/>`;
+  else if (textur === 'stucco') g += `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="url(#st${uidv})"/>`;
+  if (type === 'sektional' || type === 'tuer'){
+    const n = { s:16, m:8, l:4 }[m] || 4, x1 = type === 'tuer' ? x + 3 : x, x2 = type === 'tuer' ? x + w - 3 : x + w;
+    for (let k = 1; k < n; k++){ const yy = y + h * k / n; g += rib(x1, yy, x2, yy, n >= 16 ? 1 : 1.4); }
+    if (fenster && type === 'sektional'){ const nw = 4, ww = 28, gap = (w - nw * ww) / (nw + 1); for (let k = 0; k < nw; k++) g += win(x + gap + k * (ww + gap), y + h * .09, ww, h * .15); }
+    if (fenster && type === 'tuer') g += win(x + 18, y + 14, w - 36, 34);
+  }
+  if (type === 'schwing'){
+    if (vertikal){ const n = m === '902' ? 16 : 7; for (let k = 1; k < n; k++){ const xx = x + w * k / n; g += rib(xx, y, xx, y + h, m === '902' ? 1 : 1.4); } }
+    else if (m === '985'){ for (let k = 1; k < 5; k++){ const yy = y + h * k / 5; g += rib(x, yy, x + w, yy, 1.4); } }
+    if (fenster){ const nw = 4, ww = 28, gap = (w - nw * ww) / (nw + 1); for (let k = 0; k < nw; k++) g += win(x + gap + k * (ww + gap), y + 14, ww, 20); }
+    g += `<circle cx="${x + w / 2}" cy="${y + h * .62}" r="3.5" fill="#34383d"/><circle cx="${x + w / 2 - 1}" cy="${y + h * .62 - 1}" r="1.2" fill="#ffffff" fill-opacity=".35"/>`;
+  }
+  if (type === 'tuer'){
+    const re = anschlag === 'rechts', hx = re ? x + 10 : x + w - 18, lx = re ? x + 10 : x + w - 30, bx = re ? x + w - 5 : x + 1;
+    g += `<rect x="${bx}" y="${y + h * .12}" width="4" height="16" rx="1" fill="#7d838c"/><rect x="${bx}" y="${y + h * .78}" width="4" height="16" rx="1" fill="#7d838c"/>`;
+    g += `<rect x="${hx}" y="${y + h * .5 - 14}" width="8" height="28" rx="3" fill="#8a9099"/><rect x="${lx}" y="${y + h * .5 - 4}" width="20" height="5" rx="2.5" fill="#6f757e"/>`;
+  }
+  const hatch = sonder ? `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="url(#h${uidv})"/>` : '';
+  const woodDark = shade(fill, -0.45), woodLight = shade(fill, 0.28), rot = vertikal ? ' patternTransform="rotate(90)"' : '';
+  return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Vorschau ${esc(VISUAL_NAMEN[type] || '')}">
+    <defs><clipPath id="${clip}"><rect x="${x}" y="${y}" width="${w}" height="${h}"/></clipPath>
+      <pattern id="h${uidv}" width="10" height="10" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="10" stroke="#ffffff" stroke-opacity=".45" stroke-width="4"/></pattern>
+      <pattern id="wg${uidv}" width="80" height="12" patternUnits="userSpaceOnUse"${rot}><path d="M0 4 q20 -2 40 0 t40 0 M0 9 q20 2 40 0 t40 0" fill="none" stroke="${dark}" stroke-opacity=".2" stroke-width=".7"/></pattern>
+      <pattern id="w${uidv}" width="120" height="16" patternUnits="userSpaceOnUse"${rot}><path d="M0 3 q30 -3 60 0 t60 0 M0 8.5 q30 3 60 0 t60 0 M0 13 q30 -2 60 1 t60 -1" fill="none" stroke="${woodDark}" stroke-opacity=".6" stroke-width="1"/><path d="M0 5.5 q30 2 60 0 t60 0 M0 11 q30 -2 60 0 t60 0" fill="none" stroke="${woodLight}" stroke-opacity=".35" stroke-width="1.3"/></pattern>
+      <pattern id="mi${uidv}" width="6" height="3" patternUnits="userSpaceOnUse"><line x1="0" y1="1.5" x2="6" y2="1.5" stroke="${dark}" stroke-opacity=".25" stroke-width=".6"/></pattern>
+      <pattern id="st${uidv}" width="7" height="7" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r=".9" fill="${dark}" fill-opacity=".3"/><circle cx="5.5" cy="5" r=".8" fill="${light}" fill-opacity=".6"/><circle cx="5" cy="1.5" r=".5" fill="${dark}" fill-opacity=".25"/></pattern>
+      <linearGradient id="g${uidv}" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#ffffff" stop-opacity="${textur === 'silkgrain' || textur === 'glatt' ? .24 : .14}"/><stop offset="1" stop-color="#000000" stop-opacity=".1"/></linearGradient></defs>
+    <rect width="${W}" height="${H}" fill="#eef0f3"/>
+    <rect y="${ground}" width="${W}" height="14" fill="#d5d9df"/>
+    <rect x="${x - fr}" y="${y - fr}" width="${w + fr * 2}" height="${h + fr}" fill="#c3c8cf"/>
+    <rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${fill}"/>
+    <g clip-path="url(#${clip})">${g}</g>${hatch}
+    <rect x="${x}" y="${y}" width="${w}" height="${h}" fill="url(#g${uidv})"/>
+    <rect x="${x}" y="${y}" width="${w}" height="${h}" fill="none" stroke="${dark}" stroke-width="1.2"/>
+  </svg>`;
+}
+function konfigHtml(l, p, c){
+  const unit = l.einheit === 'pauschal' ? '' : ` je ${l.einheit}`;
+  const plus = v => v ? `+${fmt(v)}` : 'ohne Aufpreis';
+  const label = (t, withUnit) => `<span class="kfg-label">${t}${withUnit && unit ? ` (Aufpreise${unit})` : ''}</span>`;
+  const blk = (key, on) => on ? null : blocker(l, p, key);
+  const blkTxt = bl => bl ? `<small class="blk">nicht mit ${esc(keyLabel(l, bl))}</small>` : '';
+  const tileBtn = (attr, id, on, ico, name, sub, key) => { const bl = key ? blk(key, on) : null; return `<button type="button" class="tile${on ? ' on' : ''}${bl ? ' blocked' : ''}" data-${attr}="${id}" aria-pressed="${on}"${bl ? ` title="Nicht kombinierbar mit ${esc(keyLabel(l, bl))}. Antippen stellt automatisch um."` : ''}><span class="tile-ico">${ico}</span><span class="tile-txt"><b>${esc(name)}</b><small>${sub}</small>${blkTxt(bl)}</span></button>`; };
+  const ms = motiveFor(l), act = c.motiv, os = oberflFor(l), ob = c.oberfl;
+  let left = '';
+  if (ms.length) left += `<div class="kfg-group">${label('Ansicht', true)}<div class="tiles">${ms.map(m => tileBtn('motiv', m.id, !!act && act.id === m.id, motivIcon(m.id), m.name, plus(m.preis), 'motiv:' + m.id)).join('')}</div></div>`;
+  if (os.length) left += `<div class="kfg-group">${label('Oberfläche', true)}<div class="tiles">${os.map(o => tileBtn('oberfl', o.id, !!ob && ob.id === o.id, oberflIcon(o), o.name, plus(o.preis), 'oberfl:' + o.id)).join('')}</div></div>`;
+  if (l.visual === 'tuer'){
+    const a = p.anschlag === 'rechts' ? 'rechts' : 'links';
+    const ico = side => { const li = side === 'links'; return `<svg viewBox="0 0 34 26" aria-hidden="true"><rect x="11" y="2" width="13" height="22" fill="none" stroke="currentColor" stroke-width="1.6"/><rect x="${li ? 9 : 23}" y="5" width="3" height="4" fill="currentColor"/><rect x="${li ? 9 : 23}" y="17" width="3" height="4" fill="currentColor"/><line x1="${li ? 21.5 : 13.5}" x2="17.5" y1="13" y2="13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>`; };
+    left += `<div class="kfg-group">${label('Anschlag (Ansicht von der Bandseite)')}<div class="tiles">${['links', 'rechts'].map(side => tileBtn('anschlag', side, a === side, ico(side), 'DIN ' + side, 'Bänder ' + side)).join('')}</div></div>`;
+  }
+  if (l.farben){
+    if (ob && ob.dekor){
+      left += `<div class="kfg-group">${label('Farbe')}<p class="kfg-note">Bei ${esc(ob.name)} ist die Optik durch das Holzdekor festgelegt, eine Farbauswahl entfällt.</p></div>`;
+    } else {
+      const fa = l.farbAufpreis || {}, fw = c.fw, std = stdFarbe(l);
+      const ftile = (id, name, on, sub, price, cls, st) => { const bl = blk('farbe:' + (id === 'std' ? l.farbStandard : id), on); return `<button type="button" class="tile${on ? ' on' : ''}${bl ? ' blocked' : ''}" data-farbe="${id}" aria-pressed="${on}"${bl ? ` title="Nicht kombinierbar mit ${esc(keyLabel(l, bl))}. Antippen stellt automatisch um."` : ''}><span class="sw${cls}" style="${st}"></span><span class="tile-txt"><b>${esc(name)}</b><small>${esc(sub)}</small><small>${price}</small>${blkTxt(bl)}</span></button>`; };
+      const sh = fw.kind === 'sonder' ? ralHex(p.farbtext) : null;
+      const tiles = ftile('std', std.name, fw.kind === 'std', std.ral, 'Standard', '', swStyle(std))
+        + farbListe(l, 'farbVorzug').map(f => ftile(f.id, f.name, fw.kind === 'vorzug' && fw.f.id === f.id, f.ral, plus(fa.vorzug), '', swStyle(f))).join('')
+        + ftile('sonder', 'Sonderfarbe', fw.kind === 'sonder', 'nach RAL / Wunsch', plus(fa.sonder), sh ? '' : ' sonder', sh ? 'background:' + sh : '');
+      left += `<div class="kfg-group">${label('Farbe', true)}<div class="tiles">${tiles}</div>
+        ${fw.kind === 'sonder' ? `<label class="fld kfg-sonder"><span>RAL-Nummer oder Farbwunsch</span><input class="in" data-f="farbtext" value="${esc(p.farbtext)}" placeholder="z. B. RAL 5010"></label>` : ''}</div>`;
+      const dk = farbListe(l, 'farbDekore');
+      const dkBl = dk.length ? dk.map(f => blk('farbe:' + f.id, fw.kind === 'dekor' && fw.f.id === f.id)) : [];
+      if (dk.length && dkBl.every(Boolean)) left += `<div class="kfg-group">${label('Dekore')}<p class="kfg-note">Holzdekore sind mit ${esc(keyLabel(l, dkBl[0]))} nicht kombinierbar.</p></div>`;
+      else if (dk.length) left += `<div class="kfg-group">${label('Dekore', true)}<div class="tiles">${dk.map(f => ftile(f.id, f.name, fw.kind === 'dekor' && fw.f.id === f.id, 'Holzdekor', plus(fa.dekor), '', swStyle(f))).join('')}</div></div>`;
+    }
+  }
+  const prev = (l.visual && VISUAL_NAMEN[l.visual]) ? prevHtml(l, p, act) : '';
+  return `<div class="kfg${prev ? ' has-prev' : ''}"><div class="kfg-left">${left}</div>${prev}</div>`;
+}
+
+
+/* ---------- Regeln: nicht kombinierbare Auswahl ---------- */
+const keyGrp = k => k.startsWith('opt:') ? k : k.slice(0, k.indexOf(':'));
+const keyTyp = k => k.slice(0, k.indexOf(':'));
+const keyId = k => k.slice(k.indexOf(':') + 1);
+const GRUPPEN = { motiv:'Ansicht', oberfl:'Oberfläche', farbe:'Farbe', opt:'Option' };
+function keyLabel(l, k){
+  const t = keyTyp(k), id = keyId(k);
+  if (t === 'motiv') return (MOTIVE.find(m => m.id === id) || {}).name || id;
+  if (t === 'oberfl') return (OBERFL.find(o => o.id === id) || {}).name || id;
+  if (t === 'farbe') return id === 'sonder' ? 'Sonderfarbe' : (farbeById(id) || {}).name || id;
+  if (t === 'opt') return ((l.optionen || []).find(o => o.id === id) || {}).name || id;
+  return id;
+}
+function activeKeys(l, p){
+  const ks = [], m = activeMotiv(l, p), o = activeOberfl(l, p);
+  if (m) ks.push('motiv:' + m.id);
+  if (o) ks.push('oberfl:' + o.id);
+  if (l.farben && !(o && o.dekor)){ const fw = farbWahl(l, p); ks.push('farbe:' + (fw.kind === 'sonder' ? 'sonder' : fw.f.id)); }
+  (l.optionen || []).forEach(op => { if (p.optionen && p.optionen[op.id]) ks.push('opt:' + op.id); });
+  return ks;
+}
+function conflicts(l, a, b){ return (l.regeln || []).some(r => (r.wenn === a && r.nicht.includes(b)) || (r.wenn === b && r.nicht.includes(a))); }
+function blocker(l, p, key){ if (!(l.regeln || []).length) return null; const g = keyGrp(key); return activeKeys(l, p).find(k => keyGrp(k) !== g && conflicts(l, key, k)) || null; }
+function setKey(l, p, key){
+  const t = keyTyp(key), id = keyId(key);
+  if (t === 'motiv') p.motiv = id;
+  if (t === 'oberfl') p.oberfl = id;
+  if (t === 'farbe') p.farbe = id === l.farbStandard ? 'std' : id;
+  if (t === 'opt'){ p.optionen = p.optionen || {}; p.optionen[id] = true; }
+}
+/* Nach einer Auswahl alles umstellen, was damit nicht zusammenpasst */
+function resolveConflicts(l, p, newKey){
+  const msgs = [];
+  for (let pass = 0; pass < 6; pass++){
+    const act = activeKeys(l, p);
+    const bad = act.find(k => keyGrp(k) !== keyGrp(newKey) && conflicts(l, newKey, k));
+    if (!bad) break;
+    const t = keyTyp(bad);
+    if (t === 'opt'){ p.optionen[keyId(bad)] = false; msgs.push(`${keyLabel(l, bad)} geht nicht mit ${keyLabel(l, newKey)} und wurde abgewählt.`); continue; }
+    const cands = t === 'motiv' ? motiveFor(l).map(m => 'motiv:' + m.id)
+      : t === 'oberfl' ? oberflFor(l).slice().sort((a, b) => (a.dekor ? 1 : 0) - (b.dekor ? 1 : 0)).map(o => 'oberfl:' + o.id)
+      : ['farbe:' + l.farbStandard, ...(l.farbVorzug || []).map(i => 'farbe:' + i)];
+    const ok = c => c !== bad && !act.some(k => k !== bad && keyGrp(k) !== keyGrp(c) && conflicts(l, c, k));
+    const repl = cands.find(ok);
+    if (!repl) break;
+    setKey(l, p, repl);
+    msgs.push(`${keyLabel(l, bad)} geht nicht mit ${keyLabel(l, newKey)}, ${GRUPPEN[t]} auf ${keyLabel(l, repl)} geändert.`);
+  }
+  if (msgs.length) toast(msgs.join(' '), 4500);
+}
+function chooseKey(card, key, focusAttr, focusVal){
+  const p = getItem(card), l = findL(katById(card.dataset.kat), p.leistung);
+  setKey(l, p, key);
+  if (keyTyp(key) === 'farbe' && keyId(key) === 'sonder') p.farbe = 'sonder';
+  resolveConflicts(l, p, key);
+  rerenderCard(card, p.farbe === 'sonder' && focusAttr === 'farbe' ? 'input[data-f="farbtext"]' : null);
+  const again = main.querySelector(`.pos[data-uid="${p.uid}"] [data-${focusAttr}="${focusVal}"]`);
+  if (again && !(p.farbe === 'sonder' && focusAttr === 'farbe')) again.focus({ preventScroll:true });
+}
+
+/* ---------- Schritt-Ansichten ---------- */
+function head(title, sub){
+  return `<div class="panel-head"><div><div class="count">Schritt ${state.step + 1} von ${STEPS.length}</div><h1>${esc(title)}</h1></div>${sub || ''}</div>`;
+}
+function viewKunde(){
+  const k = state.kunde;
+  const f = (key, label, cls, attrs = '') => `<label class="fld ${cls}"><span>${label}</span><input class="in" data-k="${key}" value="${esc(k[key])}" ${attrs}></label>`;
+  return head('Kundendaten') + `<div class="card"><div class="grid">
+    <label class="fld c2"><span>Anrede</span><select class="sel" data-k="anrede">${['','Herr','Frau','Familie','Firma'].map(a => `<option value="${a}"${k.anrede === a ? ' selected' : ''}>${a || 'Bitte wählen'}</option>`).join('')}</select></label>
+    ${f('vorname','Vorname','c2','autocomplete="off"')}${f('nachname','Nachname','c2','autocomplete="off"')}
+    ${f('firma','Firma (optional)','c6')}
+    ${f('strasse','Straße und Hausnummer','c3')}${f('plz','PLZ','c1','inputmode="numeric"')}${f('ort','Ort','c2')}
+    ${f('telefon','Telefon','c3','type="tel"')}${f('email','E-Mail','c3','type="email"')}
+    ${f('bearbeiter','Angebot erstellt von','c3')}
+    <div class="fld c3"><span>Datum</span><div class="static">${new Date().toLocaleDateString('de-DE')}</div></div>
+  </div></div>`;
+}
+function viewKat(kat){
+  const list = state.pos[kat.id];
+  const sub = `<div class="subtotal" data-kattotal>${list.length ? `Summe Kategorie<b>${fmt(katTotal(kat.id))}</b>` : ''}</div>`;
+  let html = head(kat.name, sub);
+  if (!list.length){
+    html += `<div class="empty"><p>In dieser Kategorie ist noch nichts ausgewählt.</p><button type="button" class="btn btn-primary" data-act="add">${ICON.plus}Position hinzufügen</button></div>`;
+  } else {
+    html += `<div class="stack" id="poslist">${list.map((p, i) => posCard(kat, p, i, p._new)).join('')}</div>
+      <div style="margin-top:14px"><button type="button" class="add-btn" data-act="add">${ICON.plus}Weitere Position in ${esc(kat.name)}</button></div>`;
+  }
+  html += `<div class="card" style="margin-top:14px"><details class="notes"${state.notes[kat.id] ? ' open' : ''}><summary>Notiz zu ${esc(kat.name)}</summary>
+    <textarea data-note="${kat.id}" placeholder="z. B. Zufahrt eng, Termin erst ab März">${esc(state.notes[kat.id])}</textarea></details></div>`;
+  list.forEach(p => delete p._new);
+  return html;
+}
+function viewSonder(){
+  const list = state.sonder;
+  const sub = `<div class="subtotal" data-kattotal>${list.length ? `Summe Sonderpositionen<b>${fmt(sonderTotal())}</b>` : ''}</div>`;
+  let html = head('Sonderpositionen', sub);
+  if (!list.length){
+    html += `<div class="empty"><p>Für alles, was nicht im Katalog steht: Bezeichnung und Preis frei eintragen.</p><button type="button" class="btn btn-primary" data-act="add-sonder">${ICON.plus}Sonderposition hinzufügen</button></div>`;
+  } else {
+    html += `<div class="stack">${list.map((s, i) => sonderCard(s, i, s._new)).join('')}</div>
+      <div style="margin-top:14px"><button type="button" class="add-btn" data-act="add-sonder">${ICON.plus}Weitere Sonderposition</button></div>`;
+  }
+  list.forEach(s => delete s._new);
+  return html;
+}
+function viewAnfahrt(){
+  const a = state.anfahrt;
+  return head('Anfahrt') + `<div class="card stack">
+    <div class="tiles" style="max-width:520px">
+      <button type="button" class="tile${a.wahl === 'ja' ? ' on' : ''}" data-anfwahl="ja" aria-pressed="${a.wahl === 'ja'}"><span class="tile-txt"><b style="white-space:nowrap">Mit Anfahrt</b></span></button>
+      <button type="button" class="tile${a.wahl === 'nein' ? ' on' : ''}" data-anfwahl="nein" aria-pressed="${a.wahl === 'nein'}"><span class="tile-txt"><b style="white-space:nowrap">Ohne Anfahrt</b></span></button>
+    </div>
+    <div ${a.wahl === 'ja' ? '' : 'hidden'} id="anfBody">
+      <div class="grid" style="margin:6px 0 10px">
+        <label class="fld c3"><span>Gefahrene Kilometer</span><div class="suffix"><input inputmode="decimal" data-anf="km" value="${esc(a.km)}" placeholder="0"><em>km</em></div></label>
+        <div class="c3" data-anfrab>${rabField(a)}</div>
+      </div>
+      <div class="kv"><span>Anfahrtspauschale</span><span>${fmt(ANFAHRT.pauschale)}</span></div>
+      <div class="kv"><span>Kilometer</span><span data-anfkm>${dec.format(num(a.km))} km × ${fmt(ANFAHRT.proKm)}</span></div>
+      <div class="kv" data-anfrabrow ${anfahrtRabatt().rabBetrag ? '' : 'hidden'}><span>Nachlass</span><span data-anfrabval>− ${fmt(anfahrtRabatt().rabBetrag)}</span></div>
+      <div class="kv strong"><span>Anfahrt gesamt</span><span data-anftotal>${fmt(anfahrtTotal())}</span></div>
+    </div></div>`;
+}
+function viewSummary(){
+  const k = state.kunde, t = totals();
+  const name = [k.anrede, k.vorname, k.nachname].filter(Boolean).join(' ');
+  const lines = [k.firma, name, k.strasse, [k.plz, k.ort].filter(Boolean).join(' ')].filter(Boolean).map(esc);
+  const kontakt = [k.telefon, k.email].filter(Boolean).join(' / ');
+  if (kontakt) lines.push(`<span class="muted">${esc(kontakt)}</span>`);
+  lines.push(`<span class="muted">Erstellt ${k.bearbeiter ? 'von ' + esc(k.bearbeiter) + ' ' : ''}am ${new Date(state.meta && state.meta.erstelltMs || Date.now()).toLocaleDateString('de-DE')}</span>`);
+  const kunde = (name || k.firma) ? `<div class="kunde-lines">${lines.join('<br>')}</div>`
+    : `<p class="kunde-lines muted" style="color:var(--muted)">Noch keine Kundendaten eingetragen. <button class="link" data-goto="0" type="button" style="font-size:14px">Jetzt ergänzen</button></p>`;
+  let rows = '', n = 0;
+  KATALOG.forEach(kat => {
+    const items = state.pos[kat.id].map(p => [p, calcPos(p, kat)]).filter(x => x[1]);
+    if (!items.length) return;
+    rows += `<tr class="cat"><td colspan="5">${esc(kat.name)}</td></tr>`;
+    items.forEach(([p, c]) => {
+      n++;
+      const extras = [];
+      if (c.motiv) extras.push(esc(c.motiv.name));
+      if (c.oberfl) extras.push(esc(c.oberfl.name));
+      if (c.l.visual === 'tuer') extras.push(`DIN ${p.anschlag === 'rechts' ? 'rechts' : 'links'}`);
+      if (c.fw) extras.push(c.fw.kind === 'sonder' ? `Sonderfarbe ${esc(p.farbtext || '(nicht angegeben)')}` : c.fw.f.dekor ? `Dekor ${esc(c.fw.f.name)}` : `${esc(c.fw.f.name)} ${esc(c.fw.f.ral)}`);
+      (c.l.optionen || []).forEach(o => { if (p.optionen && p.optionen[o.id]) extras.push(esc(o.name)); });
+      if (c.l.grund) extras.push(`inkl. ${fmt(c.l.grund)} Grundpauschale`);
+      rows += `<tr><td>${esc(c.l.name)}${extras.filter(Boolean).length ? `<span class="sub">${extras.filter(Boolean).join(', ')}</span>` : ''}</td>
+        <td class="num">${c.pauschal ? 'pauschal' : dec.format(c.menge) + ' ' + c.l.einheit}</td>
+        <td class="num">${fmt(c.ep)}${p.ep != null ? ' <span class="tag">manuell</span>' : ''}</td>
+        <td class="num">${c.rab ? rabText(c) : '–'}</td><td class="num">${fmt(c.total)}</td></tr>`;
+    });
+  });
+  const sItems = state.sonder.filter(s => s.text || num(s.preis));
+  if (sItems.length){
+    rows += `<tr class="cat"><td colspan="5">Sonderpositionen</td></tr>`;
+    sItems.forEach(s => { const c = calcSonder(s); n++;
+      rows += `<tr><td>${esc(s.text || 'Ohne Bezeichnung')}</td><td class="num">${c.pauschal ? 'pauschal' : dec.format(c.menge) + ' ' + esc(s.einheit)}</td><td class="num">${fmt(c.ep)}</td><td class="num">${c.rab ? rabText(c) : '–'}</td><td class="num">${fmt(c.total)}</td></tr>`; });
+  }
+  if (anfAktiv()){
+    rows += `<tr class="cat"><td colspan="5">Anfahrt</td></tr><tr><td>Anfahrtspauschale + ${dec.format(num(state.anfahrt.km))} km × ${fmt(ANFAHRT.proKm)}</td><td class="num">pauschal</td><td class="num"></td><td class="num">${anfahrtRabatt().rab ? rabText(anfahrtRabatt()) : '–'}</td><td class="num">${fmt(t.anf)}</td></tr>`;
+  }
+  const table = n || anfAktiv() ? `<div class="table-wrap"><table><thead><tr><th>Leistung</th><th class="num">Menge</th><th class="num">Einzelpreis</th><th class="num">Nachlass</th><th class="num">Gesamt</th></tr></thead><tbody>${rows}</tbody></table></div>`
+    : `<p style="color:var(--muted)">Noch keine Positionen ausgewählt.</p>`;
+  const notes = Object.entries(state.notes).filter(([, v]) => v && v.trim());
+  return head('Zusammenfassung') + `<div class="sum-grid">
+    <div class="card sum-block"><h2>Kunde</h2>${kunde}</div>
+    <div class="stack sum-side">
+      <div class="card totals">
+        <div class="kv"><span>Positionen</span><span>${fmt(t.pos)}</span></div>
+        ${t.rab ? `<div class="kv minus"><span>darin gewährte Nachlässe</span><span>− ${fmt(t.rab)}</span></div>` : ''}
+        ${anfAktiv() ? `<div class="kv"><span>Anfahrt</span><span>${fmt(t.anf)}</span></div>` : ''}
+        <div class="kv"><span>Summe netto</span><span>${fmt(t.netto)}</span></div>
+        <div class="kv"><span>zzgl. ${MWST} % MwSt.</span><span>${fmt(t.mwst)}</span></div>
+        <div class="kv brutto"><span>Gesamt brutto</span><span>${fmt(t.brutto)}</span></div>
+      </div>
+      ${metaCard()}
+      <div class="phase2">PDF für Kunde und Innendienst mit Versand über Outlook folgt in der nächsten Ausbaustufe.</div>
+      <button type="button" class="btn btn-ghost" data-act="reset" style="width:100%">Neues Angebot beginnen</button>
+    </div>
+    <div class="card sum-block sum-full"><h2>Positionen</h2>${table}</div>
+    ${notes.length ? `<div class="card sum-block sum-full"><h2>Notizen für den Innendienst</h2><ul class="note-list">${notes.map(([id, v]) => `<li><b>${esc(katById(id)?.name || id)}:</b> ${esc(v)}</li>`).join('')}</ul></div>` : ''}
+    </div>`;
+}
+
+/* ---------- Rendern ---------- */
+const main = document.getElementById('main');
+function render(focusSel){
+  updateTopOffer();
+  const s = STEPS[state.step];
+  if (!state.visited.includes(state.step)) state.visited.push(state.step);
+  main.innerHTML = s.id === 'kunde' ? viewKunde() : s.kat ? viewKat(s.kat) : s.id === 'sonder' ? viewSonder() : s.id === 'anfahrt' ? viewAnfahrt() : viewSummary();
+  renderSteps(); updateBar(); save();
+  if (focusSel){ const f = main.querySelector(focusSel); if (f){ f.focus(); if (f.select) f.select(); } }
+}
+function rerenderCard(card, focusSel){
+  const kat = katById(card.dataset.kat);
+  const list = state.pos[kat.id]; const i = list.findIndex(p => p.uid === card.dataset.uid);
+  const tmp = document.createElement('div'); tmp.innerHTML = posCard(kat, list[i], i, false);
+  const fresh = tmp.firstElementChild; card.replaceWith(fresh);
+  if (focusSel){ const f = fresh.querySelector(focusSel); if (f){ f.focus(); if (f.select) f.select(); } }
+  refreshLive();
+}
+function updateBar(){
+  const t = totals();
+  document.getElementById('barNetto').textContent = fmt(t.netto);
+  document.getElementById('barBrutto').textContent = fmt(t.brutto);
+  const s = STEPS[state.step];
+  document.getElementById('btnBack').disabled = state.step === 0;
+  const next = document.getElementById('btnNext');
+  next.hidden = state.step === STEPS.length - 1;
+  if (s.kat) next.textContent = countPos(s.id) ? 'Weiter' : 'Überspringen';
+  else if (s.id === 'sonder') next.textContent = state.sonder.length ? 'Weiter' : 'Überspringen';
+  else next.textContent = 'Weiter';
+}
+function refreshLive(){
+  updateTopOffer();
+  const s = STEPS[state.step];
+  main.querySelectorAll('.pos').forEach(card => {
+    let c, line;
+    if (card.dataset.sonder){ const x = state.sonder.find(v => v.uid === card.dataset.uid); if (!x) return; c = calcSonder(x); line = sonderCalcLine(c, x); }
+    else { const kat = katById(card.dataset.kat); const p = state.pos[kat.id].find(v => v.uid === card.dataset.uid); c = p && calcPos(p, kat); line = calcLine(c, kat); }
+    const tEl = card.querySelector('[data-total]'), cEl = card.querySelector('[data-calc]');
+    if (tEl) tEl.innerHTML = totalHtml(c); if (cEl) cEl.textContent = line || '';
+  });
+  const kt = main.querySelector('[data-kattotal]');
+  if (kt && s.kat) kt.innerHTML = state.pos[s.id].length ? `Summe Kategorie<b>${fmt(katTotal(s.id))}</b>` : '';
+  if (kt && s.id === 'sonder') kt.innerHTML = state.sonder.length ? `Summe Sonderpositionen<b>${fmt(sonderTotal())}</b>` : '';
+  const ak = main.querySelector('[data-anfkm]'); if (ak) ak.textContent = `${dec.format(num(state.anfahrt.km))} km × ${fmt(ANFAHRT.proKm)}`;
+  const at = main.querySelector('[data-anftotal]'); if (at) at.textContent = fmt(anfahrtTotal());
+  const ar = main.querySelector('[data-anfrabrow]'); if (ar){ const r = anfahrtRabatt(); ar.hidden = !r.rabBetrag; ar.querySelector('[data-anfrabval]').textContent = `− ${fmt(r.rabBetrag)}`; }
+  renderSteps(); updateBar(); save();
+}
+function go(i){ state.step = Math.max(0, Math.min(STEPS.length - 1, i)); render(); window.scrollTo({ top:0, behavior:'smooth' }); }
+function toast(msg, ms){ const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show'); clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove('show'), ms || 2600); }
+
+/* ---------- Einstellungen (Admin) ---------- */
+let mode = 'angebot', adminTab = 'leistungen', confirmKat = null, confirmCfgReset = false;
+const openKats = new Set();
+const EINHEITEN = ['m²','lfm','Stück','pauschal'];
+const decIn = new Intl.NumberFormat('de-DE', { maximumFractionDigits:2, useGrouping:false });
+const numVal = v => v == null || v === '' ? '' : decIn.format(v);
+const ICON2 = {
+  up:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 15l6-6 6 6"/></svg>',
+  down:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>',
+  eye:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>',
+  eyeOff:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3l18 18M10.6 5.1A10.7 10.7 0 0 1 12 5c6.5 0 10 7 10 7a17.6 17.6 0 0 1-3.2 4.1M6.6 6.6C3.9 8.4 2 12 2 12s3.5 7 10 7c1.8 0 3.4-.5 4.7-1.2M9.9 9.9a3 3 0 0 0 4.2 4.2"/></svg>',
+};
+const confirmHtml = (text, yes, no, yesLabel) => `<div class="confirm-box" role="alertdialog"><p>${text}</p><div class="confirm-btns"><button type="button" class="btn btn-ghost" data-aa="${no}">Abbrechen</button><button type="button" class="btn btn-danger" data-aa="${yes}">${yesLabel}</button></div></div>`;
+
+function viewAdmin(){
+  const tabs = [['leistungen','Kategorien & Leistungen'],['farben','Farben'],['allgemein','Anfahrt & MwSt.']];
+  return `<div class="panel-head"><div><h1>Einstellungen</h1><p class="adm-hint">Änderungen werden automatisch für alle gespeichert. <span id="syncState" class="sync"></span></p></div>
+    <button type="button" class="btn btn-primary" data-aa="close">Zurück zum Angebot</button></div>
+    <div class="tabs" role="tablist">${tabs.map(([id, t]) => `<button type="button" role="tab" class="tab${adminTab === id ? ' active' : ''}" aria-selected="${adminTab === id}" data-tab="${id}">${t}</button>`).join('')}</div>
+    ${adminTab === 'leistungen' ? admLeistungen() : adminTab === 'farben' ? admFarben() : admAllgemein()}`;
+}
+function admLeistungen(){
+  const ks = CFG.katalog;
+  return `<div class="stack">${ks.map((k, i) => admKat(k, i, ks.length)).join('')}</div>
+    <div style="margin-top:14px"><button type="button" class="add-btn" data-aa="add-k">${ICON.plus}Kategorie hinzufügen</button></div>`;
+}
+function admKat(k, i, n){
+  return `<details class="adm-kat${k.hidden ? ' is-hidden' : ''}" data-kid="${k.id}"${openKats.has(k.id) ? ' open' : ''}>
+    <summary><span class="adm-chev" aria-hidden="true"></span><span class="adm-kat-name">${esc(k.name || 'Ohne Namen')}</span>${k.hidden ? '<span class="tag tag-grey">ausgeblendet</span>' : ''}<span class="adm-count">${k.leistungen.length} ${k.leistungen.length === 1 ? 'Leistung' : 'Leistungen'}</span></summary>
+    <div class="adm-kat-body">
+      <div class="adm-kat-top">
+        <label class="fld" style="flex:1;min-width:200px"><span>Name der Kategorie</span><input class="in" data-ak="name" value="${esc(k.name)}"></label>
+        <div class="adm-tools">
+          <button type="button" class="icon-btn" data-aa="up-k"${i === 0 ? ' disabled' : ''} aria-label="Kategorie nach oben" title="Nach oben">${ICON2.up}</button>
+          <button type="button" class="icon-btn" data-aa="down-k"${i === n - 1 ? ' disabled' : ''} aria-label="Kategorie nach unten" title="Nach unten">${ICON2.down}</button>
+          <button type="button" class="icon-btn" data-aa="hide-k" aria-label="${k.hidden ? 'Kategorie einblenden' : 'Kategorie ausblenden'}" title="${k.hidden ? 'Einblenden' : 'Im Angebot ausblenden'}">${k.hidden ? ICON2.eyeOff : ICON2.eye}</button>
+          <button type="button" class="icon-btn del" data-aa="del-k" aria-label="Kategorie löschen" title="Kategorie löschen">${ICON.trash}</button>
+        </div>
+        ${confirmKat === k.id ? confirmHtml(`Kategorie „${esc(k.name || 'Ohne Namen')}“ mit allen Leistungen löschen?`, 'del-k-yes', 'del-k-no', 'Ja, löschen') : ''}
+      </div>
+      <div class="adm-list">${k.leistungen.length ? k.leistungen.map((l, j) => admL(l, j, k.leistungen.length)).join('') : '<p class="adm-empty">Noch keine Leistungen in dieser Kategorie.</p>'}</div>
+      <button type="button" class="add-btn" data-aa="add-l">${ICON.plus}Leistung hinzufügen</button>
+    </div></details>`;
+}
+function admLibBlock(title, lib, arr, key, icon, je){
+  return `<div class="adm-block"><span class="adm-sub">${title} und Aufpreise (${je}). Das erste aktive ist der Standard.</span><div class="adm-motive">${lib.map(m => { const e = (arr || []).find(x => x.id === m.id); return `<div class="adm-mrow"><label class="chk"><input type="checkbox" data-lib-on="${key}:${m.id}"${e ? ' checked' : ''}><span class="tile-ico">${icon(m)}</span>${esc(m.name)}</label><div class="suffix"><input inputmode="decimal" data-lib-preis="${key}:${m.id}" value="${e ? numVal(e.preis) : ''}" placeholder="0"${e ? '' : ' disabled'} aria-label="Aufpreis ${esc(m.name)}"><em>€</em></div></div>`; }).join('')}</div></div>`;
+}
+function admFarbBlock(l, je){
+  const nd = CFG.farben.filter(f => !f.dekor), dk = CFG.farben.filter(f => f.dekor), fa = l.farbAufpreis || {};
+  const chip = (f, key) => `<label class="chk chk-sw"><input type="checkbox" data-fl="${key}:${f.id}"${(l[key] || []).includes(f.id) ? ' checked' : ''}><span class="sw sm" style="${swStyle(f)}"></span>${esc(f.name)}</label>`;
+  const fld = (k, t) => `<label class="fld"><span>${t}</span><div class="suffix"><input inputmode="decimal" data-afa="${k}" value="${numVal(fa[k])}" placeholder="0"><em>€</em></div></label>`;
+  return `<div class="adm-block"><span class="adm-sub">Farben</span>
+    <label class="fld" style="width:280px;max-width:100%"><span>Standardfarbe (ohne Aufpreis)</span><select class="sel" data-al="farbStandard">${nd.map(f => `<option value="${f.id}"${l.farbStandard === f.id ? ' selected' : ''}>${esc(f.name)} ${esc(f.ral)}</option>`).join('')}</select></label>
+    <span class="adm-sub">Vorzugsfarben</span><div class="adm-chips">${nd.filter(f => f.id !== l.farbStandard).map(f => chip(f, 'farbVorzug')).join('')}</div>
+    ${dk.length ? `<span class="adm-sub">Holzdekore</span><div class="adm-chips">${dk.map(f => chip(f, 'farbDekore')).join('')}</div>` : ''}
+    <span class="adm-sub">Farb-Aufpreise (${je})</span><div class="adm-pair adm-trio">${fld('vorzug', 'Vorzugsfarbe')}${fld('sonder', 'Sonderfarbe')}${fld('dekor', 'Holzdekor')}</div></div>`;
+}
+function regelGruppen(l){
+  const g = [];
+  const ms = motiveFor(l); if (ms.length) g.push(['Ansicht', ms.map(m => 'motiv:' + m.id)]);
+  const os = oberflFor(l); if (os.length) g.push(['Oberfläche', os.map(o => 'oberfl:' + o.id)]);
+  if (l.farben){ g.push(['Farbe', ['farbe:' + l.farbStandard, ...(l.farbVorzug || []).map(i => 'farbe:' + i), 'farbe:sonder']]); if ((l.farbDekore || []).length) g.push(['Holzdekor', l.farbDekore.map(i => 'farbe:' + i)]); }
+  if ((l.optionen || []).length) g.push(['Option', l.optionen.map(o => 'opt:' + o.id)]);
+  return g;
+}
+function admRegeln(l){
+  const gr = regelGruppen(l);
+  if (!gr.length) return '';
+  const sel = (attr, value, skipGrp, exclude, placeholder) => `<select class="sel" ${attr}>${placeholder ? `<option value="">${placeholder}</option>` : ''}${gr.map(([name, keys]) => { const ks = keys.filter(k => (!skipGrp || keyGrp(k) !== skipGrp) && !(exclude || []).includes(k)); return ks.length ? `<optgroup label="${name}">${ks.map(k => `<option value="${k}"${k === value ? ' selected' : ''}>${esc(keyLabel(l, k))}</option>`).join('')}</optgroup>` : ''; }).join('')}</select>`;
+  const rows = (l.regeln || []).map(r => `<div class="adm-regel" data-rid="${r.id}">
+      <div class="adm-regel-top"><span class="adm-regel-w">Wenn</span>${sel('data-rw', r.wenn)}<span class="adm-regel-w">dann nicht</span>${sel('data-rn-add', '', keyGrp(r.wenn), r.nicht, '+ hinzufügen …')}
+        <button type="button" class="icon-btn del" data-aa="del-r" aria-label="Regel löschen" title="Regel löschen">${ICON.trash}</button></div>
+      <div class="adm-chips">${r.nicht.length ? r.nicht.map(k => `<span class="chip-x">${esc(keyLabel(l, k))}<button type="button" data-aa="del-rn" data-key="${k}" aria-label="${esc(keyLabel(l, k))} entfernen">×</button></span>`).join('') : '<span class="adm-hint" style="margin:0">Noch nichts ausgeschlossen.</span>'}</div></div>`).join('');
+  return `<div class="adm-block"><span class="adm-sub">Regeln: was nicht miteinander kombinierbar ist (gilt in beide Richtungen)</span>${rows}
+    <button type="button" class="link" data-aa="add-r" style="align-self:flex-start">+ Regel hinzufügen</button></div>`;
+}
+function admL(l, j, n){
+  const pauschal = l.einheit === 'pauschal', je = pauschal ? 'je Position' : 'je ' + l.einheit;
+  const opts = (l.optionen || []).map(o => `<div class="adm-opt" data-oid="${o.id}"><input class="in" data-ao="name" value="${esc(o.name)}" placeholder="z. B. Fenstersektion" aria-label="Bezeichnung der Option"><div class="suffix"><input inputmode="decimal" data-ao="preis" value="${numVal(o.preis)}" placeholder="0" aria-label="Aufpreis"><em>€</em></div><button type="button" class="icon-btn del" data-aa="del-o" aria-label="Option entfernen" title="Option entfernen">${ICON.trash}</button></div>`).join('');
+  return `<div class="adm-l" data-lid="${l.id}">
+    <div class="adm-l-grid">
+      <label class="fld a-name"><span>Bezeichnung</span><input class="in" data-al="name" value="${esc(l.name)}" placeholder="z. B. Bitumen-Schweißbahn"></label>
+      <label class="fld"><span>Einheit</span><select class="sel" data-al="einheit">${EINHEITEN.map(e => `<option${e === l.einheit ? ' selected' : ''}>${e}</option>`).join('')}</select></label>
+      <label class="fld"><span>${pauschal ? 'Pauschalpreis' : 'Preis je ' + l.einheit}</span><div class="suffix"><input inputmode="decimal" data-al="preis" value="${numVal(l.preis)}" placeholder="0"><em>€</em></div></label>
+      ${pauschal ? '<div></div>' : `<label class="fld"><span>Grundpauschale</span><div class="suffix"><input inputmode="decimal" data-al="grund" value="${numVal(l.grund)}" placeholder="keine"><em>€</em></div></label>`}
+      <div class="adm-tools a-tools">
+        <button type="button" class="icon-btn" data-aa="up-l"${j === 0 ? ' disabled' : ''} aria-label="Leistung nach oben" title="Nach oben">${ICON2.up}</button>
+        <button type="button" class="icon-btn" data-aa="down-l"${j === n - 1 ? ' disabled' : ''} aria-label="Leistung nach unten" title="Nach unten">${ICON2.down}</button>
+        <button type="button" class="icon-btn del" data-aa="del-l" aria-label="Leistung löschen" title="Leistung löschen">${ICON.trash}</button>
+      </div>
+    </div>
+    <div class="adm-l-extra">
+      <label class="chk"><input type="checkbox" data-al="motivAn"${l.motive ? ' checked' : ''}>Ansichten anbieten</label>
+      <label class="chk"><input type="checkbox" data-al="oberflAn"${l.oberflaechen ? ' checked' : ''}>Oberflächen anbieten</label>
+      <label class="chk"><input type="checkbox" data-al="farben"${l.farben ? ' checked' : ''}>Farbauswahl anbieten</label>
+      <button type="button" class="link" data-aa="add-o">+ Aufpreis-Option hinzufügen</button>
+      ${l.motive ? admLibBlock('Ansichten', MOTIVE, l.motive, 'motive', m => motivIcon(m.id), je) : ''}
+      ${l.oberflaechen ? admLibBlock('Oberflächen', OBERFL, l.oberflaechen, 'oberflaechen', o => oberflIcon(o), je) : ''}
+      ${l.farben ? admFarbBlock(l, je) : ''}
+      ${(l.farben || l.motive || l.oberflaechen) ? `<div class="adm-block"><label class="fld" style="width:260px;max-width:100%"><span>Vorschau-Bild im Angebot</span><select class="sel" data-al="visual"><option value="">Keine Vorschau</option>${Object.entries(VISUAL_NAMEN).map(([k, v]) => `<option value="${k}"${l.visual === k ? ' selected' : ''}>${v}</option>`).join('')}</select></label></div>` : ''}
+      ${opts ? `<div class="adm-opts"><span class="adm-sub">Aufpreis-Optionen (${je})</span>${opts}</div>` : ''}
+      ${admRegeln(l)}
+    </div></div>`;
+}
+function admFarbRow(f){
+  return `<div class="adm-farbe" data-fid="${f.id}"><label class="fld"><span>Farbton</span><input type="color" data-af="hex" value="${esc(f.hex)}" aria-label="Farbton für Vorschau und Farbkachel"></label>
+    <label class="fld"><span>Name</span><input class="in" data-af="name" value="${esc(f.name)}" placeholder="z. B. Anthrazitgrau"></label>
+    <label class="fld a-ral"><span>RAL / Code</span><input class="in" data-af="ral" value="${esc(f.ral)}" placeholder="RAL 7016"></label>
+    <label class="chk a-dekor"><input type="checkbox" data-af-dekor${f.dekor ? ' checked' : ''}>Holzdekor</label>
+    <button type="button" class="icon-btn del" data-aa="del-f" aria-label="Farbe entfernen" title="Farbe entfernen">${ICON.trash}</button></div>`;
+}
+function admPct(key, label, val, unit){
+  return `<label class="fld c2"><span>${label}</span><div class="suffix"><input inputmode="decimal" data-ag="${key}" value="${numVal(val)}" placeholder="0"><em>${unit}</em></div></label>`;
+}
+function admFarben(){
+  return `<div class="stack"><div class="card"><h2 class="adm-h2">Farbbibliothek</h2><p class="adm-hint">Alle Farben und Holzdekore, die bei Leistungen zur Auswahl stehen können. Welche davon bei einem Produkt Standard, Vorzugsfarbe oder Dekor ist und was sie kostet, legst du direkt bei der Leistung fest.</p>
+    ${CFG.farben.map(admFarbRow).join('')}
+    <button type="button" class="add-btn" data-aa="add-f" style="margin-top:14px">${ICON.plus}Farbe hinzufügen</button></div></div>`;
+}
+function admAllgemein(){
+  return `<div class="stack">
+    <div class="card"><h2 class="adm-h2">Anfahrt</h2><p class="adm-hint">Berechnung im Angebot: Pauschale + gefahrene Kilometer × Preis je km.</p>
+      <div class="grid" style="margin-top:12px">${admPct('pauschale', 'Anfahrtspauschale', CFG.anfahrt.pauschale, '€')}${admPct('proKm', 'Preis je Kilometer', CFG.anfahrt.proKm, '€ / km')}</div></div>
+    <div class="card"><h2 class="adm-h2">Mehrwertsteuer</h2><div class="grid" style="margin-top:12px">${admPct('mwst', 'MwSt.-Satz', CFG.mwst, '%')}</div></div>
+    <div class="card"><h2 class="adm-h2">Beispielwerte wiederherstellen</h2><p class="adm-hint" style="margin-bottom:14px">Setzt Kategorien, Leistungen, Preise, Farben und Anfahrt auf den Stand des Entwurfs zurück.</p>
+      ${confirmCfgReset ? confirmHtml('Alle Einstellungen auf die Beispielwerte zurücksetzen? Eigene Änderungen gehen dabei verloren.', 'reset-cfg-yes', 'reset-cfg-no', 'Ja, zurücksetzen') : '<button type="button" class="btn btn-outline" data-aa="reset-cfg">Alle Einstellungen zurücksetzen</button>'}</div>
+  </div>`;
+}
+
+function cfgChanged(){ saveConfig(); applyConfig(); ensureStatePos(); }
+function renderAdmin(focusSel){
+  main.innerHTML = viewAdmin();
+  if (focusSel){ const f = main.querySelector(focusSel); if (f){ f.focus(); if (f.select) f.select(); f.scrollIntoView({ block:'center', behavior:'smooth' }); } }
+}
+function openAdmin(){ if (mode === 'liste') closeListe(true); mode = 'admin'; document.body.classList.add('admin-mode'); renderAdmin(); window.scrollTo({ top:0 }); }
+function closeAdmin(){ mode = 'angebot'; confirmKat = null; confirmCfgReset = false; document.body.classList.remove('admin-mode'); applyConfig(); ensureStatePos(); render(); window.scrollTo({ top:0 }); }
+const admKatOf = el => { const d = el.closest('[data-kid]'); return d ? CFG.katalog.find(k => k.id === d.dataset.kid) : null; };
+const admLOf = el => { const k = admKatOf(el), r = el.closest('[data-lid]'); return k && r ? k.leistungen.find(l => l.id === r.dataset.lid) : null; };
+const admFOf = el => { const r = el.closest('[data-fid]'); return r ? CFG.farben.find(f => f.id === r.dataset.fid) : null; };
+function swap(arr, i, d){ const j = i + d; if (i < 0 || j < 0 || j >= arr.length) return; [arr[i], arr[j]] = [arr[j], arr[i]]; }
+
+function adminClick(e){
+  const tab = e.target.closest('[data-tab]');
+  if (tab){ adminTab = tab.dataset.tab; confirmCfgReset = false; renderAdmin(); return; }
+  const b = e.target.closest('[data-aa]'); if (!b) return;
+  const a = b.dataset.aa, k = admKatOf(b), l = admLOf(b);
+  if (a === 'close'){ closeAdmin(); return; }
+  if (a === 'add-k'){ const nk = { id:'k' + uid(), name:'Neue Kategorie', leistungen:[] }; CFG.katalog.push(nk); openKats.add(nk.id); cfgChanged(); renderAdmin(`[data-kid="${nk.id}"] input[data-ak="name"]`); return; }
+  if (a === 'add-l'){ const nl = { id:'l' + uid(), name:'', einheit:'Stück', preis:0 }; k.leistungen.push(nl); cfgChanged(); renderAdmin(`[data-lid="${nl.id}"] input[data-al="name"]`); return; }
+  if (a === 'add-o'){ l.optionen = l.optionen || []; const no = { id:'o' + uid(), name:'', preis:0 }; l.optionen.push(no); cfgChanged(); renderAdmin(`[data-oid="${no.id}"] input[data-ao="name"]`); return; }
+  if (a === 'add-f'){ const nf = { id:'f' + uid(), name:'', ral:'', hex:'#8a8f96' }; CFG.farben.push(nf); cfgChanged(); renderAdmin(`[data-fid="${nf.id}"] input[data-af="name"]`); return; }
+  if (a === 'up-k' || a === 'down-k') swap(CFG.katalog, CFG.katalog.indexOf(k), a === 'up-k' ? -1 : 1);
+  if (a === 'hide-k'){ k.hidden = !k.hidden; toast(k.hidden ? 'Kategorie im Angebot ausgeblendet' : 'Kategorie wieder eingeblendet'); }
+  if (a === 'del-k') confirmKat = k.id;
+  if (a === 'del-k-no') confirmKat = null;
+  if (a === 'del-k-yes'){ CFG.katalog = CFG.katalog.filter(x => x !== k); confirmKat = null; toast('Kategorie gelöscht'); }
+  if (a === 'up-l' || a === 'down-l') swap(k.leistungen, k.leistungen.indexOf(l), a === 'up-l' ? -1 : 1);
+  if (a === 'del-l'){ k.leistungen = k.leistungen.filter(x => x !== l); toast('Leistung gelöscht'); }
+  if (a === 'add-r'){ const first = (regelGruppen(l)[0] || [null, []])[1][0]; if (first){ l.regeln = l.regeln || []; l.regeln.push({ id:'r' + uid(), wenn:first, nicht:[] }); } }
+  if (a === 'del-r'){ const rid = b.closest('[data-rid]').dataset.rid; l.regeln = (l.regeln || []).filter(r => r.id !== rid); }
+  if (a === 'del-rn'){ const r = (l.regeln || []).find(x => x.id === b.closest('[data-rid]').dataset.rid); if (r) r.nicht = r.nicht.filter(k => k !== b.dataset.key); }
+  if (a === 'del-o'){ const oid = b.closest('[data-oid]').dataset.oid; l.optionen = (l.optionen || []).filter(o => o.id !== oid); }
+  if (a === 'del-f'){ const f = admFOf(b); CFG.farben = CFG.farben.filter(x => x !== f);
+    CFG.katalog.forEach(kk => kk.leistungen.forEach(ll => { ['farbVorzug', 'farbDekore'].forEach(key => { if (ll[key]) ll[key] = ll[key].filter(id => id !== f.id); }); if (ll.farbStandard === f.id){ const first = CFG.farben.find(x => !x.dekor); ll.farbStandard = first ? first.id : ''; } }));
+    toast('Farbe entfernt'); }
+  if (a === 'reset-cfg') confirmCfgReset = true;
+  if (a === 'reset-cfg-no') confirmCfgReset = false;
+  if (a === 'reset-cfg-yes'){ CFG = clone(DEFAULT_CONFIG); confirmCfgReset = false; openKats.clear(); toast('Einstellungen zurückgesetzt'); }
+  cfgChanged(); renderAdmin();
+}
+function adminInput(e){
+  const t = e.target, d = t.dataset;
+  if (d.ak){ const k = admKatOf(t); k.name = t.value; t.closest('details').querySelector('.adm-kat-name').textContent = t.value || 'Ohne Namen'; }
+  else if (d.ao){ const l = admLOf(t), oid = t.closest('[data-oid]').dataset.oid, o = l.optionen.find(x => x.id === oid); o[d.ao] = d.ao === 'preis' ? num(t.value) : t.value; }
+  else if (d.al === 'name') admLOf(t).name = t.value;
+  else if (d.al === 'preis') admLOf(t).preis = num(t.value);
+  else if (d.al === 'grund'){ const l = admLOf(t); if (t.value.trim() === '' || num(t.value) === 0) delete l.grund; else l.grund = num(t.value); }
+  else if (d.af){ admFOf(t)[d.af] = t.value; }
+  else if (d.afa){ const l = admLOf(t); l.farbAufpreis = l.farbAufpreis || {}; l.farbAufpreis[d.afa] = num(t.value); }
+  else if (d.libPreis){ const [key, id] = d.libPreis.split(':'), en = (admLOf(t)[key] || []).find(x => x.id === id); if (en) en.preis = num(t.value); }
+  else if (d.ag){ const v = num(t.value); if (d.ag === 'mwst') CFG.mwst = v; else CFG.anfahrt[d.ag] = v; }
+  else return;
+  cfgChanged();
+}
+function adminChange(e){
+  const t = e.target, d = t.dataset;
+  if (d.al === 'einheit'){ const l = admLOf(t); l.einheit = t.value; if (t.value === 'pauschal') delete l.grund; cfgChanged(); renderAdmin(); }
+  if (d.al === 'farben'){ const l = admLOf(t); l.farben = t.checked;
+    if (t.checked){ l.farbAufpreis = l.farbAufpreis || { vorzug:0, sonder:0, dekor:0 }; if (!farbeById(l.farbStandard)){ const first = CFG.farben.find(x => !x.dekor); l.farbStandard = first ? first.id : ''; } l.farbVorzug = l.farbVorzug || []; }
+    cfgChanged(); renderAdmin(); }
+  if (d.al === 'motivAn'){ const l = admLOf(t); if (t.checked) l.motive = MOTIVE.map(m => ({ id:m.id, preis:0 })); else delete l.motive; cfgChanged(); renderAdmin(); }
+  if (d.al === 'oberflAn'){ const l = admLOf(t); if (t.checked) l.oberflaechen = OBERFL.map(o => ({ id:o.id, preis:0 })); else delete l.oberflaechen; cfgChanged(); renderAdmin(); }
+  if (d.al === 'visual'){ const l = admLOf(t); if (t.value) l.visual = t.value; else delete l.visual; cfgChanged(); }
+  if (d.al === 'farbStandard'){ const l = admLOf(t); l.farbStandard = t.value; l.farbVorzug = (l.farbVorzug || []).filter(x => x !== t.value); cfgChanged(); renderAdmin(); }
+  if (d.libOn){ const [key, id] = d.libOn.split(':'), l = admLOf(t), lib = key === 'motive' ? MOTIVE : OBERFL; l[key] = l[key] || [];
+    if (t.checked){ if (!l[key].some(x => x.id === id)) l[key].push({ id, preis:0 }); l[key].sort((a, b) => lib.findIndex(m => m.id === a.id) - lib.findIndex(m => m.id === b.id)); }
+    else l[key] = l[key].filter(x => x.id !== id);
+    cfgChanged(); renderAdmin(); }
+  if (d.fl){ const [key, id] = d.fl.split(':'), l = admLOf(t); const set = new Set(l[key] || []); if (t.checked) set.add(id); else set.delete(id);
+    l[key] = CFG.farben.filter(f => set.has(f.id)).map(f => f.id); cfgChanged(); }
+  if ('rw' in d || 'rnAdd' in d){ const l = admLOf(t), r = (l.regeln || []).find(x => x.id === t.closest('[data-rid]').dataset.rid);
+    if (r && 'rw' in d){ r.wenn = t.value; r.nicht = r.nicht.filter(k => keyGrp(k) !== keyGrp(t.value)); }
+    if (r && 'rnAdd' in d && t.value && !r.nicht.includes(t.value)) r.nicht.push(t.value);
+    cfgChanged(); renderAdmin(); }
+  if ('afDekor' in d){ const f = admFOf(t); f.dekor = t.checked; cfgChanged(); renderAdmin(); }
+}
+main.addEventListener('toggle', e => {
+  const dt = e.target; if (mode !== 'admin' || !dt.matches || !dt.matches('details.adm-kat')) return;
+  if (dt.open) openKats.add(dt.dataset.kid); else openKats.delete(dt.dataset.kid);
+}, true);
+document.getElementById('btnAdmin').onclick = () => mode === 'admin' ? closeAdmin() : openAdmin();
+
+/* ---------- Ereignisse ---------- */
+document.getElementById('btnBack').onclick = () => go(state.step - 1);
+document.getElementById('btnNext').onclick = () => go(state.step + 1);
+document.getElementById('steps').addEventListener('click', e => { const b = e.target.closest('[data-goto]'); if (b) go(+b.dataset.goto); });
+
+function getItem(card){
+  if (card.dataset.sonder) return state.sonder.find(s => s.uid === card.dataset.uid);
+  return state.pos[card.dataset.kat].find(p => p.uid === card.dataset.uid);
+}
+
+main.addEventListener('click', e => {
+  if (mode === 'admin'){ adminClick(e); return; }
+  if (mode === 'liste'){ listeClick(e); return; }
+  const gotoBtn = e.target.closest('[data-goto]'); if (gotoBtn){ go(+gotoBtn.dataset.goto); return; }
+  const ra = e.target.closest('[data-rabart]');
+  if (ra){
+    e.preventDefault();
+    if (ra.closest('[data-anfrab]')){ state.anfahrt.rabattArt = ra.dataset.rabart; render('[data-anfrab] input[data-f="rabatt"]'); return; }
+    const card = ra.closest('.pos'), p = getItem(card), uidv = p.uid;
+    p.rabattArt = ra.dataset.rabart;
+    if (card.dataset.sonder) render(); else rerenderCard(card);
+    const inp = main.querySelector(`.pos[data-uid="${uidv}"] input[data-f="rabatt"]`); if (inp){ inp.focus(); inp.select(); }
+    return;
+  }
+  const aw = e.target.closest('[data-anfwahl]');
+  if (aw){ state.anfahrt.wahl = aw.dataset.anfwahl; render(aw.dataset.anfwahl === 'ja' ? 'input[data-anf="km"]' : null); return; }
+  const tileO = e.target.closest('[data-oberfl]');
+  if (tileO){
+    chooseKey(tileO.closest('.pos'), 'oberfl:' + tileO.dataset.oberfl, 'oberfl', tileO.dataset.oberfl);
+    return;
+  }
+  const tileA = e.target.closest('[data-anschlag]');
+  if (tileA){
+    const card = tileA.closest('.pos'), p = getItem(card); p.anschlag = tileA.dataset.anschlag; rerenderCard(card);
+    const ag = main.querySelector(`.pos[data-uid="${p.uid}"] [data-anschlag="${p.anschlag}"]`); if (ag) ag.focus({ preventScroll:true });
+    return;
+  }
+  const tileM = e.target.closest('[data-motiv]'), tileF = e.target.closest('[data-farbe]');
+  if (tileM || tileF){
+    const card = (tileM || tileF).closest('.pos');
+    if (tileM) chooseKey(card, 'motiv:' + tileM.dataset.motiv, 'motiv', tileM.dataset.motiv);
+    else { const p = getItem(card), l = findL(katById(card.dataset.kat), p.leistung), id = tileF.dataset.farbe;
+      chooseKey(card, 'farbe:' + (id === 'std' ? l.farbStandard : id), 'farbe', id); }
+    return;
+  }
+  const b = e.target.closest('[data-act]'); if (!b) return;
+  const act = b.dataset.act, s = STEPS[state.step], card = b.closest('.pos');
+  if (act === 'add'){
+    state.pos[s.id].push({ uid:uid(), leistung:'', menge:'', ep:null, rabatt:'', farbe:'std', farbtext:'', optionen:{}, _new:true });
+    render('.pos:last-child select[data-f="leistung"]');
+    main.querySelector('.pos:last-child')?.scrollIntoView({ block:'center', behavior:'smooth' });
+  }
+  if (act === 'add-sonder'){
+    state.sonder.push({ uid:uid(), text:'', menge:'1', einheit:'Stück', preis:'', rabatt:'', _new:true });
+    render('.pos:last-child input[data-f="text"]');
+    main.querySelector('.pos:last-child')?.scrollIntoView({ block:'center', behavior:'smooth' });
+  }
+  if (act === 'del' && card){
+    if (card.dataset.sonder) state.sonder = state.sonder.filter(x => x.uid !== card.dataset.uid);
+    else state.pos[card.dataset.kat] = state.pos[card.dataset.kat].filter(x => x.uid !== card.dataset.uid);
+    render();
+  }
+  if (act === 'edit-ep' && card){ const p = getItem(card); p.editing = true; rerenderCard(card, 'input[data-f="ep"]'); }
+  if (act === 'reset-ep' && card){ const p = getItem(card); p.ep = null; rerenderCard(card); }
+  if (act === 'save') saveOffer(b);
+  if (act === 'variante') makeVariant();
+  if (act === 'reset'){ b.outerHTML = `<div class="confirm-box" role="alertdialog" aria-label="Neues Angebot beginnen"><p>Alle Eingaben löschen und ein neues Angebot beginnen?</p><div class="confirm-btns"><button type="button" class="btn btn-ghost" data-act="reset-no">Abbrechen</button><button type="button" class="btn btn-danger" data-act="reset-yes">Ja, alles löschen</button></div></div>`; main.querySelector('[data-act="reset-no"]').focus(); }
+  if (act === 'reset-no') render();
+  if (act === 'reset-yes'){ newOffer(); toast('Neues Angebot begonnen'); }
+});
+
+main.addEventListener('input', e => {
+  if (mode === 'admin'){ adminInput(e); return; }
+  if (mode === 'liste'){ listeInput(e); return; }
+  const t = e.target;
+  if (t.dataset.k){ state.kunde[t.dataset.k] = t.value; renderSteps(); save(); return; }
+  if (t.dataset.note){ state.notes[t.dataset.note] = t.value; save(); return; }
+  if (t.dataset.anf === 'km'){ state.anfahrt.km = t.value; refreshLive(); return; }
+  if (t.dataset.f === 'rabatt' && t.closest('[data-anfrab]')){ state.anfahrt.rabatt = t.value; refreshLive(); return; }
+  const card = t.closest('.pos'); if (!card) return;
+  const p = getItem(card); const f = t.dataset.f;
+  if (['menge','rabatt','farbtext','text','preis'].includes(f)){ p[f] = t.value; refreshLive();
+    if (f === 'farbtext'){
+      const l = findL(katById(card.dataset.kat), p.leistung), pv = card.querySelector('[data-preview]');
+      if (pv && l){ const tmp = document.createElement('div'); tmp.innerHTML = prevHtml(l, p, activeMotiv(l, p)); pv.replaceWith(tmp.firstElementChild); }
+      const sw = card.querySelector('[data-farbe="sonder"] .sw');
+      if (sw){ const h = ralHex(t.value); sw.className = 'sw' + (h ? '' : ' sonder'); sw.style.background = h || ''; }
+    } }
+});
+
+main.addEventListener('change', e => {
+  if (mode === 'admin'){ adminChange(e); return; }
+  if (mode === 'liste'){ listeInput(e); return; }
+  if (e.target.id === 'metaStatus'){ setStatus(e.target.value); return; }
+  const t = e.target;
+  if (t.dataset.k === 'anrede'){ state.kunde.anrede = t.value; save(); return; }
+  if (t.dataset.anf === 'aktiv'){ state.anfahrt.aktiv = t.checked; document.getElementById('anfBody').hidden = !t.checked; refreshLive(); return; }
+  const card = t.closest('.pos'); if (!card) return;
+  const p = getItem(card); const f = t.dataset.f;
+  if (card.dataset.sonder){ if (f === 'einheit'){ p.einheit = t.value; render(); } return; }
+  if (f === 'leistung'){ p.leistung = t.value; p.ep = null; p.optionen = {}; p.farbe = 'std'; p.farbtext = ''; p.motiv = ''; p.oberfl = ''; rerenderCard(card, t.value && findL(katById(card.dataset.kat), t.value).einheit !== 'pauschal' ? 'input[data-f="menge"]' : null); }
+  if (f === 'farbe'){ p.farbe = t.value; rerenderCard(card, t.value === 'sonder' ? 'input[data-f="farbtext"]' : null); }
+  if (t.dataset.opt){ p.optionen = p.optionen || {}; p.optionen[t.dataset.opt] = t.checked;
+    if (t.checked){ const l = findL(katById(card.dataset.kat), p.leistung); resolveConflicts(l, p, 'opt:' + t.dataset.opt); }
+    rerenderCard(card); }
+});
+
+function commitEp(t){
+  const card = t.closest('.pos'); if (!card) return;
+  const p = getItem(card); if (!p || !p.editing) return;
+  const kat = katById(card.dataset.kat); const l = findL(kat, p.leistung);
+  const v = t.value.trim();
+  p.ep = v === '' ? null : num(v);
+  if (p.ep === l.preis) p.ep = null;
+  p.editing = false; rerenderCard(card);
+}
+main.addEventListener('focusout', e => { if (e.target.dataset.f === 'ep') commitEp(e.target); });
+main.addEventListener('keydown', e => {
+  if (e.target.dataset.f === 'ep' && (e.key === 'Enter' || e.key === 'Escape')){
+    if (e.key === 'Escape'){ const p = getItem(e.target.closest('.pos')); p.editing = false; rerenderCard(e.target.closest('.pos')); return; }
+    e.preventDefault(); e.target.blur();
+  }
+});
+
+
+/* =====================================================================
+   Firebase: Login, gemeinsame Einstellungen, Angebote
+   ===================================================================== */
+let USER = null, ANGEBOTE = [], unsubCfg = null, unsubAng = null;
+const STATUS = { entwurf:'Entwurf', versendet:'Versendet', beauftragt:'Beauftragt', abgelehnt:'Abgelehnt' };
+const PAPIERKORB_TAGE = 30;
+const LF = { q:'', bearbeiter:'', status:'', zeit:'', versionen:false, tab:'aktiv' };
+let delConfirm = null, pendingOpen = null;
+
+function errText(e){
+  const c = (e && e.code) || '';
+  if (c.includes('permission-denied')) return 'Keine Berechtigung für diese Aktion.';
+  if (c.includes('unavailable')) return 'Keine Verbindung zum Server. Bitte Internetverbindung prüfen.';
+  return 'Es ist ein Fehler aufgetreten' + (c ? ` (${c})` : '') + '.';
+}
+function nameFromMail(mail){
+  const local = String(mail || '').split('@')[0];
+  return local.split(/[._-]+/).filter(Boolean).map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ') || 'Unbekannt';
+}
+const datum = ms => ms ? new Date(ms).toLocaleDateString('de-DE') : '–';
+function kundeAnzeige(k){ return k.firma || [k.vorname, k.nachname].filter(Boolean).join(' ') || 'Ohne Kundenname'; }
+function contentKey(){
+  return JSON.stringify({ kunde:state.kunde, pos:state.pos, notes:state.notes, sonder:state.sonder, anfahrt:state.anfahrt },
+    (key, v) => (key === 'editing' || key === '_new') ? undefined : v);
+}
+function hasContent(){
+  return !!(state.kunde.nachname || state.kunde.firma || state.sonder.length || Object.values(state.pos).some(l => l.some(p => p.leistung)));
+}
+function isDirty(){ return state.meta && state.meta.id ? contentKey() !== state.meta.saved : hasContent(); }
+function updateTopOffer(){
+  const el = document.getElementById('topOffer'); if (!el) return;
+  if (!USER){ el.hidden = true; return; }
+  const m = state.meta;
+  el.hidden = false;
+  el.textContent = m && m.nummer ? `${m.nummer} ${m.variante}${m.version ? ' v' + m.version : ' (neu)'}${isDirty() ? ' *' : ''}` : 'Neues Angebot';
+  el.title = isDirty() ? 'Ungespeicherte Änderungen' : 'Gespeichert';
+}
+
+/* ---------- Login ---------- */
+const loginEl = document.getElementById('login');
+function loginMsg(text, isErr){ const st = document.getElementById('loginStatus'); st.textContent = text || ''; st.classList.toggle('err', !!isErr); }
+function cloudInit(){
+  const start = () => {
+    loginMsg('');
+    document.getElementById('loginBtn').disabled = false;
+    FB.f.onAuthStateChanged(FB.auth, user => { if (user) onLogin(user); else onLogout(); });
+  };
+  if (window.FB) start(); else window.addEventListener('fb-ready', start, { once:true });
+  setTimeout(() => { if (!window.FB) loginMsg('Keine Verbindung zum Server. Bitte Internetverbindung prüfen und die Seite neu laden.', true); }, 15000);
+}
+document.getElementById('loginForm').addEventListener('submit', async e => {
+  e.preventDefault();
+  const mail = document.getElementById('loginMail').value.trim(), pw = document.getElementById('loginPw').value;
+  const err = document.getElementById('loginErr'), btn = document.getElementById('loginBtn');
+  err.textContent = '';
+  if (!mail || !pw){ err.textContent = 'Bitte E-Mail und Passwort eingeben.'; return; }
+  btn.disabled = true; btn.textContent = 'Anmelden …';
+  try { await FB.f.signInWithEmailAndPassword(FB.auth, mail, pw); }
+  catch(ex){
+    const c = ex.code || '';
+    err.textContent = c.includes('too-many-requests') ? 'Zu viele Versuche. Bitte kurz warten und erneut probieren.'
+      : c.includes('network') ? 'Keine Internetverbindung.'
+      : c.includes('invalid-email') ? 'Bitte eine gültige E-Mail-Adresse eingeben.'
+      : c.includes('user-disabled') ? 'Dieses Konto ist gesperrt.'
+      : 'E-Mail oder Passwort ist falsch.';
+  }
+  btn.disabled = false; btn.textContent = 'Anmelden';
+});
+document.getElementById('pwReset').addEventListener('click', async () => {
+  const mail = document.getElementById('loginMail').value.trim(), err = document.getElementById('loginErr');
+  if (!mail){ err.textContent = 'Bitte zuerst oben die E-Mail-Adresse eintragen.'; return; }
+  try { await FB.f.sendPasswordResetEmail(FB.auth, mail); } catch(ex) {}
+  err.textContent = '';
+  loginMsg('Falls ein Konto mit dieser Adresse existiert, wurde eine E-Mail zum Zurücksetzen des Passworts verschickt.');
+});
+document.getElementById('btnLogout').onclick = async () => {
+  if (isDirty() && !confirmLogout){ confirmLogout = true; toast('Es gibt ungespeicherte Änderungen. Zum Abmelden nochmal klicken, dann gehen sie verloren.', 5000); setTimeout(() => confirmLogout = false, 5000); return; }
+  confirmLogout = false;
+  await FB.f.signOut(FB.auth);
+};
+let confirmLogout = false;
+
+async function onLogin(user){
+  USER = { uid:user.uid, email:user.email, name:nameFromMail(user.email), admin:false };
+  try { const a = await FB.f.getDoc(FB.f.doc(FB.db, 'admins', user.uid)); if (a.exists()){ USER.admin = true; if (a.data().name) USER.name = a.data().name; } } catch(e) {}
+  document.getElementById('btnAdmin').hidden = !USER.admin;
+  document.getElementById('userName').textContent = 'Abmelden';
+  document.getElementById('btnLogout').title = `Abmelden (${USER.email})`;
+  if (!state.kunde.bearbeiter) state.kunde.bearbeiter = USER.name;
+  subscribeConfig(); subscribeAngebote();
+  loginEl.hidden = true;
+  document.getElementById('loginPw').value = '';
+  render();
+}
+function onLogout(){
+  if (unsubCfg) unsubCfg(); if (unsubAng) unsubAng(); unsubCfg = unsubAng = null;
+  USER = null; ANGEBOTE = [];
+  if (mode !== 'angebot'){ mode = 'angebot'; document.body.classList.remove('admin-mode', 'liste-mode'); }
+  state = freshState(); try { localStorage.removeItem(STORE_KEY); } catch(e) {}
+  render();
+  loginEl.hidden = false;
+  document.getElementById('loginErr').textContent = '';
+}
+
+/* ---------- Einstellungen aus der Datenbank ---------- */
+function subscribeConfig(){
+  const ref = FB.f.doc(FB.db, 'config', 'main');
+  unsubCfg = FB.f.onSnapshot(ref, snap => {
+    if (snap.metadata && snap.metadata.hasPendingWrites) return;
+    if (!snap.exists()){
+      if (USER && USER.admin){ const data = plain(CFG); lastCfgJSON = canon(data); FB.f.setDoc(ref, data).then(() => toast('Einstellungen erstmals in der Datenbank angelegt.')).catch(e => toast(errText(e))); }
+      return;
+    }
+    const data = snap.data(), json = canon(data);
+    if (json === lastCfgJSON) return;
+    lastCfgJSON = json;
+    CFG = Object.assign(clone(DEFAULT_CONFIG), data);
+    try { localStorage.setItem(CFG_KEY, JSON.stringify(CFG)); } catch(e) {}
+    applyConfig(); ensureStatePos();
+    if (mode === 'admin') renderAdmin(); else if (mode === 'liste') renderListe(); else render();
+  }, e => toast('Einstellungen konnten nicht geladen werden: ' + errText(e), 5000));
+}
+
+/* ---------- Angebote ---------- */
+function subscribeAngebote(){
+  unsubAng = FB.f.onSnapshot(FB.f.collection(FB.db, 'angebote'), snap => {
+    ANGEBOTE = snap.docs.map(d => ({ id:d.id, ...d.data() }));
+    if (mode === 'liste') renderListResults();
+    if (USER && USER.admin) purgeTrash();
+  }, e => toast('Angebote konnten nicht geladen werden: ' + errText(e), 5000));
+}
+let purged = false;
+function purgeTrash(){
+  if (purged) return; purged = true;
+  const grenze = Date.now() - PAPIERKORB_TAGE * 864e5;
+  ANGEBOTE.filter(a => a.geloescht && a.geloeschtMs && a.geloeschtMs < grenze)
+    .forEach(a => FB.f.deleteDoc(FB.f.doc(FB.db, 'angebote', a.id)).catch(() => {}));
+}
+async function nextNummer(){
+  const ref = FB.f.doc(FB.db, 'zaehler', 'angebote');
+  return FB.f.runTransaction(FB.db, async tx => {
+    const snap = await tx.get(ref), jahr = new Date().getFullYear();
+    let n = 1; if (snap.exists() && snap.data().jahr === jahr) n = (snap.data().n || 0) + 1;
+    tx.set(ref, { jahr, n });
+    return `${jahr}-${String(n).padStart(4, '0')}`;
+  });
+}
+function offerData(){
+  const t = totals(), k = state.kunde;
+  return plain({
+    kunde:k, pos:state.pos, notes:state.notes, sonder:state.sonder, anfahrt:state.anfahrt,
+    summen:{ netto:t.netto, brutto:t.brutto }, kundeName:kundeAnzeige(k), ort:k.ort || '', bearbeiter:k.bearbeiter || USER.name,
+  });
+}
+function versionsOf(nummer, variante){ return ANGEBOTE.filter(a => a.nummer === nummer && a.variante === variante); }
+async function saveOffer(btn){
+  if (!USER) return;
+  if (!hasContent()){ toast('Bitte zuerst Kundendaten oder Positionen eintragen.'); return; }
+  const m = state.meta;
+  if (m && m.id && contentKey() === m.saved){ toast('Keine Änderungen seit dem letzten Speichern.'); return; }
+  if (btn){ btn.disabled = true; btn.textContent = 'Wird gespeichert …'; }
+  try {
+    const now = Date.now(), data = offerData();
+    const nummer = m && m.nummer ? m.nummer : await nextNummer();
+    const variante = m && m.variante ? m.variante : 'A';
+    const version = m && m.id ? Math.max(0, ...versionsOf(nummer, variante).map(a => a.version || 0)) + 1 : 1;
+    const status = m && m.status || 'entwurf';
+    const doc = { ...data, nummer, variante, version, aktuell:true, status, geloescht:false,
+      erstelltVonUid:USER.uid, erstelltVonName:USER.name, erstelltMs:now, geaendertMs:now };
+    const ref = await FB.f.addDoc(FB.f.collection(FB.db, 'angebote'), doc);
+    await Promise.all(versionsOf(nummer, variante).filter(a => a.aktuell && a.id !== ref.id)
+      .map(a => FB.f.updateDoc(FB.f.doc(FB.db, 'angebote', a.id), { aktuell:false })));
+    state.meta = { id:ref.id, nummer, variante, version, status, erstelltMs:now, saved:contentKey() };
+    toast(version > 1 ? `Version ${version} von ${nummer} ${variante} gespeichert.` : `Angebot ${nummer} ${variante} gespeichert.`);
+  } catch(e){ toast(errText(e), 5000); }
+  save(); render();
+}
+function makeVariant(){
+  const m = state.meta; if (!m || !m.nummer) return;
+  const used = ANGEBOTE.filter(a => a.nummer === m.nummer && !a.geloescht).map(a => a.variante);
+  if (m.variante) used.push(m.variante);
+  let c = 'A'; while (used.includes(c)) c = String.fromCharCode(c.charCodeAt(0) + 1);
+  state.meta = { nummer:m.nummer, variante:c, status:'entwurf' };
+  save(); render();
+  toast(`Variante ${c} angelegt. Jetzt anpassen und speichern.`, 4500);
+}
+async function setStatus(val){
+  const m = state.meta; if (!m || !m.id) return;
+  try { await FB.f.updateDoc(FB.f.doc(FB.db, 'angebote', m.id), { status:val, geaendertMs:Date.now() }); m.status = val; save(); toast(`Status auf „${STATUS[val]}“ gesetzt.`); }
+  catch(e){ toast(errText(e)); }
+}
+function newOffer(){
+  state = freshState(); if (USER) state.kunde.bearbeiter = USER.name;
+  try { localStorage.removeItem(STORE_KEY); } catch(e) {}
+  render(); window.scrollTo({ top:0 });
+}
+function metaCard(){
+  const m = state.meta;
+  if (!m || !m.nummer) return `<button type="button" class="btn btn-primary" data-act="save" style="width:100%">${ICON.check}Angebot speichern</button>`;
+  const dirty = isDirty();
+  const statusSel = m.id ? `<label class="fld"><span>Status</span><select class="sel" id="metaStatus">${Object.entries(STATUS).map(([k, v]) => `<option value="${k}"${m.status === k ? ' selected' : ''}>${v}</option>`).join('')}</select></label>` : '';
+  return `<div class="card meta-card stack">
+      <div><div class="meta-nr">${esc(m.nummer)} ${esc(m.variante)}</div><div class="adm-hint" style="margin:2px 0 0">${m.id ? `Version ${m.version}, ${dirty ? 'ungespeicherte Änderungen' : 'gespeichert'}` : 'Neue Variante, noch nicht gespeichert'}</div></div>
+      ${statusSel}
+      <div class="btn-row">
+        <button type="button" class="btn btn-primary" data-act="save">${ICON.check}${m.id ? 'Als neue Version speichern' : 'Variante speichern'}</button>
+        ${m.id ? `<button type="button" class="btn btn-outline" data-act="variante">Als Variante kopieren</button>` : ''}
+      </div></div>`;
+}
+
+/* ---------- Angebotsübersicht ---------- */
+function openListe(){
+  if (mode === 'admin'){ mode = 'angebot'; document.body.classList.remove('admin-mode'); applyConfig(); ensureStatePos(); }
+  mode = 'liste'; delConfirm = null; pendingOpen = null;
+  document.body.classList.add('liste-mode');
+  renderListe(); window.scrollTo({ top:0 });
+}
+function closeListe(silent){ mode = 'angebot'; document.body.classList.remove('liste-mode'); if (!silent){ render(); window.scrollTo({ top:0 }); } }
+document.getElementById('btnListe').onclick = () => mode === 'liste' ? closeListe() : openListe();
+function renderListe(){
+  const bearb = [...new Set(ANGEBOTE.map(a => a.bearbeiter).filter(Boolean))].sort();
+  const muell = groupsOf(ANGEBOTE.filter(a => a.geloescht)).length;
+  main.innerHTML = `<div class="panel-head"><div><h1>Angebote</h1></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap"><button type="button" class="btn btn-outline" data-la="zurueck">Zurück zum Angebot</button><button type="button" class="btn btn-primary" data-la="neu">${ICON.plus}Neues Angebot</button></div></div>
+    <div class="tabs" role="tablist">
+      <button type="button" role="tab" class="tab${LF.tab === 'aktiv' ? ' active' : ''}" data-ltab="aktiv" aria-selected="${LF.tab === 'aktiv'}">Angebote</button>
+      <button type="button" role="tab" class="tab${LF.tab === 'muell' ? ' active' : ''}" data-ltab="muell" aria-selected="${LF.tab === 'muell'}">Papierkorb${muell ? ` (${muell})` : ''}</button></div>
+    ${LF.tab === 'aktiv' ? `<div class="filters">
+      <label class="fld q"><span>Suche</span><input class="in" data-lf="q" value="${esc(LF.q)}" placeholder="Kunde, Ort oder Angebotsnummer"></label>
+      <label class="fld"><span>Bearbeiter</span><select class="sel" data-lf="bearbeiter"><option value="">Alle</option>${bearb.map(b => `<option${LF.bearbeiter === b ? ' selected' : ''}>${esc(b)}</option>`).join('')}</select></label>
+      <label class="fld"><span>Status</span><select class="sel" data-lf="status"><option value="">Alle</option>${Object.entries(STATUS).map(([k, v]) => `<option value="${k}"${LF.status === k ? ' selected' : ''}>${v}</option>`).join('')}</select></label>
+      <label class="fld"><span>Zeitraum</span><select class="sel" data-lf="zeit">${[['', 'Alle'], ['30', 'Letzte 30 Tage'], ['90', 'Letzte 3 Monate'], ['jahr', 'Dieses Jahr']].map(([k, v]) => `<option value="${k}"${LF.zeit === k ? ' selected' : ''}>${v}</option>`).join('')}</select></label>
+    </div>
+    <div class="filters-2"><label class="chk"><input type="checkbox" data-lf="versionen"${LF.versionen ? ' checked' : ''}>Ältere Versionen anzeigen</label><span id="listCount"></span></div>`
+    : `<p class="adm-hint" style="margin:0 0 16px">Gelöschte Angebote werden nach ${PAPIERKORB_TAGE} Tagen automatisch endgültig entfernt.</p>`}
+    ${pendingOpen ? `<div class="confirm-box" style="margin-bottom:14px" role="alertdialog"><p>Das aktuelle Angebot hat ungespeicherte Änderungen. Beim Öffnen gehen sie verloren.</p><div class="confirm-btns"><button type="button" class="btn btn-ghost" data-la="open-no">Abbrechen</button><button type="button" class="btn btn-danger" data-la="open-yes">Trotzdem öffnen</button></div></div>` : ''}
+    <div class="stack" id="listResults"></div>`;
+  renderListResults();
+}
+function groupsOf(list){
+  const map = new Map();
+  list.forEach(a => { const k = a.nummer + '|' + a.variante; if (!map.has(k)) map.set(k, []); map.get(k).push(a); });
+  return [...map.values()];
+}
+function matchesFilter(a){
+  if (LF.bearbeiter && a.bearbeiter !== LF.bearbeiter) return false;
+  if (LF.status && (a.status || 'entwurf') !== LF.status) return false;
+  if (LF.zeit){
+    const ms = a.geaendertMs || a.erstelltMs || 0;
+    if (LF.zeit === 'jahr'){ if (new Date(ms).getFullYear() !== new Date().getFullYear()) return false; }
+    else if (ms < Date.now() - (+LF.zeit) * 864e5) return false;
+  }
+  if (LF.q){
+    const q = LF.q.toLowerCase(), k = a.kunde || {};
+    const hay = [a.nummer, a.kundeName, a.ort, k.vorname, k.nachname, k.firma, k.strasse, a.bearbeiter].join(' ').toLowerCase();
+    if (!q.split(/\s+/).every(w => hay.includes(w))) return false;
+  }
+  return true;
+}
+const canDelete = docs => USER && (USER.admin || docs.every(d => d.erstelltVonUid === USER.uid));
+function rowHtml(a, isAlt, docsOfVariant, nummerDocs){
+  const key = a.nummer + '|' + a.variante;
+  const varianten = new Set(nummerDocs.filter(d => !d.geloescht).map(d => d.variante)).size;
+  const del = !isAlt && canDelete(docsOfVariant) ? `<button type="button" class="btn btn-ghost" data-la="del" data-key="${esc(key)}">Löschen</button>` : '';
+  const confirm = delConfirm === key ? `<div class="confirm-box" role="alertdialog"><p>Variante ${esc(a.variante)} von ${esc(a.nummer)} in den Papierkorb verschieben?${varianten > 1 ? ' Oder gleich das ganze Angebot mit allen Varianten?' : ''}</p><div class="confirm-btns">
+      <button type="button" class="btn btn-ghost" data-la="del-no">Abbrechen</button>
+      ${varianten > 1 && canDelete(nummerDocs) ? `<button type="button" class="btn btn-outline" data-la="del-all" data-nummer="${esc(a.nummer)}">Ganzes Angebot</button>` : ''}
+      <button type="button" class="btn btn-danger" data-la="del-yes" data-key="${esc(key)}">${varianten > 1 ? `Nur Variante ${esc(a.variante)}` : 'In den Papierkorb'}</button></div></div>` : '';
+  return `<div class="offer-row${isAlt ? ' alt' : ''}">
+      <div><b>Variante ${esc(a.variante)}</b> <span class="meta">v${a.version || 1}</span></div>
+      <div class="meta">${esc(a.bearbeiter || '–')}, geändert ${datum(a.geaendertMs || a.erstelltMs)}${a.erstelltVonName && a.erstelltVonName !== a.bearbeiter ? `, gespeichert von ${esc(a.erstelltVonName)}` : ''}</div>
+      <div><span class="badge ${a.status || 'entwurf'}">${STATUS[a.status || 'entwurf']}</span></div>
+      <div class="num">${fmt(a.summen ? a.summen.brutto : 0)}</div>
+      <div class="offer-acts"><button type="button" class="btn btn-outline" data-la="open" data-id="${a.id}">Öffnen</button>${del}</div>
+      ${confirm}</div>`;
+}
+function renderListResults(){
+  const box = document.getElementById('listResults'); if (!box) return;
+  if (LF.tab === 'muell') return renderTrash(box);
+  const live = ANGEBOTE.filter(a => !a.geloescht);
+  const aktuelle = live.filter(a => a.aktuell !== false && matchesFilter(a));
+  const byNr = new Map();
+  aktuelle.forEach(a => { if (!byNr.has(a.nummer)) byNr.set(a.nummer, []); byNr.get(a.nummer).push(a); });
+  const gruppen = [...byNr.entries()].sort((x, y) => Math.max(...y[1].map(a => a.geaendertMs || 0)) - Math.max(...x[1].map(a => a.geaendertMs || 0)));
+  const cnt = document.getElementById('listCount'); if (cnt) cnt.textContent = `${gruppen.length} ${gruppen.length === 1 ? 'Angebot' : 'Angebote'}`;
+  if (!gruppen.length){ box.innerHTML = `<div class="empty"><p>${live.length ? 'Keine Angebote passen zu den Filtern.' : 'Noch keine Angebote gespeichert.'}</p></div>`; return; }
+  box.innerHTML = gruppen.map(([nr, list]) => {
+    const nummerDocs = live.filter(a => a.nummer === nr), first = list[0];
+    const rows = list.sort((a, b) => a.variante.localeCompare(b.variante)).map(a => {
+      const vDocs = nummerDocs.filter(d => d.variante === a.variante);
+      let html = rowHtml(a, false, vDocs, nummerDocs);
+      if (LF.versionen) vDocs.filter(d => d.id !== a.id).sort((x, y) => (y.version || 0) - (x.version || 0)).forEach(old => { html += rowHtml(old, true, vDocs, nummerDocs); });
+      return html;
+    }).join('');
+    return `<div class="offer-card"><div class="offer-head"><b>${esc(nr)}</b><span>${esc(first.kundeName || '')}${first.ort ? ', ' + esc(first.ort) : ''}</span></div>${rows}</div>`;
+  }).join('');
+}
+function renderTrash(box){
+  const gruppen = groupsOf(ANGEBOTE.filter(a => a.geloescht)).sort((x, y) => Math.max(...y.map(a => a.geloeschtMs || 0)) - Math.max(...x.map(a => a.geloeschtMs || 0)));
+  if (!gruppen.length){ box.innerHTML = '<div class="empty"><p>Der Papierkorb ist leer.</p></div>'; return; }
+  box.innerHTML = gruppen.map(docs => {
+    const a = docs.slice().sort((x, y) => (y.version || 0) - (x.version || 0))[0], key = a.nummer + '|' + a.variante;
+    const rest = Math.max(0, PAPIERKORB_TAGE - Math.floor((Date.now() - (a.geloeschtMs || Date.now())) / 864e5));
+    const confirm = delConfirm === 'final|' + key ? `<div class="confirm-box" role="alertdialog"><p>Endgültig löschen? Das lässt sich nicht rückgängig machen.</p><div class="confirm-btns"><button type="button" class="btn btn-ghost" data-la="del-no">Abbrechen</button><button type="button" class="btn btn-danger" data-la="final-yes" data-key="${esc(key)}">Endgültig löschen</button></div></div>` : '';
+    return `<div class="offer-card"><div class="offer-row">
+      <div><b>${esc(a.nummer)} ${esc(a.variante)}</b></div>
+      <div class="meta">${esc(a.kundeName || '')}${a.ort ? ', ' + esc(a.ort) : ''}, gelöscht am ${datum(a.geloeschtMs)}${a.geloeschtVon ? ' von ' + esc(a.geloeschtVon) : ''}</div>
+      <div class="meta">noch ${rest} ${rest === 1 ? 'Tag' : 'Tage'}</div>
+      <div class="num">${fmt(a.summen ? a.summen.brutto : 0)}</div>
+      <div class="offer-acts"><button type="button" class="btn btn-outline" data-la="restore" data-key="${esc(key)}">Wiederherstellen</button>${canDelete(docs) ? `<button type="button" class="btn btn-ghost" data-la="final" data-key="${esc(key)}">Endgültig löschen</button>` : ''}</div>
+      ${confirm}</div></div>`;
+  }).join('');
+}
+function docsByKey(key, includeDeleted){ const [nr, v] = key.split('|'); return ANGEBOTE.filter(a => a.nummer === nr && a.variante === v && (includeDeleted || !a.geloescht)); }
+async function softDelete(docs){
+  const now = Date.now();
+  try {
+    await Promise.all(docs.map(d => FB.f.updateDoc(FB.f.doc(FB.db, 'angebote', d.id), { geloescht:true, geloeschtMs:now, geloeschtVon:USER.name })));
+    if (state.meta && docs.some(d => d.nummer === state.meta.nummer && d.variante === state.meta.variante)){ state.meta = null; save(); updateTopOffer(); }
+    toast('In den Papierkorb verschoben.');
+  } catch(e){ toast(errText(e)); }
+}
+function loadOffer(id){
+  const a = ANGEBOTE.find(x => x.id === id); if (!a) return;
+  state = freshState();
+  ['kunde', 'notes', 'anfahrt'].forEach(k => { if (a[k]) state[k] = Object.assign(state[k], plain(a[k])); });
+  if (a.pos) state.pos = Object.assign(state.pos, plain(a.pos));
+  if (a.sonder) state.sonder = plain(a.sonder);
+  ensureStatePos();
+  KATALOG.forEach(k => state.pos[k.id].forEach(p => { p.editing = false; }));
+  state.meta = { id:a.id, nummer:a.nummer, variante:a.variante, version:a.version || 1, status:a.status || 'entwurf', erstelltMs:a.erstelltMs, saved:'' };
+  state.meta.saved = contentKey();
+  state.step = STEPS.length - 1; state.visited = STEPS.map((_, i) => i);
+  closeListe(true); render(); window.scrollTo({ top:0 });
+  toast(`Angebot ${a.nummer} ${a.variante} (Version ${a.version || 1}) geöffnet.`);
+}
+async function listeClick(e){
+  const tab = e.target.closest('[data-ltab]');
+  if (tab){ LF.tab = tab.dataset.ltab; delConfirm = null; renderListe(); return; }
+  const b = e.target.closest('[data-la]'); if (!b) return;
+  const a = b.dataset.la;
+  if (a === 'zurueck') closeListe();
+  if (a === 'neu'){ if (isDirty()){ pendingOpen = '__neu'; renderListe(); return; } closeListe(true); newOffer(); }
+  if (a === 'open'){ if (isDirty() && !(state.meta && state.meta.id === b.dataset.id)){ pendingOpen = b.dataset.id; renderListe(); return; } loadOffer(b.dataset.id); }
+  if (a === 'open-no'){ pendingOpen = null; renderListe(); }
+  if (a === 'open-yes'){ const id = pendingOpen; pendingOpen = null; if (id === '__neu'){ closeListe(true); newOffer(); } else loadOffer(id); }
+  if (a === 'del'){ delConfirm = b.dataset.key; renderListResults(); }
+  if (a === 'del-no'){ delConfirm = null; renderListResults(); }
+  if (a === 'del-yes'){ delConfirm = null; await softDelete(docsByKey(b.dataset.key)); }
+  if (a === 'del-all'){ delConfirm = null; await softDelete(ANGEBOTE.filter(x => x.nummer === b.dataset.nummer && !x.geloescht)); }
+  if (a === 'restore'){
+    try { await Promise.all(docsByKey(b.dataset.key, true).map(d => FB.f.updateDoc(FB.f.doc(FB.db, 'angebote', d.id), { geloescht:false, geloeschtMs:null, geloeschtVon:null }))); toast('Angebot wiederhergestellt.'); }
+    catch(ex){ toast(errText(ex)); }
+  }
+  if (a === 'final'){ delConfirm = 'final|' + b.dataset.key; renderListResults(); }
+  if (a === 'final-yes'){
+    delConfirm = null;
+    try { await Promise.all(docsByKey(b.dataset.key, true).map(d => FB.f.deleteDoc(FB.f.doc(FB.db, 'angebote', d.id)))); toast('Endgültig gelöscht.'); }
+    catch(ex){ toast(errText(ex)); }
+  }
+  if (mode === 'liste' && ['restore', 'final-yes', 'del-yes', 'del-all'].includes(a)) renderListe();
+}
+function listeInput(e){
+  const t = e.target, k = t.dataset.lf; if (!k) return;
+  LF[k] = t.type === 'checkbox' ? t.checked : t.value;
+  renderListResults();
+}
+
+/* Bearbeitungsmodus nach Neuladen nicht hängen lassen */
+KATALOG.forEach(k => state.pos[k.id].forEach(p => { p.editing = false; }));
+render();
+cloudInit();
+</script>
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-app.js";
+  import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-auth.js";
+  import { getFirestore, doc, collection, getDoc, setDoc, addDoc, updateDoc, deleteDoc, onSnapshot, runTransaction } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDYcjgoU_ifGk5g0RIYKDBZzQcZGyzFX3A",
+    authDomain: "laumer-gs-konfigurator.firebaseapp.com",
+    projectId: "laumer-gs-konfigurator",
+    storageBucket: "laumer-gs-konfigurator.firebasestorage.app",
+    messagingSenderId: "848279293276",
+    appId: "1:848279293276:web:d9b98d217e6859da160599"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  window.FB = {
+    auth: getAuth(app),
+    db: getFirestore(app),
+    f: { onAuthStateChanged, signInWithEmailAndPassword, signOut, sendPasswordResetEmail,
+         doc, collection, getDoc, setDoc, addDoc, updateDoc, deleteDoc, onSnapshot, runTransaction }
+  };
+  window.dispatchEvent(new Event('fb-ready'));
+</script>
+</body>
+</html>
