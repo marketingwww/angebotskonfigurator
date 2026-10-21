@@ -244,6 +244,21 @@ td .sub{display:block;color:var(--muted);font-size:12px;margin-top:2px}
 .chip-x button{border:0;background:none;color:inherit;width:22px;height:22px;border-radius:50%;cursor:pointer;font-size:15px;line-height:1}
 .chip-x button:hover{background:rgba(0,0,0,.08)}
 
+/* Kundensuche */
+.kunde-suche{position:relative;margin-bottom:14px}
+.ks-input{position:relative}
+.ks-input svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:18px;height:18px;color:var(--muted);pointer-events:none}
+.ks-input .in{padding-left:38px}
+.ks-results{position:absolute;left:20px;right:20px;top:calc(100% - 14px);z-index:15;background:var(--surface);border:1px solid var(--line);border-radius:8px;box-shadow:0 12px 32px rgba(24,40,101,.14);max-height:360px;overflow:auto}
+.ks-results[hidden]{display:none}
+.ks-item{display:flex;justify-content:space-between;align-items:center;gap:14px;width:100%;text-align:left;padding:10px 14px;border:0;border-bottom:1px solid var(--line);background:none;cursor:pointer;font-size:14px}
+.ks-item:last-child{border-bottom:0}
+.ks-item:hover,.ks-item:focus-visible{background:var(--blue-soft)}
+.ks-item b{display:block;color:var(--ink-blue)}
+.ks-item small{display:block;color:var(--muted);font-size:12.5px}
+.ks-meta{text-align:right;font-size:12.5px;color:var(--text);white-space:nowrap}
+.ks-empty{margin:0;padding:12px 14px;color:var(--muted);font-size:14px}
+
 /* Einstellungen */
 .top-actions{margin-left:auto;display:flex;gap:8px;align-items:center}
 .top-btn{min-height:40px;padding:0 14px}
@@ -1023,7 +1038,11 @@ function head(title, sub){
 function viewKunde(){
   const k = state.kunde;
   const f = (key, label, cls, attrs = '') => `<label class="fld ${cls}"><span>${label}</span><input class="in" data-k="${key}" value="${esc(k[key])}" ${attrs}></label>`;
-  return head('Kundendaten') + `<div class="card"><div class="grid">
+  return head('Kundendaten') + `<div class="card kunde-suche">
+    <label class="fld"><span>Bestehenden Kunden suchen</span><div class="ks-input"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><input class="in" id="kundeSuche" placeholder="Name, Firma, Straße, Ort oder Telefon" autocomplete="off" aria-controls="ksResults"></div></label>
+    <div class="ks-results" id="ksResults" role="listbox" hidden></div>
+  </div>
+  <div class="card"><div class="grid">
     <label class="fld c2"><span>Anrede</span><select class="sel" data-k="anrede">${['','Herr','Frau','Familie','Firma'].map(a => `<option value="${a}"${k.anrede === a ? ' selected' : ''}>${a || 'Bitte wählen'}</option>`).join('')}</select></label>
     ${f('vorname','Vorname','c2','autocomplete="off"')}${f('nachname','Nachname','c2','autocomplete="off"')}
     ${f('firma','Firma (optional)','c6')}
@@ -1480,6 +1499,8 @@ main.addEventListener('click', e => {
     const inp = main.querySelector(`.pos[data-uid="${uidv}"] input[data-f="rabatt"]`); if (inp){ inp.focus(); inp.select(); }
     return;
   }
+  const kd = e.target.closest('[data-kunde]');
+  if (kd){ applyKunde(+kd.dataset.kunde); return; }
   const aw = e.target.closest('[data-anfwahl]');
   if (aw){ state.anfahrt.wahl = aw.dataset.anfwahl; render(aw.dataset.anfwahl === 'ja' ? 'input[data-anf="km"]' : null); return; }
   const tileO = e.target.closest('[data-oberfl]');
@@ -1532,6 +1553,7 @@ main.addEventListener('input', e => {
   if (mode === 'admin'){ adminInput(e); return; }
   if (mode === 'liste'){ listeInput(e); return; }
   const t = e.target;
+  if (t.id === 'kundeSuche'){ renderKs(t.value); return; }
   if (t.dataset.k){ state.kunde[t.dataset.k] = t.value; renderSteps(); save(); updateBar(); updateTopOffer(); return; }
   if (t.dataset.note){ state.notes[t.dataset.note] = t.value; save(); updateBar(); updateTopOffer(); return; }
   if (t.dataset.anf === 'km'){ state.anfahrt.km = t.value; refreshLive(); return; }
@@ -2154,6 +2176,48 @@ async function makePdf(typ, btn){
   } catch(e){ console.error(e); toast('Das PDF konnte nicht erstellt werden. Bitte Internetverbindung prüfen.', 5000); }
   if (btn && btn.isConnected){ btn.disabled = false; btn.innerHTML = label; }
 }
+
+
+
+/* ---------- Kundendatei aus gespeicherten Angeboten ---------- */
+let ksCache = [];
+const KUNDE_FELDER = ['anrede', 'vorname', 'nachname', 'firma', 'strasse', 'plz', 'ort', 'telefon', 'email'];
+function kundenIndex(){
+  const map = new Map();
+  ANGEBOTE.filter(a => !a.geloescht && a.kunde).forEach(a => {
+    const k = a.kunde, n = v => String(v || '').trim().toLowerCase();
+    const key = [n(k.firma), n(k.nachname), n(k.vorname), n(k.strasse), n(k.plz)].join('|');
+    if (!key.replace(/\|/g, '')) return;
+    const ms = a.geaendertMs || a.erstelltMs || 0, e = map.get(key);
+    if (!e) map.set(key, { kunde:k, ms, nummern:new Set([a.nummer]), status:new Set([a.status]) });
+    else { e.nummern.add(a.nummer); e.status.add(a.status); if (ms > e.ms){ e.kunde = k; e.ms = ms; } }
+  });
+  return [...map.values()];
+}
+function renderKs(q){
+  const box = document.getElementById('ksResults'); if (!box) return;
+  q = q.trim().toLowerCase();
+  if (q.length < 2){ box.hidden = true; return; }
+  const worte = q.split(/\s+/);
+  ksCache = kundenIndex().filter(e => { const k = e.kunde, hay = [...KUNDE_FELDER.map(f => k[f])].join(' ').toLowerCase(); return worte.every(w => hay.includes(w)); })
+    .sort((a, b) => b.ms - a.ms).slice(0, 8);
+  box.hidden = false;
+  box.innerHTML = ksCache.length ? ksCache.map((e, i) => {
+    const k = e.kunde, name = k.firma ? `${k.firma}${k.nachname ? ` (${[k.vorname, k.nachname].filter(Boolean).join(' ')})` : ''}` : [k.anrede === 'Firma' ? '' : k.anrede, k.vorname, k.nachname].filter(Boolean).join(' ');
+    const n = e.nummern.size;
+    return `<button type="button" class="ks-item" role="option" data-kunde="${i}"><span><b>${esc(name || 'Ohne Namen')}</b><small>${esc([k.strasse, [k.plz, k.ort].filter(Boolean).join(' ')].filter(Boolean).join(', ') || 'Keine Adresse')}${k.telefon ? ', ' + esc(k.telefon) : ''}</small></span>
+      <span class="ks-meta">${n} ${n === 1 ? 'Angebot' : 'Angebote'}${e.status.has('beauftragt') ? ', schon beauftragt' : ''}<small>zuletzt ${datum(e.ms)}</small></span></button>`;
+  }).join('') : '<p class="ks-empty">Kein passender Kunde gefunden.</p>';
+}
+function applyKunde(i){
+  const e = ksCache[i]; if (!e) return;
+  KUNDE_FELDER.forEach(f => { state.kunde[f] = e.kunde[f] || ''; });
+  render();
+  const k = e.kunde;
+  toast(`Kundendaten von ${k.firma || [k.vorname, k.nachname].filter(Boolean).join(' ')} übernommen.`);
+}
+document.addEventListener('click', e => { const box = document.getElementById('ksResults'); if (box && !box.hidden && !e.target.closest('.kunde-suche')) box.hidden = true; });
+document.addEventListener('keydown', e => { if (e.key === 'Escape'){ const box = document.getElementById('ksResults'); if (box) box.hidden = true; } });
 
 /* Bearbeitungsmodus nach Neuladen nicht hängen lassen */
 KATALOG.forEach(k => state.pos[k.id].forEach(p => { p.editing = false; }));
