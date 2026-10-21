@@ -1043,7 +1043,7 @@ function viewKat(kat){
   const sub = `<div class="subtotal" data-kattotal>${countPos(kat.id) ? `Summe Kategorie<b>${fmt(katTotal(kat.id))}</b>` : ''}</div>`;
   let html = head(kat.name, sub);
   html += `<div class="stack" id="poslist">${list.map((p, i) => posCard(kat, p, i, p._new)).join('')}</div>
-    <div style="margin-top:14px"><button type="button" class="add-btn" data-act="add">${ICON.plus}Weitere Position in ${esc(kat.name)}</button></div>`;
+    <div style="margin-top:14px" data-addwrap${list.some(p => !p.leistung) ? ' hidden' : ''}><button type="button" class="add-btn" data-act="add">${ICON.plus}Weitere Position in ${esc(kat.name)}</button></div>`;
   html += `<div class="card" style="margin-top:14px"><details class="notes"${state.notes[kat.id] ? ' open' : ''}><summary>Notiz zu ${esc(kat.name)}</summary>
     <textarea data-note="${kat.id}" placeholder="z. B. Zufahrt eng, Termin erst ab März">${esc(state.notes[kat.id])}</textarea></details></div>`;
   list.forEach(p => delete p._new);
@@ -1056,7 +1056,7 @@ function viewSonder(){
   let html = head('Sonderpositionen', sub);
   html += `<p class="adm-hint" style="margin:-8px 0 14px">Für alles, was nicht im Katalog steht: Bezeichnung und Preis frei eintragen.</p>
     <div class="stack">${list.map((s, i) => sonderCard(s, i, s._new)).join('')}</div>
-    <div style="margin-top:14px"><button type="button" class="add-btn" data-act="add-sonder">${ICON.plus}Weitere Sonderposition</button></div>`;
+    <div style="margin-top:14px" data-addwrap${list.some(x => !(x.text || num(x.preis))) ? ' hidden' : ''}><button type="button" class="add-btn" data-act="add-sonder">${ICON.plus}Weitere Sonderposition</button></div>`;
   list.forEach(s => delete s._new);
   return html;
 }
@@ -1188,6 +1188,9 @@ function refreshLive(){
     if (tEl) tEl.innerHTML = totalHtml(c); if (cEl) cEl.textContent = line || '';
   });
   const kt = main.querySelector('[data-kattotal]');
+  const aw = main.querySelector('[data-addwrap]');
+  if (aw && s.kat) aw.hidden = state.pos[s.id].some(p => !p.leistung);
+  if (aw && s.id === 'sonder') aw.hidden = state.sonder.some(x => !(x.text || num(x.preis)));
   if (kt && s.kat) kt.innerHTML = countPos(s.id) ? `Summe Kategorie<b>${fmt(katTotal(s.id))}</b>` : '';
   if (kt && s.id === 'sonder') kt.innerHTML = sonderFilled().length ? `Summe Sonderpositionen<b>${fmt(sonderTotal())}</b>` : '';
   const ak = main.querySelector('[data-anfkm]'); if (ak) ak.textContent = `${dec.format(num(state.anfahrt.km))} km × ${fmt(ANFAHRT.proKm)}`;
