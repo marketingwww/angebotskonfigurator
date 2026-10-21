@@ -244,7 +244,9 @@ td .sub{display:block;color:var(--muted);font-size:12px;margin-top:2px}
 .chip-x button{border:0;background:none;color:inherit;width:22px;height:22px;border-radius:50%;cursor:pointer;font-size:15px;line-height:1}
 .chip-x button:hover{background:rgba(0,0,0,.08)}
 
-.ep-old{display:block;color:var(--muted);font-size:12px;text-decoration:line-through}
+.ep-note{display:block;font-size:11.5px;color:#9a5b00;font-weight:600;margin-top:2px}
+.ep-note s{color:var(--muted);font-weight:500}
+td .sub.auf{color:#1d4a9e}
 
 /* Kundensuche */
 .kunde-suche{position:relative;margin-bottom:14px}
@@ -1121,10 +1123,15 @@ function viewSummary(){
       if (c.l.visual === 'tuer') extras.push(`DIN ${p.anschlag === 'rechts' ? 'rechts' : 'links'}`);
       if (c.fw) extras.push(c.fw.kind === 'sonder' ? `Sonderfarbe ${esc(p.farbtext || '(nicht angegeben)')}` : c.fw.f.dekor ? `Dekor ${esc(c.fw.f.name)}` : `${esc(c.fw.f.name)} ${esc(c.fw.f.ral)}`);
       (c.l.optionen || []).forEach(o => { if (p.optionen && p.optionen[o.id]) extras.push(esc(o.name)); });
-      if (c.l.grund) extras.push(`inkl. ${fmt(c.l.grund)} Grundpauschale`);
-      rows += `<tr><td>${esc(c.l.name)}${extras.filter(Boolean).length ? `<span class="sub">${extras.filter(Boolean).join(', ')}</span>` : ''}</td>
+      const auf = [];
+      if (c.l.grund) auf.push(`Grundpauschale ${fmt(c.l.grund)}`);
+      if (c.motivBetrag) auf.push(`Ansicht ${fmt(c.motivBetrag)}`);
+      if (c.oberflBetrag) auf.push(`Oberfläche ${fmt(c.oberflBetrag)}`);
+      if (c.farbBetrag) auf.push(`Farbe ${fmt(c.farbBetrag)}`);
+      if (c.opt) auf.push(`Optionen ${fmt(c.opt)}`);
+      rows += `<tr><td>${esc(c.l.name)}${extras.filter(Boolean).length ? `<span class="sub">${extras.filter(Boolean).join(', ')}</span>` : ''}${auf.length ? `<span class="sub auf">zzgl. ${auf.join(', ')}</span>` : ''}</td>
         <td class="num">${c.pauschal ? 'pauschal' : dec.format(c.menge) + ' ' + c.l.einheit}</td>
-        <td class="num">${p.ep != null ? `<s class="ep-old">${fmt(c.l.preis)}</s>${fmt(c.ep)} <span class="tag">manuell</span>` : fmt(c.ep)}</td>
+        <td class="num">${fmt(c.ep)}${p.ep != null ? `<span class="ep-note">manuell, statt <s>${fmt(c.l.preis)}</s></span>` : ''}</td>
         <td class="num">${c.rab ? rabText(c) : '–'}</td><td class="num">${fmt(c.total)}</td></tr>`;
     });
   });
