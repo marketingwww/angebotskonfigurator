@@ -635,6 +635,7 @@ const katById = id => CFG.katalog.find(k => k.id === id);
 const farbeById = id => FARBEN.find(f => f.id === id);
 
 const ICON = {
+  pdf:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M12 12v6M9 15l3 3 3-3"/></svg>',
   plus:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>',
   trash:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12M9 7V4h6v3"/></svg>',
   pen:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9l-4-4L4 16v4zM13.5 6.5l4 4"/></svg>',
@@ -1131,7 +1132,12 @@ function viewSummary(){
         <div class="kv brutto"><span>Gesamt brutto</span><span>${fmt(t.brutto)}</span></div>
       </div>
       ${metaCard()}
-      <div class="phase2">PDF für Kunde und Innendienst mit Versand über Outlook folgt in der nächsten Ausbaustufe.</div>
+      <div class="card stack"><h2 class="adm-h2">PDF erstellen</h2>
+        ${!(state.meta && state.meta.id) && hasContent() ? '<p class="adm-hint" style="margin:0">Tipp: Erst speichern, dann steht die Angebotsnummer im PDF.</p>' : ''}
+        <div class="btn-row">
+          <button type="button" class="btn btn-outline" data-act="pdf-kunde">${ICON.pdf}PDF für den Kunden</button>
+          <button type="button" class="btn btn-outline" data-act="pdf-innen">${ICON.pdf}PDF für den Innendienst</button>
+        </div></div>
       <button type="button" class="btn btn-ghost" data-act="reset" style="width:100%">Neues Angebot beginnen</button>
     </div>
     <div class="card sum-block sum-full"><h2>Positionen</h2>${table}</div>
@@ -1471,6 +1477,7 @@ main.addEventListener('click', e => {
   if (act === 'reset-ep' && card){ const p = getItem(card); p.ep = null; rerenderCard(card); }
   if (act === 'save') saveOffer(b);
   if (act === 'variante') makeVariant();
+  if (act === 'pdf-kunde' || act === 'pdf-innen') makePdf(act === 'pdf-kunde' ? 'kunde' : 'innen', b);
   if (act === 'reset'){ b.outerHTML = `<div class="confirm-box" role="alertdialog" aria-label="Neues Angebot beginnen"><p>Alle Eingaben löschen und ein neues Angebot beginnen?</p><div class="confirm-btns"><button type="button" class="btn btn-ghost" data-act="reset-no">Abbrechen</button><button type="button" class="btn btn-danger" data-act="reset-yes">Ja, alles löschen</button></div></div>`; main.querySelector('[data-act="reset-no"]').focus(); }
   if (act === 'reset-no') render();
   if (act === 'reset-yes'){ newOffer(); toast('Neues Angebot begonnen'); }
@@ -1910,6 +1917,199 @@ document.getElementById('btnSave').onclick = e => saveOffer(e.currentTarget);
 document.addEventListener('keydown', e => {
   if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's'){ e.preventDefault(); if (USER && mode === 'angebot') saveOffer(document.getElementById('btnSave')); }
 });
+
+/* =====================================================================
+   PDF-Export für Kunde und Innendienst
+   ===================================================================== */
+const PDF_LIB = 'https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.10/pdfmake.min.js';
+const PDF_FONTS = 'https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.10/vfs_fonts.js';
+const FIRMA = { name:'Laumer Bautechnik GmbH', adresse:'Bahnhofstraße 8, 84323 Massing', telefon:'08724 88-960', mail:'info@laumer.de', web:'www.laumer.de' };
+const GUELTIG_TAGE = 28;
+function loadScript(src){ return new Promise((res, rej) => { const sc = document.createElement('script'); sc.src = src; sc.onload = res; sc.onerror = () => rej(new Error('load ' + src)); document.head.appendChild(sc); }); }
+async function ensurePdf(){ if (window.pdfMake && window.pdfMake.vfs) return; if (!window.pdfMake) await loadScript(PDF_LIB); if (!window.pdfMake.vfs) await loadScript(PDF_FONTS); }
+function logoSvg(){ const el = document.querySelector('.top .logo svg'); return el ? el.outerHTML.replace(/fill="currentColor"/, 'fill="#182865"') : null; }
+function posDetails(p, c){
+  const ex = [];
+  if (c.motiv) ex.push(c.motiv.name);
+  if (c.oberfl) ex.push('Oberfläche ' + c.oberfl.name);
+  if (c.l.visual === 'tuer') ex.push('DIN ' + (p.anschlag === 'rechts' ? 'rechts' : 'links'));
+  if (c.fw) ex.push(c.fw.kind === 'sonder' ? 'Sonderfarbe ' + (p.farbtext || 'nach Absprache') : c.fw.f.dekor ? 'Dekor ' + c.fw.f.name : `${c.fw.f.name} (${c.fw.f.ral})`);
+  (c.l.optionen || []).forEach(o => { if (p.optionen && p.optionen[o.id]) ex.push('mit ' + o.name); });
+  return ex;
+}
+function offerGroups(){
+  const groups = [];
+  KATALOG.forEach(kat => {
+    const items = state.pos[kat.id].map(p => ({ p, c:calcPos(p, kat) })).filter(x => x.c);
+    if (items.length) groups.push({ name:kat.name, note:(state.notes[kat.id] || '').trim(), items:items.map(({ p, c }) => ({ p, c, name:c.l.name, details:posDetails(p, c), menge:c.pauschal ? 'pauschal' : `${dec.format(c.menge)} ${c.l.einheit}` })) });
+  });
+  const so = state.sonder.filter(x => x.text || num(x.preis));
+  if (so.length) groups.push({ name:'Sonderpositionen', note:'', items:so.map(x => { const c = calcSonder(x); return { p:x, c, sonder:true, name:x.text || 'Sonderposition', details:[], menge:c.pauschal ? 'pauschal' : `${dec.format(c.menge)} ${x.einheit}` }; }) });
+  return groups;
+}
+function anrede(k){
+  const n = k.nachname || '';
+  if (k.anrede === 'Herr' && n) return `Sehr geehrter Herr ${n},`;
+  if (k.anrede === 'Frau' && n) return `Sehr geehrte Frau ${n},`;
+  if (k.anrede === 'Familie' && n) return `Sehr geehrte Familie ${n},`;
+  return 'Sehr geehrte Damen und Herren,';
+}
+function pdfName(typ){
+  const m = state.meta, k = state.kunde;
+  const teil = [m && m.nummer ? `${m.nummer}-${m.variante}` : 'Entwurf', (k.nachname || k.firma || '').replace(/[^\wäöüÄÖÜß-]+/g, '_')].filter(Boolean).join('_');
+  return `Angebot_${teil}_${typ === 'kunde' ? 'Kunde' : 'Innendienst'}.pdf`;
+}
+const C = { blue:'#182865', grey:'#5b6578', line:'#dce1e8', soft:'#eaecf4', amber:'#9a5b00' };
+const hLine = { hLineWidth:(i, n) => (i === 0 || i === n.table.headerRows || i === n.table.body.length) ? 0.8 : 0.4, vLineWidth:() => 0, hLineColor:i => i <= 1 ? C.blue : C.line, paddingTop:() => 4, paddingBottom:() => 4, paddingLeft:() => 4, paddingRight:() => 4 };
+
+function ddKunde(){
+  const k = state.kunde, m = state.meta, t = totals(), groups = offerGroups(), logo = logoSvg();
+  const heute = new Date(), gueltig = new Date(Date.now() + GUELTIG_TAGE * 864e5);
+  const name = [k.anrede === 'Firma' ? '' : k.anrede, k.vorname, k.nachname].filter(Boolean).join(' ');
+  const adresse = [k.firma, name, k.strasse, [k.plz, k.ort].filter(Boolean).join(' ')].filter(Boolean);
+  const meta = [['Angebot', m && m.nummer ? `${m.nummer} ${m.variante}` : 'Entwurf'], ['Datum', heute.toLocaleDateString('de-DE')], ['Gültig bis', gueltig.toLocaleDateString('de-DE')], ['Ihr Ansprechpartner', k.bearbeiter || (USER ? USER.name : '')]];
+  const body = [[{ text:'Pos.', style:'th' }, { text:'Leistung', style:'th' }, { text:'Menge', style:'th', alignment:'right' }, { text:'Preis', style:'th', alignment:'right' }]];
+  let pos = 0;
+  groups.forEach(g => {
+    body.push([{ text:g.name, colSpan:4, bold:true, color:C.blue, fontSize:9, fillColor:C.soft, margin:[0, 1, 0, 1] }, {}, {}, {}]);
+    g.items.forEach(it => {
+      pos++;
+      body.push([
+        { text:String(pos), color:C.grey },
+        { stack:[{ text:it.name, bold:true }, ...(it.details.length ? [{ text:it.details.join(', '), fontSize:8.5, color:C.grey, margin:[0, 2, 0, 0] }] : [])] },
+        { text:it.menge, alignment:'right', noWrap:true },
+        { stack:[{ text:fmt(it.c.total), alignment:'right', bold:true, noWrap:true }, ...(it.c.rabBetrag ? [{ text:`inkl. ${fmt(it.c.rabBetrag)} Nachlass`, fontSize:7.5, color:C.amber, alignment:'right' }] : [])] },
+      ]);
+    });
+  });
+  if (anfAktiv()){
+    pos++;
+    const r = anfahrtRabatt();
+    body.push([{ text:'Anfahrt', colSpan:4, bold:true, color:C.blue, fontSize:9, fillColor:C.soft }, {}, {}, {}]);
+    body.push([{ text:String(pos), color:C.grey }, { text:'Anfahrt', bold:true }, { text:'pauschal', alignment:'right' }, { stack:[{ text:fmt(t.anf), alignment:'right', bold:true }, ...(r.rabBetrag ? [{ text:`inkl. ${fmt(r.rabBetrag)} Nachlass`, fontSize:7.5, color:C.amber, alignment:'right' }] : [])] }]);
+  }
+  const vorteil = t.rab + (anfAktiv() ? anfahrtRabatt().rabBetrag : 0);
+  const sums = [['Summe netto', fmt(t.netto)], [`zzgl. ${dec.format(MWST)} % MwSt.`, fmt(t.mwst)]];
+  return {
+    pageSize:'A4', pageMargins:[50, 100, 50, 64],
+    info:{ title:`Angebot ${m && m.nummer ? m.nummer + ' ' + m.variante : ''}`.trim(), author:FIRMA.name },
+    defaultStyle:{ font:'Roboto', fontSize:9.5, color:'#17213a', lineHeight:1.2 },
+    styles:{ th:{ bold:true, fontSize:8.5, color:C.grey } },
+    header:() => ({ margin:[50, 36, 50, 0], columns:[logo ? { svg:logo, width:115 } : { text:'Laumer', bold:true, fontSize:18, color:C.blue }, { text:'' }, { width:'auto', stack:[{ text:'Angebot', fontSize:17, bold:true, color:C.blue, alignment:'right' }, { text:'Laumer Garagenservice', fontSize:8.5, color:C.grey, alignment:'right' }] }] }),
+    footer:(cur, total) => ({ margin:[50, 18, 50, 0], columns:[{ text:`${FIRMA.name}, ${FIRMA.adresse}\nGaragenservice: Tel. ${FIRMA.telefon}, ${FIRMA.mail}, ${FIRMA.web}`, fontSize:7.5, color:C.grey }, { width:'auto', text:`Seite ${cur} von ${total}`, fontSize:7.5, color:C.grey, alignment:'right' }] }),
+    content:[
+      { columns:[
+        { width:'*', stack:[{ text:`${FIRMA.name}, ${FIRMA.adresse}`, fontSize:7, color:C.grey, margin:[0, 0, 0, 6] }, ...adresse.map(a => ({ text:a }))] },
+        { width:'auto', table:{ body:meta.map(([a, b]) => [{ text:a, color:C.grey, fontSize:8.5 }, { text:b, bold:true, fontSize:8.5 }]) }, layout:'noBorders' },
+      ], margin:[0, 0, 0, 20] },
+      { text:anrede(k), margin:[0, 0, 0, 6] },
+      { text:'vielen Dank für das freundliche Gespräch und Ihr Interesse. Gerne bieten wir Ihnen die besprochenen Leistungen wie folgt an:', margin:[0, 0, 0, 10] },
+      groups.length || anfAktiv() ? { table:{ headerRows:1, widths:[24, '*', 70, 85], body, dontBreakRows:true }, layout:hLine } : { text:'Keine Positionen ausgewählt.', color:C.grey },
+      { columns:[{ width:'*', text:'' }, { width:230, table:{ widths:['*', 'auto'], body:[
+          ...sums.map(([a, b]) => [{ text:a, color:C.grey }, { text:b, alignment:'right' }]),
+          [{ text:'Gesamtbetrag', bold:true, fontSize:12, color:C.blue, margin:[0, 4, 0, 0] }, { text:fmt(t.brutto), bold:true, fontSize:12, color:C.blue, alignment:'right', margin:[0, 4, 0, 0] }],
+        ] }, layout:{ hLineWidth:(i, n) => i === n.table.body.length - 1 ? 0.8 : 0, vLineWidth:() => 0, hLineColor:() => C.blue, paddingTop:() => 3, paddingBottom:() => 3, paddingLeft:() => 0, paddingRight:() => 0 } }], margin:[0, 14, 0, 0] },
+      vorteil ? { columns:[{ width:'*', text:'' }, { width:230, text:`Ihr Preisvorteil in diesem Angebot: ${fmt(vorteil)}`, fontSize:8.5, color:C.amber, bold:true, margin:[0, 6, 0, 0] }] } : '',
+      { unbreakable:true, stack:[
+        { text:`Dieses Angebot ist bis zum ${gueltig.toLocaleDateString('de-DE')} gültig. Farbdarstellungen und Abbildungen können vom Original abweichen.`, fontSize:8, color:C.grey, margin:[0, 22, 0, 0] },
+        { text:'Bei Fragen erreichen Sie uns jederzeit. Wir freuen uns auf Ihren Auftrag.', margin:[0, 12, 0, 0] },
+        { text:'Mit freundlichen Grüßen', margin:[0, 12, 0, 0] },
+        { text:k.bearbeiter || (USER ? USER.name : ''), bold:true, margin:[0, 16, 0, 0] },
+        { text:'Laumer Garagenservice', color:C.grey },
+      ] },
+    ],
+  };
+}
+
+function ddInnen(){
+  const k = state.kunde, m = state.meta, t = totals(), groups = offerGroups(), logo = logoSvg();
+  const stand = m && m.id ? (isDirty() ? 'mit ungespeicherten Änderungen' : 'gespeichert') : 'nicht gespeichert';
+  const info = [
+    ['Angebot', m && m.nummer ? `${m.nummer} ${m.variante}` : 'Entwurf (noch keine Nummer)'],
+    ['Status', m && m.status ? STATUS[m.status] : 'Entwurf'],
+    ['Stand', `${new Date().toLocaleString('de-DE', { dateStyle:'medium', timeStyle:'short' })}, ${stand}`],
+    ['Bearbeiter', k.bearbeiter || '–'],
+    ['PDF erstellt von', USER ? USER.name : '–'],
+  ];
+  const kunde = [
+    ['Name', [k.anrede, k.vorname, k.nachname].filter(Boolean).join(' ') || '–'], ['Firma', k.firma || '–'],
+    ['Adresse', [k.strasse, [k.plz, k.ort].filter(Boolean).join(' ')].filter(Boolean).join(', ') || '–'],
+    ['Telefon', k.telefon || '–'], ['E-Mail', k.email || '–'],
+  ];
+  const kv = rows => ({ table:{ widths:[85, '*'], body:rows.map(([a, b]) => [{ text:a, color:C.grey, fontSize:8.5 }, { text:b, fontSize:8.5, bold:a === 'Angebot' }]) }, layout:'noBorders' });
+  const body = [[{ text:'Pos.', style:'th' }, { text:'Leistung und Ausführung', style:'th' }, { text:'Menge', style:'th', alignment:'right' }, { text:'Einzelpreis', style:'th', alignment:'right' }, { text:'Aufpreise', style:'th', alignment:'right' }, { text:'Nachlass', style:'th', alignment:'right' }, { text:'Gesamt', style:'th', alignment:'right' }]];
+  let pos = 0;
+  groups.forEach(g => {
+    body.push([{ text:g.name, colSpan:7, bold:true, color:C.blue, fontSize:9, fillColor:C.soft }, {}, {}, {}, {}, {}, {}]);
+    g.items.forEach(it => {
+      pos++;
+      const c = it.c, auf = [];
+      if (!it.sonder){
+        if (c.l.grund) auf.push(`Grundpauschale ${fmt(c.l.grund)}`);
+        if (c.motivBetrag) auf.push(`Ansicht ${fmt(c.motivBetrag)}`);
+        if (c.oberflBetrag) auf.push(`Oberfläche ${fmt(c.oberflBetrag)}`);
+        if (c.farbBetrag) auf.push(`Farbe ${fmt(c.farbBetrag)}`);
+        if (c.opt) auf.push(`Optionen ${fmt(c.opt)}`);
+      }
+      const manuell = !it.sonder && it.p.ep != null;
+      body.push([
+        { text:String(pos), color:C.grey },
+        { stack:[{ text:it.name, bold:true }, ...(it.details.length ? [{ text:it.details.join(', '), fontSize:8, color:C.grey, margin:[0, 2, 0, 0] }] : []), ...(it.sonder ? [{ text:'Freie Sonderposition', fontSize:7.5, color:C.amber }] : [])] },
+        { text:it.menge, alignment:'right', noWrap:true },
+        { stack:[{ text:fmt(c.ep), alignment:'right', noWrap:true }, ...(manuell ? [{ text:`manuell, Katalog ${fmt(c.l.preis)}`, fontSize:7, color:C.amber, alignment:'right' }] : [])] },
+        { text:auf.length ? auf.join('\n') : '–', alignment:'right', fontSize:8 },
+        { text:c.rab ? `${rabText(c)}${c.rabEur ? '' : '\n−' + fmt(c.rabBetrag)}` : '–', alignment:'right', fontSize:8, color:c.rab ? C.amber : undefined },
+        { text:fmt(c.total), alignment:'right', bold:true, noWrap:true },
+      ]);
+    });
+  });
+  if (anfAktiv()){
+    pos++;
+    const r = anfahrtRabatt();
+    body.push([{ text:'Anfahrt', colSpan:7, bold:true, color:C.blue, fontSize:9, fillColor:C.soft }, {}, {}, {}, {}, {}, {}]);
+    body.push([{ text:String(pos), color:C.grey }, { stack:[{ text:'Anfahrt', bold:true }, { text:`Pauschale ${fmt(ANFAHRT.pauschale)} + ${dec.format(num(state.anfahrt.km))} km × ${fmt(ANFAHRT.proKm)}`, fontSize:8, color:C.grey }] },
+      { text:`${dec.format(num(state.anfahrt.km))} km`, alignment:'right' }, { text:'', alignment:'right' }, { text:'–', alignment:'right', fontSize:8 },
+      { text:r.rab ? rabText(r) : '–', alignment:'right', fontSize:8, color:r.rab ? C.amber : undefined }, { text:fmt(t.anf), alignment:'right', bold:true }]);
+  } else if (state.anfahrt.wahl === 'nein'){
+    body.push([{ text:'Ohne Anfahrt berechnet', colSpan:7, fontSize:8.5, color:C.grey, italics:true }, {}, {}, {}, {}, {}, {}]);
+  }
+  const anfRab = anfAktiv() ? anfahrtRabatt().rabBetrag : 0;
+  const sums = [['Summe Positionen (nach Nachlass)', fmt(t.pos)], ['darin gewährte Nachlässe Positionen', '−' + fmt(t.rab)], ...(anfAktiv() ? [['Anfahrt (nach Nachlass)', fmt(t.anf)], ...(anfRab ? [['darin Nachlass Anfahrt', '−' + fmt(anfRab)]] : [])] : []), ['Summe netto', fmt(t.netto)], [`MwSt. ${dec.format(MWST)} %`, fmt(t.mwst)]];
+  const notes = groups.filter(g => g.note).map(g => ({ text:[{ text:g.name + ': ', bold:true }, g.note], margin:[0, 0, 0, 4] }));
+  return {
+    pageSize:'A4', pageOrientation:'landscape', pageMargins:[40, 80, 40, 50],
+    info:{ title:`Innendienst ${m && m.nummer ? m.nummer + ' ' + m.variante : 'Entwurf'}`, author:FIRMA.name },
+    defaultStyle:{ font:'Roboto', fontSize:9, color:'#17213a', lineHeight:1.15 },
+    styles:{ th:{ bold:true, fontSize:8, color:C.grey }, h:{ bold:true, fontSize:10.5, color:C.blue, margin:[0, 0, 0, 6] } },
+    header:() => ({ margin:[40, 28, 40, 0], columns:[logo ? { svg:logo, width:95 } : { text:'Laumer', bold:true, color:C.blue }, { text:'' }, { width:'auto', stack:[{ text:'Auftragsübersicht Innendienst', fontSize:14, bold:true, color:C.blue, alignment:'right' }, { text:'Nur für den internen Gebrauch', fontSize:8, color:C.amber, alignment:'right', bold:true }] }] }),
+    footer:(cur, total) => ({ margin:[40, 14, 40, 0], columns:[{ text:`${m && m.nummer ? m.nummer + ' ' + m.variante : 'Entwurf'}, ${k.nachname || k.firma || ''}`, fontSize:7.5, color:C.grey }, { width:'auto', text:`Seite ${cur} von ${total}`, fontSize:7.5, color:C.grey }] }),
+    content:[
+      { columns:[{ width:'*', stack:[{ text:'Angebot', style:'h' }, kv(info)] }, { width:'*', stack:[{ text:'Kunde', style:'h' }, kv(kunde)] }], columnGap:30, margin:[0, 0, 0, 18] },
+      { text:'Positionen', style:'h' },
+      groups.length || anfAktiv() ? { table:{ headerRows:1, widths:[22, '*', 60, 80, 105, 70, 72], body, dontBreakRows:true }, layout:hLine } : { text:'Keine Positionen ausgewählt.', color:C.grey },
+      { columns:[
+        { width:'*', stack:notes.length ? [{ text:'Notizen', style:'h', margin:[0, 14, 0, 6] }, ...notes] : [] },
+        { width:280, margin:[0, 14, 0, 0], table:{ widths:['*', 'auto'], body:[
+          ...sums.map(([a, b]) => [{ text:a, color:C.grey, fontSize:8.5 }, { text:b, alignment:'right', fontSize:8.5 }]),
+          [{ text:'Gesamt brutto', bold:true, fontSize:11, color:C.blue, margin:[0, 3, 0, 0] }, { text:fmt(t.brutto), bold:true, fontSize:11, color:C.blue, alignment:'right', margin:[0, 3, 0, 0] }],
+        ] }, layout:{ hLineWidth:(i, n) => i === n.table.body.length - 1 ? 0.8 : 0, vLineWidth:() => 0, hLineColor:() => C.blue, paddingTop:() => 2, paddingBottom:() => 2, paddingLeft:() => 0, paddingRight:() => 0 } },
+      ], columnGap:30 },
+    ],
+  };
+}
+async function makePdf(typ, btn){
+  if (!hasContent() && !anfAktiv()){ toast('Bitte zuerst Kundendaten oder Positionen eintragen.'); return; }
+  const label = btn ? btn.innerHTML : '';
+  if (btn){ btn.disabled = true; btn.textContent = 'PDF wird erstellt …'; }
+  try {
+    await ensurePdf();
+    const dd = typ === 'kunde' ? ddKunde() : ddInnen();
+    window.pdfMake.createPdf(dd).download(pdfName(typ));
+    toast(typ === 'kunde' ? 'PDF für den Kunden erstellt.' : 'PDF für den Innendienst erstellt.');
+  } catch(e){ console.error(e); toast('Das PDF konnte nicht erstellt werden. Bitte Internetverbindung prüfen.', 5000); }
+  if (btn && btn.isConnected){ btn.disabled = false; btn.innerHTML = label; }
+}
+
 /* Bearbeitungsmodus nach Neuladen nicht hängen lassen */
 KATALOG.forEach(k => state.pos[k.id].forEach(p => { p.editing = false; }));
 render();
