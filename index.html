@@ -355,6 +355,9 @@ td .sub{display:block;color:var(--muted);font-size:12px;margin-top:2px}
 .bar-nav{display:flex;gap:10px}
 .bar .btn-back{background:transparent;color:#fff;border-color:rgba(255,255,255,.35)}
 .bar .btn-back:hover{background:rgba(255,255,255,.1)}
+.bar .btn[hidden]{display:none}
+#btnSave.dirty{border-color:#fff;box-shadow:inset 0 0 0 1px #fff}
+#btnSave.dirty span::after{content:" *"}
 .bar .btn-next{background:#fff;color:#182865}
 .bar .btn-next:hover{background:#eaecf4}
 
@@ -431,6 +434,7 @@ td .sub{display:block;color:var(--muted);font-size:12px;margin-top:2px}
       <div class="brutto"><small>Gesamt inkl. MwSt.</small><b id="barBrutto">0,00 €</b></div>
     </div>
     <div class="bar-nav">
+      <button class="btn btn-back" id="btnSave" type="button" title="Angebot speichern (Strg+S)" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3h11l3 3v13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"/><path d="M7 3v5h8V3M7 21v-7h10v7"/></svg><span>Speichern</span></button>
       <button class="btn btn-back" id="btnBack" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg><span>Zurück</span></button>
       <button class="btn btn-next" id="btnNext" type="button">Weiter</button>
     </div>
@@ -1154,6 +1158,8 @@ function rerenderCard(card, focusSel){
   refreshLive();
 }
 function updateBar(){
+  const sb = document.getElementById('btnSave');
+  if (sb){ sb.hidden = !USER; sb.classList.toggle('dirty', !!USER && isDirty()); }
   const t = totals();
   document.getElementById('barNetto').textContent = fmt(t.netto);
   document.getElementById('barBrutto').textContent = fmt(t.brutto);
@@ -1167,6 +1173,7 @@ function updateBar(){
 }
 function refreshLive(){
   updateTopOffer();
+  const sb = document.getElementById('btnSave'); if (sb) sb.classList.toggle('dirty', !!USER && isDirty());
   const s = STEPS[state.step];
   main.querySelectorAll('.pos').forEach(card => {
     let c, line;
@@ -1473,8 +1480,8 @@ main.addEventListener('input', e => {
   if (mode === 'admin'){ adminInput(e); return; }
   if (mode === 'liste'){ listeInput(e); return; }
   const t = e.target;
-  if (t.dataset.k){ state.kunde[t.dataset.k] = t.value; renderSteps(); save(); return; }
-  if (t.dataset.note){ state.notes[t.dataset.note] = t.value; save(); return; }
+  if (t.dataset.k){ state.kunde[t.dataset.k] = t.value; renderSteps(); save(); updateBar(); updateTopOffer(); return; }
+  if (t.dataset.note){ state.notes[t.dataset.note] = t.value; save(); updateBar(); updateTopOffer(); return; }
   if (t.dataset.anf === 'km'){ state.anfahrt.km = t.value; refreshLive(); return; }
   if (t.dataset.f === 'rabatt' && t.closest('[data-anfrab]')){ state.anfahrt.rabatt = t.value; refreshLive(); return; }
   const card = t.closest('.pos'); if (!card) return;
@@ -1557,7 +1564,7 @@ function updateTopOffer(){
   if (!USER){ el.hidden = true; return; }
   const m = state.meta;
   el.hidden = false;
-  el.textContent = m && m.nummer ? `${m.nummer} ${m.variante}${m.version ? ' v' + m.version : ' (neu)'}${isDirty() ? ' *' : ''}` : 'Neues Angebot';
+  el.textContent = m && m.nummer ? `${m.nummer} ${m.variante}${m.id ? '' : ' (neu)'}${isDirty() ? ' *' : ''}` : 'Neues Angebot';
   el.title = isDirty() ? 'Ungespeicherte Änderungen' : 'Gespeichert';
 }
 
@@ -1678,27 +1685,35 @@ function offerData(){
   });
 }
 function versionsOf(nummer, variante){ return ANGEBOTE.filter(a => a.nummer === nummer && a.variante === variante); }
+let saving = false;
 async function saveOffer(btn){
-  if (!USER) return;
+  if (!USER || saving) return;
   if (!hasContent()){ toast('Bitte zuerst Kundendaten oder Positionen eintragen.'); return; }
   const m = state.meta;
-  if (m && m.id && contentKey() === m.saved){ toast('Keine Änderungen seit dem letzten Speichern.'); return; }
-  if (btn){ btn.disabled = true; btn.textContent = 'Wird gespeichert …'; }
+  if (m && m.id && contentKey() === m.saved){ toast('Alles gespeichert, keine neuen Änderungen.'); return; }
+  saving = true;
+  const label = btn ? btn.innerHTML : '';
+  if (btn){ btn.disabled = true; btn.textContent = 'Speichert …'; }
   try {
     const now = Date.now(), data = offerData();
-    const nummer = m && m.nummer ? m.nummer : await nextNummer();
-    const variante = m && m.variante ? m.variante : 'A';
-    const version = m && m.id ? Math.max(0, ...versionsOf(nummer, variante).map(a => a.version || 0)) + 1 : 1;
-    const status = m && m.status || 'entwurf';
-    const doc = { ...data, nummer, variante, version, aktuell:true, status, geloescht:false,
-      erstelltVonUid:USER.uid, erstelltVonName:USER.name, erstelltMs:now, geaendertMs:now };
-    const ref = await FB.f.addDoc(FB.f.collection(FB.db, 'angebote'), doc);
-    await Promise.all(versionsOf(nummer, variante).filter(a => a.aktuell && a.id !== ref.id)
-      .map(a => FB.f.updateDoc(FB.f.doc(FB.db, 'angebote', a.id), { aktuell:false })));
-    state.meta = { id:ref.id, nummer, variante, version, status, erstelltMs:now, saved:contentKey() };
-    toast(version > 1 ? `Version ${version} von ${nummer} ${variante} gespeichert.` : `Angebot ${nummer} ${variante} gespeichert.`);
+    if (m && m.id){
+      await FB.f.updateDoc(FB.f.doc(FB.db, 'angebote', m.id), { ...data, geaendertMs:now, geaendertVonName:USER.name });
+      m.saved = contentKey();
+      toast(`Angebot ${m.nummer} ${m.variante} gespeichert.`);
+    } else {
+      const nummer = m && m.nummer ? m.nummer : await nextNummer();
+      const variante = m && m.variante ? m.variante : 'A';
+      const status = m && m.status || 'entwurf';
+      const ref = await FB.f.addDoc(FB.f.collection(FB.db, 'angebote'), { ...data, nummer, variante, version:1, aktuell:true, status, geloescht:false,
+        erstelltVonUid:USER.uid, erstelltVonName:USER.name, erstelltMs:now, geaendertMs:now, geaendertVonName:USER.name });
+      state.meta = { id:ref.id, nummer, variante, status, erstelltMs:now, saved:contentKey() };
+      toast(`Angebot ${nummer} ${variante} angelegt und gespeichert.`);
+    }
   } catch(e){ toast(errText(e), 5000); }
-  save(); render();
+  saving = false;
+  if (btn && btn.isConnected){ btn.disabled = false; btn.innerHTML = label; }
+  save();
+  if (mode === 'angebot' && STEPS[state.step].id === 'summary') render(); else { updateTopOffer(); updateBar(); }
 }
 function makeVariant(){
   const m = state.meta; if (!m || !m.nummer) return;
@@ -1707,7 +1722,7 @@ function makeVariant(){
   let c = 'A'; while (used.includes(c)) c = String.fromCharCode(c.charCodeAt(0) + 1);
   state.meta = { nummer:m.nummer, variante:c, status:'entwurf' };
   save(); render();
-  toast(`Variante ${c} angelegt. Jetzt anpassen und speichern.`, 4500);
+  toast(`Variante ${c} von ${m.nummer} vorbereitet. Anpassen und speichern, Variante ${m.variante} bleibt unverändert.`, 5000);
 }
 async function setStatus(val){
   const m = state.meta; if (!m || !m.id) return;
@@ -1725,11 +1740,11 @@ function metaCard(){
   const dirty = isDirty();
   const statusSel = m.id ? `<label class="fld"><span>Status</span><select class="sel" id="metaStatus">${Object.entries(STATUS).map(([k, v]) => `<option value="${k}"${m.status === k ? ' selected' : ''}>${v}</option>`).join('')}</select></label>` : '';
   return `<div class="card meta-card stack">
-      <div><div class="meta-nr">${esc(m.nummer)} ${esc(m.variante)}</div><div class="adm-hint" style="margin:2px 0 0">${m.id ? `Version ${m.version}, ${dirty ? 'ungespeicherte Änderungen' : 'gespeichert'}` : 'Neue Variante, noch nicht gespeichert'}</div></div>
+      <div><div class="meta-nr">${esc(m.nummer)} ${esc(m.variante)}</div><div class="adm-hint" style="margin:2px 0 0">${m.id ? (dirty ? 'Ungespeicherte Änderungen' : 'Alles gespeichert') : 'Neue Variante, noch nicht gespeichert'}</div></div>
       ${statusSel}
       <div class="btn-row">
-        <button type="button" class="btn btn-primary" data-act="save">${ICON.check}${m.id ? 'Als neue Version speichern' : 'Variante speichern'}</button>
-        ${m.id ? `<button type="button" class="btn btn-outline" data-act="variante">Als Variante kopieren</button>` : ''}
+        <button type="button" class="btn btn-primary" data-act="save">${ICON.check}${m.id ? 'Speichern' : `Variante ${esc(m.variante)} speichern`}</button>
+        ${m.id ? `<button type="button" class="btn btn-outline" data-act="variante">${ICON.plus}Neue Variante erstellen</button>` : ''}
       </div></div>`;
 }
 
@@ -1756,7 +1771,7 @@ function renderListe(){
       <label class="fld"><span>Status</span><select class="sel" data-lf="status"><option value="">Alle</option>${Object.entries(STATUS).map(([k, v]) => `<option value="${k}"${LF.status === k ? ' selected' : ''}>${v}</option>`).join('')}</select></label>
       <label class="fld"><span>Zeitraum</span><select class="sel" data-lf="zeit">${[['', 'Alle'], ['30', 'Letzte 30 Tage'], ['90', 'Letzte 3 Monate'], ['jahr', 'Dieses Jahr']].map(([k, v]) => `<option value="${k}"${LF.zeit === k ? ' selected' : ''}>${v}</option>`).join('')}</select></label>
     </div>
-    <div class="filters-2"><label class="chk"><input type="checkbox" data-lf="versionen"${LF.versionen ? ' checked' : ''}>Ältere Versionen anzeigen</label><span id="listCount"></span></div>`
+    <div class="filters-2"><span></span><span id="listCount"></span></div>`
     : `<p class="adm-hint" style="margin:0 0 16px">Gelöschte Angebote werden nach ${PAPIERKORB_TAGE} Tagen automatisch endgültig entfernt.</p>`}
     ${pendingOpen ? `<div class="confirm-box" style="margin-bottom:14px" role="alertdialog"><p>Das aktuelle Angebot hat ungespeicherte Änderungen. Beim Öffnen gehen sie verloren.</p><div class="confirm-btns"><button type="button" class="btn btn-ghost" data-la="open-no">Abbrechen</button><button type="button" class="btn btn-danger" data-la="open-yes">Trotzdem öffnen</button></div></div>` : ''}
     <div class="stack" id="listResults"></div>`;
@@ -1792,8 +1807,8 @@ function rowHtml(a, isAlt, docsOfVariant, nummerDocs){
       ${varianten > 1 && canDelete(nummerDocs) ? `<button type="button" class="btn btn-outline" data-la="del-all" data-nummer="${esc(a.nummer)}">Ganzes Angebot</button>` : ''}
       <button type="button" class="btn btn-danger" data-la="del-yes" data-key="${esc(key)}">${varianten > 1 ? `Nur Variante ${esc(a.variante)}` : 'In den Papierkorb'}</button></div></div>` : '';
   return `<div class="offer-row${isAlt ? ' alt' : ''}">
-      <div><b>Variante ${esc(a.variante)}</b> <span class="meta">v${a.version || 1}</span></div>
-      <div class="meta">${esc(a.bearbeiter || '–')}, geändert ${datum(a.geaendertMs || a.erstelltMs)}${a.erstelltVonName && a.erstelltVonName !== a.bearbeiter ? `, gespeichert von ${esc(a.erstelltVonName)}` : ''}</div>
+      <div><b>Variante ${esc(a.variante)}</b></div>
+      <div class="meta">${esc(a.bearbeiter || '–')}, zuletzt gespeichert ${datum(a.geaendertMs || a.erstelltMs)}${a.geaendertVonName && a.geaendertVonName !== a.bearbeiter ? ` von ${esc(a.geaendertVonName)}` : ''}</div>
       <div><span class="badge ${a.status || 'entwurf'}">${STATUS[a.status || 'entwurf']}</span></div>
       <div class="num">${fmt(a.summen ? a.summen.brutto : 0)}</div>
       <div class="offer-acts"><button type="button" class="btn btn-outline" data-la="open" data-id="${a.id}">Öffnen</button>${del}</div>
@@ -1857,7 +1872,7 @@ function loadOffer(id){
   state.meta.saved = contentKey();
   state.step = STEPS.length - 1; state.visited = STEPS.map((_, i) => i);
   closeListe(true); render(); window.scrollTo({ top:0 });
-  toast(`Angebot ${a.nummer} ${a.variante} (Version ${a.version || 1}) geöffnet.`);
+  toast(`Angebot ${a.nummer} ${a.variante} geöffnet.`);
 }
 async function listeClick(e){
   const tab = e.target.closest('[data-ltab]');
@@ -1891,6 +1906,10 @@ function listeInput(e){
   renderListResults();
 }
 
+document.getElementById('btnSave').onclick = e => saveOffer(e.currentTarget);
+document.addEventListener('keydown', e => {
+  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's'){ e.preventDefault(); if (USER && mode === 'angebot') saveOffer(document.getElementById('btnSave')); }
+});
 /* Bearbeitungsmodus nach Neuladen nicht hängen lassen */
 KATALOG.forEach(k => state.pos[k.id].forEach(p => { p.editing = false; }));
 render();
