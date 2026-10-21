@@ -244,6 +244,8 @@ td .sub{display:block;color:var(--muted);font-size:12px;margin-top:2px}
 .chip-x button{border:0;background:none;color:inherit;width:22px;height:22px;border-radius:50%;cursor:pointer;font-size:15px;line-height:1}
 .chip-x button:hover{background:rgba(0,0,0,.08)}
 
+.ep-old{display:block;color:var(--muted);font-size:12px;text-decoration:line-through}
+
 /* Kundensuche */
 .kunde-suche{position:relative;margin-bottom:14px}
 .ks-input{position:relative}
@@ -1122,7 +1124,7 @@ function viewSummary(){
       if (c.l.grund) extras.push(`inkl. ${fmt(c.l.grund)} Grundpauschale`);
       rows += `<tr><td>${esc(c.l.name)}${extras.filter(Boolean).length ? `<span class="sub">${extras.filter(Boolean).join(', ')}</span>` : ''}</td>
         <td class="num">${c.pauschal ? 'pauschal' : dec.format(c.menge) + ' ' + c.l.einheit}</td>
-        <td class="num">${fmt(c.ep)}${p.ep != null ? ' <span class="tag">manuell</span>' : ''}</td>
+        <td class="num">${p.ep != null ? `<s class="ep-old">${fmt(c.l.preis)}</s>${fmt(c.ep)} <span class="tag">manuell</span>` : fmt(c.ep)}</td>
         <td class="num">${c.rab ? rabText(c) : '–'}</td><td class="num">${fmt(c.total)}</td></tr>`;
     });
   });
@@ -2123,7 +2125,7 @@ function ddInnen(){
         { text:String(pos), color:C.grey },
         { stack:[{ text:it.name, bold:true }, ...(it.details.length ? [{ text:it.details.join(', '), fontSize:8, color:C.grey, margin:[0, 2, 0, 0] }] : []), ...(it.sonder ? [{ text:'Freie Sonderposition', fontSize:7.5, color:C.amber }] : [])] },
         { text:it.menge, alignment:'right', noWrap:true },
-        { stack:[{ text:fmt(c.ep), alignment:'right', noWrap:true }, ...(manuell ? [{ text:`manuell, Katalog ${fmt(c.l.preis)}`, fontSize:7, color:C.amber, alignment:'right' }] : [])] },
+        { stack:[...(manuell ? [{ text:fmt(c.l.preis), decoration:'lineThrough', color:C.grey, fontSize:7.5, alignment:'right', noWrap:true }] : []), { text:fmt(c.ep), alignment:'right', noWrap:true }, ...(manuell ? [{ text:'manuell geändert', fontSize:7, color:C.amber, alignment:'right' }] : [])] },
         { text:auf.length ? auf.join('\n') : '–', alignment:'right', fontSize:8 },
         { text:c.rab ? `${rabText(c)}${c.rabEur ? '' : '\n−' + fmt(c.rabBetrag)}` : '–', alignment:'right', fontSize:8, color:c.rab ? C.amber : undefined },
         { text:fmt(c.total), alignment:'right', bold:true, noWrap:true },
