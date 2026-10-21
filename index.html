@@ -248,6 +248,13 @@ td .sub{display:block;color:var(--muted);font-size:12px;margin-top:2px}
 .ep-note s{color:var(--muted);font-weight:500}
 td .sub.auf{color:#1d4a9e}
 
+.clear-row{display:flex;justify-content:flex-end;margin-top:10px}
+.clear-row[hidden]{display:none}
+.clear-row .confirm-box{flex:1}
+.clear-btn{min-height:36px;font-size:13px;padding:0 12px}
+.clear-btn:hover{color:var(--danger)}
+.clear-btn svg{width:16px;height:16px}
+
 /* Kundensuche */
 .kunde-suche{position:relative;margin-bottom:14px}
 .ks-input{position:relative}
@@ -628,7 +635,7 @@ function freshState(){
     step:0, visited:[0],
     kunde:{ anrede:'', vorname:'', nachname:'', firma:'', strasse:'', plz:'', ort:'', telefon:'', email:'', bearbeiter:'' },
     pos:Object.fromEntries(KATALOG.map(k => [k.id, []])),
-    notes:{}, sonder:[], anfahrt:{ wahl:null, km:'' }, meta:null,
+    notes:{}, sonder:[], anfahrt:{ wahl:null, km:'' }, meta:null, gesamt:{ rabatt:'', rabattArt:'pct' },
   };
 }
 let state = freshState();
@@ -724,8 +731,9 @@ function totals(){
   KATALOG.forEach(k => state.pos[k.id].forEach(p => { const c = calcPos(p, k); if (c){ pos += c.total; rab += c.rabBetrag; } }));
   state.sonder.forEach(s => { const c = calcSonder(s); pos += c.total; rab += c.rabBetrag; });
   const anf = anfahrtTotal();
-  const netto = pos + anf, mwst = netto * MWST / 100;
-  return { pos, rab, anf, netto, mwst, brutto: netto + mwst };
+  const zw = pos + anf, ges = calcRabatt(state.gesamt || {}, zw);
+  const netto = zw - ges.rabBetrag, mwst = netto * MWST / 100;
+  return { pos, rab, anf, zw, ges, netto, mwst, brutto: netto + mwst };
 }
 function countPos(katId){ return state.pos[katId].filter(p => p.leistung).length; }
 
@@ -1056,6 +1064,13 @@ function viewKunde(){
     <div class="fld c3"><span>Datum</span><div class="static">${new Date().toLocaleDateString('de-DE')}</div></div>
   </div></div>`;
 }
+let clearConfirm = null;
+function clearRow(id, name, n){
+  const inner = clearConfirm === id
+    ? `<div class="confirm-box" role="alertdialog"><p>Alle ${n} ${n === 1 ? 'Position' : 'Positionen'} in „${esc(name)}“ entfernen?</p><div class="confirm-btns"><button type="button" class="btn btn-ghost" data-act="clear-no">Abbrechen</button><button type="button" class="btn btn-danger" data-act="clear-yes">Ja, alle entfernen</button></div></div>`
+    : `<button type="button" class="btn btn-ghost clear-btn" data-act="clear-kat">${ICON.trash}Alle Positionen entfernen</button>`;
+  return `<div class="clear-row" data-clearwrap${n ? '' : ' hidden'}>${inner}</div>`;
+}
 function emptyPos(){ return { uid:uid(), leistung:'', menge:'', ep:null, rabatt:'', farbe:'std', farbtext:'', optionen:{} }; }
 function emptySonder(){ return { uid:uid(), text:'', menge:'1', einheit:'Stück', preis:'', rabatt:'' }; }
 const sonderFilled = () => state.sonder.filter(x => x.text || num(x.preis));
@@ -1066,7 +1081,8 @@ function viewKat(kat){
   const sub = `<div class="subtotal" data-kattotal>${countPos(kat.id) ? `Summe Kategorie<b>${fmt(katTotal(kat.id))}</b>` : ''}</div>`;
   let html = head(kat.name, sub);
   html += `<div class="stack" id="poslist">${list.map((p, i) => posCard(kat, p, i, p._new)).join('')}</div>
-    <div style="margin-top:14px" data-addwrap${list.some(p => !p.leistung) ? ' hidden' : ''}><button type="button" class="add-btn" data-act="add">${ICON.plus}Weitere Position in ${esc(kat.name)}</button></div>`;
+    <div style="margin-top:14px" data-addwrap${list.some(p => !p.leistung) ? ' hidden' : ''}><button type="button" class="add-btn" data-act="add">${ICON.plus}Weitere Position in ${esc(kat.name)}</button></div>
+    ${clearRow(kat.id, kat.name, countPos(kat.id))}`;
   html += `<div class="card" style="margin-top:14px"><details class="notes"${state.notes[kat.id] ? ' open' : ''}><summary>Notiz zu ${esc(kat.name)}</summary>
     <textarea data-note="${kat.id}" placeholder="z. B. Zufahrt eng, Termin erst ab März">${esc(state.notes[kat.id])}</textarea></details></div>`;
   list.forEach(p => delete p._new);
@@ -1079,7 +1095,8 @@ function viewSonder(){
   let html = head('Sonderpositionen', sub);
   html += `<p class="adm-hint" style="margin:-8px 0 14px">Für alles, was nicht im Katalog steht: Bezeichnung und Preis frei eintragen.</p>
     <div class="stack">${list.map((s, i) => sonderCard(s, i, s._new)).join('')}</div>
-    <div style="margin-top:14px" data-addwrap${list.some(x => !(x.text || num(x.preis))) ? ' hidden' : ''}><button type="button" class="add-btn" data-act="add-sonder">${ICON.plus}Weitere Sonderposition</button></div>`;
+    <div style="margin-top:14px" data-addwrap${list.some(x => !(x.text || num(x.preis))) ? ' hidden' : ''}><button type="button" class="add-btn" data-act="add-sonder">${ICON.plus}Weitere Sonderposition</button></div>
+    ${clearRow('sonder', 'Sonderpositionen', sonderFilled().length)}`;
   list.forEach(s => delete s._new);
   return html;
 }
@@ -1100,6 +1117,15 @@ function viewAnfahrt(){
       <div class="kv" data-anfrabrow ${anfahrtRabatt().rabBetrag ? '' : 'hidden'}><span>Nachlass</span><span data-anfrabval>− ${fmt(anfahrtRabatt().rabBetrag)}</span></div>
       <div class="kv strong"><span>Anfahrt gesamt</span><span data-anftotal>${fmt(anfahrtTotal())}</span></div>
     </div></div>`;
+}
+function totalsInner(t){
+  return `<div class="kv"><span>Positionen</span><span>${fmt(t.pos)}</span></div>
+    ${t.rab ? `<div class="kv minus"><span>darin gewährte Nachlässe</span><span>− ${fmt(t.rab)}</span></div>` : ''}
+    ${anfAktiv() ? `<div class="kv"><span>Anfahrt</span><span>${fmt(t.anf)}</span></div>` : ''}
+    ${t.ges.rabBetrag ? `<div class="kv"><span>Zwischensumme</span><span>${fmt(t.zw)}</span></div><div class="kv minus"><span>Nachlass Gesamtauftrag${t.ges.rabEur ? '' : ` (${dec.format(t.ges.rab)} %)`}</span><span>− ${fmt(t.ges.rabBetrag)}</span></div>` : ''}
+    <div class="kv"><span>Summe netto</span><span>${fmt(t.netto)}</span></div>
+    <div class="kv"><span>zzgl. ${MWST} % MwSt.</span><span>${fmt(t.mwst)}</span></div>
+    <div class="kv brutto"><span>Gesamt brutto</span><span>${fmt(t.brutto)}</span></div>`;
 }
 function viewSummary(){
   const k = state.kunde, t = totals();
@@ -1150,14 +1176,8 @@ function viewSummary(){
   return head('Zusammenfassung') + `<div class="sum-grid">
     <div class="card sum-block"><h2>Kunde</h2>${kunde}</div>
     <div class="stack sum-side">
-      <div class="card totals">
-        <div class="kv"><span>Positionen</span><span>${fmt(t.pos)}</span></div>
-        ${t.rab ? `<div class="kv minus"><span>darin gewährte Nachlässe</span><span>− ${fmt(t.rab)}</span></div>` : ''}
-        ${anfAktiv() ? `<div class="kv"><span>Anfahrt</span><span>${fmt(t.anf)}</span></div>` : ''}
-        <div class="kv"><span>Summe netto</span><span>${fmt(t.netto)}</span></div>
-        <div class="kv"><span>zzgl. ${MWST} % MwSt.</span><span>${fmt(t.mwst)}</span></div>
-        <div class="kv brutto"><span>Gesamt brutto</span><span>${fmt(t.brutto)}</span></div>
-      </div>
+      <div class="card" data-gesrab><h2 class="adm-h2">Nachlass auf den Gesamtauftrag</h2><p class="adm-hint" style="margin:4px 0 12px">Wird nach allen Positionen und der Anfahrt von der Nettosumme abgezogen.</p>${rabField(state.gesamt)}</div>
+      <div class="card totals" id="totalsCard">${totalsInner(t)}</div>
       ${metaCard()}
       <div class="card stack"><h2 class="adm-h2">PDF erstellen</h2>
         ${!(state.meta && state.meta.id) && hasContent() ? '<p class="adm-hint" style="margin:0">Tipp: Erst speichern, dann steht die Angebotsnummer im PDF.</p>' : ''}
@@ -1216,6 +1236,9 @@ function refreshLive(){
     if (tEl) tEl.innerHTML = totalHtml(c); if (cEl) cEl.textContent = line || '';
   });
   const kt = main.querySelector('[data-kattotal]');
+  const cw = main.querySelector('[data-clearwrap]');
+  if (cw && s.kat) cw.hidden = !countPos(s.id);
+  if (cw && s.id === 'sonder') cw.hidden = !sonderFilled().length;
   const aw = main.querySelector('[data-addwrap]');
   if (aw && s.kat) aw.hidden = state.pos[s.id].some(p => !p.leistung);
   if (aw && s.id === 'sonder') aw.hidden = state.sonder.some(x => !(x.text || num(x.preis)));
@@ -1226,7 +1249,7 @@ function refreshLive(){
   const ar = main.querySelector('[data-anfrabrow]'); if (ar){ const r = anfahrtRabatt(); ar.hidden = !r.rabBetrag; ar.querySelector('[data-anfrabval]').textContent = `− ${fmt(r.rabBetrag)}`; }
   renderSteps(); updateBar(); save();
 }
-function go(i){ state.step = Math.max(0, Math.min(STEPS.length - 1, i)); render(); window.scrollTo({ top:0, behavior:'smooth' }); }
+function go(i){ clearConfirm = null; state.step = Math.max(0, Math.min(STEPS.length - 1, i)); render(); window.scrollTo({ top:0, behavior:'smooth' }); }
 function toast(msg, ms){ const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show'); clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove('show'), ms || 2600); }
 
 /* ---------- Einstellungen (Admin) ---------- */
@@ -1501,6 +1524,7 @@ main.addEventListener('click', e => {
   const ra = e.target.closest('[data-rabart]');
   if (ra){
     e.preventDefault();
+    if (ra.closest('[data-gesrab]')){ state.gesamt.rabattArt = ra.dataset.rabart; render('[data-gesrab] input[data-f="rabatt"]'); return; }
     if (ra.closest('[data-anfrab]')){ state.anfahrt.rabattArt = ra.dataset.rabart; render('[data-anfrab] input[data-f="rabatt"]'); return; }
     const card = ra.closest('.pos'), p = getItem(card), uidv = p.uid;
     p.rabattArt = ra.dataset.rabart;
@@ -1538,6 +1562,9 @@ main.addEventListener('click', e => {
     render('.pos:last-child select[data-f="leistung"]');
     main.querySelector('.pos:last-child')?.scrollIntoView({ block:'center', behavior:'smooth' });
   }
+  if (act === 'clear-kat'){ clearConfirm = s.id; render(); return; }
+  if (act === 'clear-no'){ clearConfirm = null; render(); return; }
+  if (act === 'clear-yes'){ if (s.kat) state.pos[s.id] = []; else if (s.id === 'sonder') state.sonder = []; clearConfirm = null; render(); toast(`Alle Positionen in „${s.title}“ entfernt.`); return; }
   if (act === 'add-sonder'){
     state.sonder.push({ ...emptySonder(), _new:true });
     render('.pos:last-child input[data-f="text"]');
@@ -1566,6 +1593,7 @@ main.addEventListener('input', e => {
   if (t.dataset.k){ state.kunde[t.dataset.k] = t.value; renderSteps(); save(); updateBar(); updateTopOffer(); return; }
   if (t.dataset.note){ state.notes[t.dataset.note] = t.value; save(); updateBar(); updateTopOffer(); return; }
   if (t.dataset.anf === 'km'){ state.anfahrt.km = t.value; refreshLive(); return; }
+  if (t.dataset.f === 'rabatt' && t.closest('[data-gesrab]')){ state.gesamt.rabatt = t.value; const tc = document.getElementById('totalsCard'); if (tc) tc.innerHTML = totalsInner(totals()); refreshLive(); return; }
   if (t.dataset.f === 'rabatt' && t.closest('[data-anfrab]')){ state.anfahrt.rabatt = t.value; refreshLive(); return; }
   const card = t.closest('.pos'); if (!card) return;
   const p = getItem(card); const f = t.dataset.f;
@@ -1635,7 +1663,7 @@ function nameFromMail(mail){
 const datum = ms => ms ? new Date(ms).toLocaleDateString('de-DE') : '–';
 function kundeAnzeige(k){ return k.firma || [k.vorname, k.nachname].filter(Boolean).join(' ') || 'Ohne Kundenname'; }
 function contentKey(){
-  return JSON.stringify({ kunde:state.kunde, pos:filledPos(), notes:state.notes, sonder:sonderFilled(), anfahrt:state.anfahrt },
+  return JSON.stringify({ kunde:state.kunde, pos:filledPos(), notes:state.notes, sonder:sonderFilled(), anfahrt:state.anfahrt, gesamt:state.gesamt },
     (key, v) => (key === 'editing' || key === '_new') ? undefined : v);
 }
 function hasContent(){
@@ -1763,7 +1791,7 @@ async function nextNummer(){
 function offerData(){
   const t = totals(), k = state.kunde;
   return plain({
-    kunde:k, pos:filledPos(), notes:state.notes, sonder:sonderFilled(), anfahrt:state.anfahrt,
+    kunde:k, pos:filledPos(), notes:state.notes, sonder:sonderFilled(), anfahrt:state.anfahrt, gesamt:state.gesamt,
     summen:{ netto:t.netto, brutto:t.brutto }, kundeName:kundeAnzeige(k), ort:k.ort || '', bearbeiter:k.bearbeiter || USER.name,
   });
 }
@@ -1946,7 +1974,7 @@ async function softDelete(docs){
 function loadOffer(id){
   const a = ANGEBOTE.find(x => x.id === id); if (!a) return;
   state = freshState();
-  ['kunde', 'notes', 'anfahrt'].forEach(k => { if (a[k]) state[k] = Object.assign(state[k], plain(a[k])); });
+  ['kunde', 'notes', 'anfahrt', 'gesamt'].forEach(k => { if (a[k]) state[k] = Object.assign(state[k], plain(a[k])); });
   if (a.pos) state.pos = Object.assign(state.pos, plain(a.pos));
   if (a.sonder) state.sonder = plain(a.sonder);
   ensureStatePos();
@@ -2064,8 +2092,8 @@ function ddKunde(){
     body.push([{ text:'Anfahrt', colSpan:4, bold:true, color:C.blue, fontSize:9, fillColor:C.soft }, {}, {}, {}]);
     body.push([{ text:String(pos), color:C.grey }, { text:'Anfahrt', bold:true }, { text:'pauschal', alignment:'right' }, { stack:[{ text:fmt(t.anf), alignment:'right', bold:true }, ...(r.rabBetrag ? [{ text:`inkl. ${fmt(r.rabBetrag)} Nachlass`, fontSize:7.5, color:C.amber, alignment:'right' }] : [])] }]);
   }
-  const vorteil = t.rab + (anfAktiv() ? anfahrtRabatt().rabBetrag : 0);
-  const sums = [['Summe netto', fmt(t.netto)], [`zzgl. ${dec.format(MWST)} % MwSt.`, fmt(t.mwst)]];
+  const vorteil = t.rab + (anfAktiv() ? anfahrtRabatt().rabBetrag : 0) + t.ges.rabBetrag;
+  const sums = [...(t.ges.rabBetrag ? [['Zwischensumme', fmt(t.zw)], [`Nachlass auf den Gesamtauftrag${t.ges.rabEur ? '' : ` (${dec.format(t.ges.rab)} %)`}`, '−' + fmt(t.ges.rabBetrag)]] : []), ['Summe netto', fmt(t.netto)], [`zzgl. ${dec.format(MWST)} % MwSt.`, fmt(t.mwst)]];
   return {
     pageSize:'A4', pageMargins:[50, 100, 50, 64],
     info:{ title:`Angebot ${m && m.nummer ? m.nummer + ' ' + m.variante : ''}`.trim(), author:FIRMA.name },
@@ -2150,7 +2178,7 @@ function ddInnen(){
     body.push([{ text:'Ohne Anfahrt berechnet', colSpan:7, fontSize:8.5, color:C.grey, italics:true }, {}, {}, {}, {}, {}, {}]);
   }
   const anfRab = anfAktiv() ? anfahrtRabatt().rabBetrag : 0;
-  const sums = [['Summe Positionen (nach Nachlass)', fmt(t.pos)], ['darin gewährte Nachlässe Positionen', '−' + fmt(t.rab)], ...(anfAktiv() ? [['Anfahrt (nach Nachlass)', fmt(t.anf)], ...(anfRab ? [['darin Nachlass Anfahrt', '−' + fmt(anfRab)]] : [])] : []), ['Summe netto', fmt(t.netto)], [`MwSt. ${dec.format(MWST)} %`, fmt(t.mwst)]];
+  const sums = [['Summe Positionen (nach Nachlass)', fmt(t.pos)], ['darin gewährte Nachlässe Positionen', '−' + fmt(t.rab)], ...(anfAktiv() ? [['Anfahrt (nach Nachlass)', fmt(t.anf)], ...(anfRab ? [['darin Nachlass Anfahrt', '−' + fmt(anfRab)]] : [])] : []), ...(t.ges.rabBetrag ? [['Zwischensumme', fmt(t.zw)], [`Nachlass Gesamtauftrag${t.ges.rabEur ? '' : ` (${dec.format(t.ges.rab)} %)`}`, '−' + fmt(t.ges.rabBetrag)]] : []), ['Summe netto', fmt(t.netto)], [`MwSt. ${dec.format(MWST)} %`, fmt(t.mwst)]];
   const notes = groups.filter(g => g.note).map(g => ({ text:[{ text:g.name + ': ', bold:true }, g.note], margin:[0, 0, 0, 4] }));
   return {
     pageSize:'A4', pageOrientation:'landscape', pageMargins:[40, 80, 40, 50],
