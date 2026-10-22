@@ -166,6 +166,8 @@ td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;white-space:now
 tr.cat td{background:var(--surface-2);font-weight:700;color:var(--ink-blue);font-size:12.5px;padding:7px 10px}
 td .sub{display:block;color:var(--muted);font-size:12px;margin-top:2px}
 .totals .kv.brutto{font-size:19px;font-weight:700;color:var(--ink-blue);border-bottom:0;padding-top:14px}
+.totals .kv{align-items:baseline}
+.totals .kv span:last-child{white-space:nowrap}
 .totals .kv.minus{color:var(--muted);font-size:13.5px}
 .note-list{margin:0;padding:0;list-style:none;font-size:14px}
 .note-list li{padding:8px 0;border-bottom:1px solid var(--line)}
@@ -1121,9 +1123,9 @@ function viewAnfahrt(){
 function totalsInner(t){
   return `<div class="kv"><span>Positionen${t.rab ? ' vor Nachlass' : ''}</span><span>${fmt(t.posVor)}</span></div>
     ${t.rab ? `<div class="kv minus"><span>Nachlässe auf Positionen</span><span>− ${fmt(t.rab)}</span></div>` : ''}
-    ${anfAktiv() ? `<div class="kv"><span>Anfahrt</span><span>${fmt(t.anf)}</span></div>` : ''}
+    ${anfAktiv() ? (() => { const ar = anfahrtRabatt(); return `<div class="kv"><span>Anfahrt${ar.rabBetrag ? ' vor Nachlass' : ''}</span><span>${fmt(anfahrtVor())}</span></div>${ar.rabBetrag ? `<div class="kv minus"><span>Nachlass auf Anfahrt${ar.rabEur ? '' : ` (${dec.format(ar.rab)} %)`}</span><span>− ${fmt(ar.rabBetrag)}</span></div>` : ''}`; })() : ''}
     ${t.ges.rabBetrag && (t.rab || anfAktiv()) ? `<div class="kv"><span>Zwischensumme</span><span>${fmt(t.zw)}</span></div>` : ''}
-    ${t.ges.rabBetrag ? `<div class="kv minus"><span>Nachlass Gesamtauftrag${t.ges.rabEur ? '' : ` (${dec.format(t.ges.rab)} %)`}</span><span>− ${fmt(t.ges.rabBetrag)}</span></div>` : ''}
+    ${t.ges.rabBetrag ? `<div class="kv minus"><span>Gesamtnachlass${t.ges.rabEur ? '' : ` (${dec.format(t.ges.rab)} %)`}</span><span>− ${fmt(t.ges.rabBetrag)}</span></div>` : ''}
     <div class="kv"><span>Summe netto</span><span>${fmt(t.netto)}</span></div>
     <div class="kv"><span>zzgl. ${MWST} % MwSt.</span><span>${fmt(t.mwst)}</span></div>
     <div class="kv brutto"><span>Gesamt brutto</span><span>${fmt(t.brutto)}</span></div>`;
@@ -2179,7 +2181,7 @@ function ddInnen(){
     body.push([{ text:'Ohne Anfahrt berechnet', colSpan:7, fontSize:8.5, color:C.grey, italics:true }, {}, {}, {}, {}, {}, {}]);
   }
   const anfRab = anfAktiv() ? anfahrtRabatt().rabBetrag : 0;
-  const sums = [[t.rab ? 'Positionen vor Nachlass' : 'Positionen', fmt(t.posVor)], ...(t.rab ? [['Nachlässe auf Positionen', '−' + fmt(t.rab)]] : []), ...(anfAktiv() ? [[anfRab ? `Anfahrt (nach ${fmt(anfRab)} Nachlass)` : 'Anfahrt', fmt(t.anf)]] : []), ...(t.ges.rabBetrag ? [...(t.rab || anfAktiv() ? [['Zwischensumme', fmt(t.zw)]] : []), [`Nachlass Gesamtauftrag${t.ges.rabEur ? '' : ` (${dec.format(t.ges.rab)} %)`}`, '−' + fmt(t.ges.rabBetrag)]] : []), ['Summe netto', fmt(t.netto)], [`MwSt. ${dec.format(MWST)} %`, fmt(t.mwst)]];
+  const sums = [[t.rab ? 'Positionen vor Nachlass' : 'Positionen', fmt(t.posVor)], ...(t.rab ? [['Nachlässe auf Positionen', '−' + fmt(t.rab)]] : []), ...(anfAktiv() ? [[anfRab ? 'Anfahrt vor Nachlass' : 'Anfahrt', fmt(anfahrtVor())], ...(anfRab ? [['Nachlass auf Anfahrt', '−' + fmt(anfRab)]] : [])] : []), ...(t.ges.rabBetrag ? [...(t.rab || anfAktiv() ? [['Zwischensumme', fmt(t.zw)]] : []), [`Gesamtnachlass${t.ges.rabEur ? '' : ` (${dec.format(t.ges.rab)} %)`}`, '−' + fmt(t.ges.rabBetrag)]] : []), ['Summe netto', fmt(t.netto)], [`MwSt. ${dec.format(MWST)} %`, fmt(t.mwst)]];
   const notes = groups.filter(g => g.note).map(g => ({ text:[{ text:g.name + ': ', bold:true }, g.note], margin:[0, 0, 0, 4] }));
   return {
     pageSize:'A4', pageOrientation:'landscape', pageMargins:[40, 80, 40, 50],
